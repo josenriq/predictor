@@ -1,0 +1,42 @@
+# compiled output
+dist
+dist.zip
+tmp
+lib
+
+# dependencies
+node_modules
+bower_components
+
+# IDEs and editors
+.idea
+.project
+.classpath
+*.launch
+.settings/
+*.sublime*
+.vscode
+
+# misc
+.cache
+.sass-cache
+connect.lock
+coverage/*
+*.log
+
+#System Files
+.DS_Store
+Thumbs.db
+
+# env files
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Environment config files
+**/src/environments/environment.*.ts
+
+.tools/bin
+.deps/snapshots
+.deps/restore

@@ -1,0 +1,22 @@
+{
+  "name": "@predictor/api",
+  "version": "0.0.0",
+  "description": "Backend API for the predictor game app",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@types/convict": "^6.1.1",
+    "@types/node": "^18.7.18",
+    "dotenv-safe": "^8.2.0",
+    "ts-node-dev": "^2.0.0",
+    "ttypescript": "^1.5.13"
+  },
+  "scripts": {
+    "start": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/index.ts"
+  },
+  "dependencies": {
+    "convict": "^6.2.3",
+    "convict-format-with-validator": "^6.2.0"
+  }
+}

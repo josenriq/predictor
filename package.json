@@ -1,0 +1,33 @@
+{
+  "name": "predictor",
+  "version": "1.0.0",
+  "description": "Football prediction game!",
+  "main": "index.js",
+  "author": "Jose E. Bolanos <jenrique7@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "cross-env": "^7.0.3",
+    "husky": "^8.0.1",
+    "lerna": "^5.5.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "husky": {
+    "hooks": {
+      "commit-msg": "[[ -n $HUSKY_BYPASS ]] || commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "scripts": {
+    "start": "lerna run --stream start",
+    "release": "cross-env HUSKY_BYPASS=true lerna publish"
+  }
+}

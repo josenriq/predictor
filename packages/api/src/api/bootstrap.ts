@@ -1,7 +1,7 @@
 import { ApolloServer } from 'apollo-server-express';
 import {
   ApolloServerPluginDrainHttpServer,
-  ApolloServerPluginLandingPageGraphQLPlayground,
+  ApolloServerPluginLandingPageLocalDefault,
 } from 'apollo-server-core';
 import http from 'http';
 import express from 'express';
@@ -64,8 +64,10 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
     // credentials: true,
     // origin: config.corsOrigin,
   };
+  // secure(app, { cors })
 
-  secure(app, { cors }).use(json());
+  app.use(json());
+
   // .use(cookieParser(config.auth.cookie.secret))
   // .use(useRefreshTokens(authTokenRedis));
 
@@ -77,16 +79,19 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
     typeDefs,
     resolvers,
     context: createContext,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    csrfPrevention: true,
+    cache: 'bounded',
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      // TODO: Only in dev
+      ApolloServerPluginLandingPageLocalDefault({ embed: true }),
+    ],
     // formatError,
     introspection: true,
   });
   await server.start();
 
-  server.applyMiddleware({
-    app: app as any,
-    path: '/graphql',
-  });
+  server.applyMiddleware({ app, path: '/graphql' });
 
   // app.use(errorHandler);
 

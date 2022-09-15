@@ -1,0 +1,10 @@
+overwrite: true
+schema: 'http://localhost:4000/graphql'
+generates:
+  src/app/graphql/codegen/schema-types.ts:
+    plugins:
+      - 'typescript'
+    config:
+      skipTypename: true
+      scalars:
+        DateTime: Date

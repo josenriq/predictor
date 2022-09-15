@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:graphql": "graphql-codegen --config graphql-codegen.yml && node ./scripts/graphql/possible-types.js && prettier --write src/app/graphql/codegen/*",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -18,6 +19,12 @@
     "@angular/platform-browser": "^14.0.0",
     "@angular/platform-browser-dynamic": "^14.0.0",
     "@angular/router": "^14.0.0",
+    "@apollo/client": "^3.6.9",
+    "apollo-angular": "^4.0.1",
+    "apollo-link-error": "^1.1.13",
+    "apollo-link-token-refresh": "^0.4.0",
+    "graphql": "^16.6.0",
+    "jwt-decode": "^3.1.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
@@ -26,6 +33,8 @@
     "@angular-devkit/build-angular": "^14.0.0",
     "@angular/cli": "~14.0.0",
     "@angular/compiler-cli": "^14.0.0",
+    "@graphql-codegen/cli": "^2.12.0",
+    "@graphql-codegen/typescript": "^2.7.3",
     "@types/jasmine": "~4.0.0",
     "jasmine-core": "~4.1.0",
     "karma": "~6.3.0",
@@ -33,6 +42,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "prettier": "^2.7.1",
     "typescript": "~4.7.2"
   }
 }

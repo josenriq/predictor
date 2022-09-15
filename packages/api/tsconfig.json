@@ -15,6 +15,10 @@
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "paths": {
+      "@predictor/*": ["./src/*"]
+    },
+    "plugins": [{ "transform": "typescript-transform-paths" }]
   }
 }

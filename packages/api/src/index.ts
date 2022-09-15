@@ -1,4 +1,4 @@
 import { read as readConfig } from './config';
+import { bootstrap } from './api';
 
-console.log(`Running! Here's the config`);
-console.log(readConfig());
+bootstrap(readConfig());

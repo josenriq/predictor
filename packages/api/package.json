@@ -1,22 +1,33 @@
 {
   "name": "@predictor/api",
   "version": "0.0.0",
-  "description": "Backend API for the predictor game app",
+  "description": "Backend Graphql Api for the predictor game app",
   "main": "index.js",
   "license": "MIT",
   "private": true,
+  "dependencies": {
+    "apollo-server-core": "^3.10.2",
+    "apollo-server-express": "^3.10.2",
+    "convict": "^6.2.3",
+    "convict-format-with-validator": "^6.2.0",
+    "express": "^4.18.1",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
+    "helmet": "^6.0.0",
+    "hpp": "^0.2.3",
+    "uid": "^2.0.0"
+  },
   "devDependencies": {
     "@types/convict": "^6.1.1",
+    "@types/helmet": "^4.0.0",
+    "@types/hpp": "^0.2.2",
     "@types/node": "^18.7.18",
     "dotenv-safe": "^8.2.0",
     "ts-node-dev": "^2.0.0",
-    "ttypescript": "^1.5.13"
+    "ttypescript": "^1.5.13",
+    "typescript-transform-paths": "^3.3.1"
   },
   "scripts": {
     "start": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/index.ts"
-  },
-  "dependencies": {
-    "convict": "^6.2.3",
-    "convict-format-with-validator": "^6.2.0"
   }
 }

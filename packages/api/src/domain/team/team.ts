@@ -1,9 +1,8 @@
-import { Id } from '../id';
-import { Entity } from '../entity';
-import { Guard } from '@predictor/core';
+import { Id, Entity } from '@predictor/domain';
+import { Guard, Maybe } from '@predictor/core';
 
 export class Team extends Entity<Team> {
-  constructor(public readonly id: Id, public name: string) {
+  constructor(public readonly id: Id, public readonly name: string) {
     super(id);
     Guard.nonempty(this.name, 'name');
   }
@@ -14,5 +13,5 @@ export class Team extends Entity<Team> {
 }
 
 export type TeamStorage = {
-  get(id: Id): Promise<Team>;
+  find(teamId: Id): Promise<Maybe<Team>>;
 };

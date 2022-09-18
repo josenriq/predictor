@@ -1,9 +1,8 @@
-import { Id } from '../id';
-import { Entity } from '../entity';
+import { Id, Entity, Storage } from '@predictor/domain';
 import { Guard } from '@predictor/core';
 
 export class User extends Entity<User> {
-  constructor(public readonly id: Id, public name: string) {
+  constructor(public readonly id: Id, public readonly name: string) {
     super(id);
     Guard.nonempty(this.name, 'name');
   }
@@ -13,6 +12,4 @@ export class User extends Entity<User> {
   }
 }
 
-export type UserStorage = {
-  get(id: Id): Promise<User>;
-};
+export type UserStorage = Storage<User>;

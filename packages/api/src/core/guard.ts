@@ -35,10 +35,6 @@ export class Guard {
     );
   }
 
-  static greaterThanZero(arg: number, name: string): void {
-    return Guard.greaterThan(0, arg, name);
-  }
-
   static between(floor: number, ceil: number, arg: number, name: string): void {
     return Guard.clause(
       floor <= arg && arg <= ceil,

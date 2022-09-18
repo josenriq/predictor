@@ -6,13 +6,13 @@ import {
 import http from 'http';
 import express from 'express';
 import { Request, Response, NextFunction, json } from 'express';
-// import IORedis from 'ioredis';
-// import { connectRedis } from '@thewall-accounts/infra/redis/connect';
 import { resolvers, typeDefs } from './graphql';
 import { createContext } from './context';
 import { secure } from './security';
 // import cookieParser from 'cookie-parser';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
+import { TeamModel } from '@predictor/infra/team';
+import { MatchModel } from '@predictor/infra/match';
 
 export interface ApiConfiguration {
   port: number;
@@ -21,15 +21,15 @@ export interface ApiConfiguration {
   };
 }
 
-// function useSlidebeanDatabase(
-//   config: SlidebeanDatabaseConfiguration,
-//   databaseFactory: SlidebeanDatabaseFactory,
-// ) {
-//   return (req: Request, _: Response, next: NextFunction): void => {
-//     (req as any)['db'] = databaseFactory(config);
-//     next();
-//   };
-// }
+function useDatabase() {
+// config: SlidebeanDatabaseConfiguration,
+// databaseFactory: SlidebeanDatabaseFactory,
+  return (req: Request, _: Response, next: NextFunction): void => {
+    (req as any)['teamStorage'] = new TeamModel();
+    (req as any)['matchStorage'] = new MatchModel();
+    next();
+  };
+}
 
 // function isDomainError(error: any): error is DomainError {
 //   return error?.message && error?.code;
@@ -49,14 +49,6 @@ export interface ApiConfiguration {
 // }
 
 export async function bootstrap(config: ApiConfiguration): Promise<void> {
-  // const [
-  //   schema,
-  //   // authTokenRedis,
-  // ] = await Promise.all([
-  //   createSchema(),
-  //   // connectRedis(config.auth.redisUrl),
-  // ]);
-
   const app = express();
   const httpServer = http.createServer(app);
 
@@ -67,6 +59,7 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
   // secure(app, { cors })
 
   app.use(json());
+  app.use(useDatabase());
 
   // .use(cookieParser(config.auth.cookie.secret))
   // .use(useRefreshTokens(authTokenRedis));

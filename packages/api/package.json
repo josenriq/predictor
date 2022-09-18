@@ -15,6 +15,7 @@
     "graphql-tag": "^2.12.6",
     "helmet": "^6.0.0",
     "hpp": "^0.2.3",
+    "mongodb": "^4.9.1",
     "uid": "^2.0.0"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "scripts": {
-    "start": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/index.ts"
+    "start": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/index.ts",
+    "init-db": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- scripts/database/init.ts"
   }
 }

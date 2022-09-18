@@ -20,6 +20,8 @@ export enum MatchStatus {
   Postponed = 'Postponed',
 }
 
+export type TournamentGroup = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H';
+
 export class Match extends Entity<Match> {
   constructor(
     public readonly id: Id,
@@ -28,6 +30,7 @@ export class Match extends Entity<Match> {
     public readonly awayTeamId: Id,
     public readonly startsAt: Date,
     public readonly level: MatchLevel,
+    public readonly group: Maybe<TournamentGroup>,
     public readonly status: MatchStatus,
     public readonly score: Maybe<Score>,
   ) {

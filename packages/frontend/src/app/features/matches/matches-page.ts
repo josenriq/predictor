@@ -7,32 +7,38 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Apollo } from 'apollo-angular';
-import { MeQuery, watchMeQuery } from './me.query';
-import { User, WatchQuery } from 'app/graphql';
+import { MatchesQuery, watchMatchesQuery } from './matches.query';
+import { Match, WatchQuery } from 'app/graphql';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-matches-page',
   template: `
     <p *ngIf="isLoading$ | async">Loading...</p>
-    <p *ngIf="!(isLoading$ | async)"
-      >Hello <b>{{ (me$ | async)?.name }}</b
-      >!</p
-    >
+
+    <ng-container *ngIf="!(isLoading$ | async)">
+      <div *ngFor="let match of matches$ | async" style="padding-bottom: 20px">
+        <p>Group {{ match.group }}, {{ match.startsAt | date: 'medium' }}</p>
+        <p
+          ><b>{{ match.homeTeam.name }}</b> vs
+          <b>{{ match.awayTeam.name }}</b></p
+        >
+      </div>
+    </ng-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatchesPageComponent implements OnInit {
-  meQuery!: WatchQuery<MeQuery>;
-  me$!: Observable<User>;
+  matchesQuery!: WatchQuery<MatchesQuery>;
+  matches$!: Observable<Match[]>;
   isLoading$!: Observable<boolean>;
 
   constructor(private readonly apollo: Apollo) {}
 
   ngOnInit(): void {
-    this.meQuery = watchMeQuery(this.apollo);
-    this.me$ = this.meQuery.data$.pipe(map(data => data.me));
-    this.isLoading$ = this.meQuery.isLoading$;
+    this.matchesQuery = watchMatchesQuery(this.apollo);
+    this.matches$ = this.matchesQuery.data$.pipe(map(data => data.matches));
+    this.isLoading$ = this.matchesQuery.isLoading$;
   }
 }
 

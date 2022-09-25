@@ -17,29 +17,51 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: Date;
+  Score: any;
 };
 
-/** Input to get a the details of a user */
-export type GetUserInput = {
-  /** The id of the user */
-  userId: Scalars['ID'];
+export type Match = {
+  awayTeam: Team;
+  group?: Maybe<Scalars['String']>;
+  homeTeam: Team;
+  id: Scalars['ID'];
+  level: MatchLevel;
+  prediction?: Maybe<Scalars['String']>;
+  score?: Maybe<Scalars['Score']>;
+  startsAt: Scalars['DateTime'];
+  status: MatchStatus;
+  time?: Maybe<Scalars['String']>;
 };
+
+export enum MatchLevel {
+  Final = 'Final',
+  GroupStage = 'GroupStage',
+  QuaterFinal = 'QuaterFinal',
+  Regular = 'Regular',
+  RoundOf16 = 'RoundOf16',
+  SemiFinal = 'SemiFinal',
+  ThirdPlace = 'ThirdPlace',
+}
+
+export enum MatchStatus {
+  Cancelled = 'Cancelled',
+  Finished = 'Finished',
+  Ongoing = 'Ongoing',
+  Postponed = 'Postponed',
+  Unstarted = 'Unstarted',
+}
 
 export type Query = {
-  /** Returns the currently signed-in user */
+  matches: Array<Match>;
   me?: Maybe<User>;
-  /** Returns a user */
-  user: User;
 };
 
-export type QueryUserArgs = {
-  input: GetUserInput;
-};
-
-/** An end-user of the app */
-export type User = {
-  /** The id of the user */
+export type Team = {
   id: Scalars['ID'];
-  /** The name of the user */
+  name: Scalars['String'];
+};
+
+export type User = {
+  id: Scalars['ID'];
   name: Scalars['String'];
 };

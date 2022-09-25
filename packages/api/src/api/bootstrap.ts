@@ -11,22 +11,26 @@ import { createContext } from './context';
 import { secure } from './security';
 // import cookieParser from 'cookie-parser';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
-import { TeamModel } from '@predictor/infra/team';
-import { MatchModel } from '@predictor/infra/match';
+import {
+  DatabaseConfig,
+  getTeamDb,
+  getMatchDb,
+  MatchMongooseStorage,
+  TeamMongooseStorage,
+} from '@predictor/infra/database';
+import { connectToDatabase } from '@predictor/infra/mongo';
 
 export interface ApiConfiguration {
   port: number;
   storage: {
-    redisUri: string;
+    mongoUri: string;
   };
 }
 
-function useDatabase() {
-// config: SlidebeanDatabaseConfiguration,
-// databaseFactory: SlidebeanDatabaseFactory,
+function useDatabase(config: DatabaseConfig) {
   return (req: Request, _: Response, next: NextFunction): void => {
-    (req as any)['teamStorage'] = new TeamModel();
-    (req as any)['matchStorage'] = new MatchModel();
+    (req as any)['teamStorage'] = new TeamMongooseStorage(getTeamDb(config));
+    (req as any)['matchStorage'] = new MatchMongooseStorage(getMatchDb(config));
     next();
   };
 }
@@ -52,6 +56,8 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
   const app = express();
   const httpServer = http.createServer(app);
 
+  const dbConnection = await connectToDatabase(config.storage.mongoUri);
+
   const cors = {
     // credentials: true,
     // origin: config.corsOrigin,
@@ -59,7 +65,7 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
   // secure(app, { cors })
 
   app.use(json());
-  app.use(useDatabase());
+  app.use(useDatabase({ connection: dbConnection }));
 
   // .use(cookieParser(config.auth.cookie.secret))
   // .use(useRefreshTokens(authTokenRedis));

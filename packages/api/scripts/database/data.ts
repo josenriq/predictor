@@ -45,7 +45,7 @@ export const teams: Team[] = [
     name: 'England',
   },
   {
-    _id: 'ira',
+    _id: 'irn',
     name: 'Iran',
   },
   {
@@ -61,7 +61,7 @@ export const teams: Team[] = [
     name: 'Argentina',
   },
   {
-    _id: 'sau',
+    _id: 'ksa',
     name: 'Saudi Arabia',
   },
   {
@@ -89,7 +89,7 @@ export const teams: Team[] = [
     name: 'Tunisia',
   },
   {
-    _id: 'spa',
+    _id: 'esp',
     name: 'Spain',
   },
   {
@@ -101,7 +101,7 @@ export const teams: Team[] = [
     name: 'Germany',
   },
   {
-    _id: 'jap',
+    _id: 'jpn',
     name: 'Japan',
   },
   {
@@ -125,15 +125,15 @@ export const teams: Team[] = [
     name: 'Brazil',
   },
   {
-    _id: 'ser',
+    _id: 'srb',
     name: 'Serbia',
   },
   {
-    _id: 'swz',
+    _id: 'sui',
     name: 'Switzerland',
   },
   {
-    _id: 'cam',
+    _id: 'cmr',
     name: 'Cameroon',
   },
   {
@@ -173,7 +173,7 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'eng',
-    awayTeamId: 'ira',
+    awayTeamId: 'irn',
     startsAt: new Date(Date.UTC(2022, 10, 21, 13)),
     group: 'B',
     stadium: 'Khalifa International Stadium',
@@ -187,7 +187,7 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'arg',
-    awayTeamId: 'sau',
+    awayTeamId: 'ksa',
     startsAt: new Date(Date.UTC(2022, 10, 22, 10)),
     group: 'C',
     stadium: 'Lusail Iconic Stadium',
@@ -214,7 +214,7 @@ export const matches: Match[] = [
     stadium: 'Education City Stadium',
   },
   {
-    homeTeamId: 'spa',
+    homeTeamId: 'esp',
     awayTeamId: 'crc',
     startsAt: new Date(Date.UTC(2022, 10, 23, 16)),
     group: 'E',
@@ -222,7 +222,7 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'ger',
-    awayTeamId: 'jap',
+    awayTeamId: 'jpn',
     startsAt: new Date(Date.UTC(2022, 10, 23, 13)),
     group: 'E',
     stadium: 'Khalifa International Stadium',
@@ -243,14 +243,14 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'bra',
-    awayTeamId: 'ser',
+    awayTeamId: 'srb',
     startsAt: new Date(Date.UTC(2022, 10, 24, 19)),
     group: 'G',
     stadium: 'Lusail Iconic Stadium',
   },
   {
-    homeTeamId: 'swi',
-    awayTeamId: 'cam',
+    homeTeamId: 'sui',
+    awayTeamId: 'cmr',
     startsAt: new Date(Date.UTC(2022, 10, 24, 10)),
     group: 'G',
     stadium: 'Al Janoub Stadium',
@@ -292,7 +292,7 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'wal',
-    awayTeamId: 'ira',
+    awayTeamId: 'irn',
     startsAt: new Date(Date.UTC(2022, 10, 25, 10)),
     group: 'B',
     stadium: 'Ahmad bin Ali Stadium',
@@ -306,7 +306,7 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'pol',
-    awayTeamId: 'sau',
+    awayTeamId: 'ksa',
     startsAt: new Date(Date.UTC(2022, 10, 26, 13)),
     group: 'C',
     stadium: 'Education City Stadium',
@@ -326,14 +326,14 @@ export const matches: Match[] = [
     stadium: 'Al Janoub Stadium',
   },
   {
-    homeTeamId: 'spa',
+    homeTeamId: 'esp',
     awayTeamId: 'ger',
     startsAt: new Date(Date.UTC(2022, 10, 27, 19)),
     group: 'E',
     stadium: 'Al Bayt Stadium',
   },
   {
-    homeTeamId: 'jap',
+    homeTeamId: 'jpn',
     awayTeamId: 'crc',
     startsAt: new Date(Date.UTC(2022, 10, 27, 10)),
     group: 'E',
@@ -355,14 +355,14 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'bra',
-    awayTeamId: 'swi',
+    awayTeamId: 'sui',
     startsAt: new Date(Date.UTC(2022, 10, 28, 16)),
     group: 'G',
     stadium: 'Stadium 974',
   },
   {
-    homeTeamId: 'cam',
-    awayTeamId: 'ser',
+    homeTeamId: 'cmr',
+    awayTeamId: 'srb',
     startsAt: new Date(Date.UTC(2022, 10, 28, 10)),
     group: 'G',
     stadium: 'Al Janoub Stadium',
@@ -403,7 +403,7 @@ export const matches: Match[] = [
     stadium: 'Ahmad bin Ali Stadium',
   },
   {
-    homeTeamId: 'ira',
+    homeTeamId: 'irn',
     awayTeamId: 'usa',
     startsAt: new Date(Date.UTC(2022, 10, 29, 19)),
     group: 'B',
@@ -417,7 +417,7 @@ export const matches: Match[] = [
     stadium: 'Stadium 974',
   },
   {
-    homeTeamId: 'sau',
+    homeTeamId: 'ksa',
     awayTeamId: 'mex',
     startsAt: new Date(Date.UTC(2022, 10, 30, 19)),
     group: 'C',
@@ -438,8 +438,8 @@ export const matches: Match[] = [
     stadium: 'Al Janoub Stadium',
   },
   {
-    homeTeamId: 'jap',
-    awayTeamId: 'spa',
+    homeTeamId: 'jpn',
+    awayTeamId: 'esp',
     startsAt: new Date(Date.UTC(2022, 11, 1, 19)),
     group: 'E',
     stadium: 'Khalifa International Stadium',
@@ -466,15 +466,15 @@ export const matches: Match[] = [
     stadium: 'Al Thumama Stadium',
   },
   {
-    homeTeamId: 'cam',
+    homeTeamId: 'cmr',
     awayTeamId: 'bra',
     startsAt: new Date(Date.UTC(2022, 11, 2, 19)),
     group: 'G',
     stadium: 'Lusail Iconic Stadium',
   },
   {
-    homeTeamId: 'ser',
-    awayTeamId: 'swi',
+    homeTeamId: 'srb',
+    awayTeamId: 'sui',
     startsAt: new Date(Date.UTC(2022, 11, 2, 19)),
     group: 'G',
     stadium: 'Stadium 974',

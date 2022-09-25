@@ -35,6 +35,7 @@ export const MatchTypeDef = gql`
     awayTeam: Team!
     startsAt: DateTime!
     level: MatchLevel!
+    group: String
     status: MatchStatus!
     score: Score
     time: String

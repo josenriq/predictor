@@ -20,10 +20,10 @@ const config = convict<ApiConfiguration>({
     env: 'PORT',
   },
   storage: {
-    redisUri: {
-      doc: 'Connection string (uri) for the redis database',
+    mongoUri: {
+      doc: 'Connection string (uri) for the mongo database',
       format: 'secret',
-      env: 'REDIS_URI',
+      env: 'MONGO_URI',
       default: null,
       sensitive: true,
     },

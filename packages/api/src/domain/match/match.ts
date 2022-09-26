@@ -29,6 +29,7 @@ export class Match extends Entity<Match> {
     public readonly tournamentId: Id,
     public readonly homeTeamId: Id,
     public readonly awayTeamId: Id,
+    public readonly stadium: Maybe<string>,
     public readonly startsAt: Date,
     public readonly level: MatchLevel,
     public readonly group: Maybe<TournamentGroup>,

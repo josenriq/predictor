@@ -29,6 +29,7 @@ export type Match = {
   level: MatchLevel;
   prediction?: Maybe<Prediction>;
   score?: Maybe<Scalars['Score']>;
+  stadium?: Maybe<Scalars['String']>;
   startsAt: Scalars['DateTime'];
   status: MatchStatus;
   time?: Maybe<Scalars['String']>;

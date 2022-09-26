@@ -37,6 +37,9 @@ export class MatchDbModel extends DbModel {
   @prop({ required: true })
   public awayTeamId: string;
 
+  @prop()
+  public stadium?: string;
+
   @prop({ required: true })
   public startsAt: Date;
 
@@ -74,6 +77,7 @@ function createMatchMapper(
         Id.decode(model.tournamentId),
         Id.decode(model.homeTeamId),
         Id.decode(model.awayTeamId),
+        model.stadium,
         model.startsAt,
         model.level,
         model.group,
@@ -89,6 +93,7 @@ function createMatchMapper(
         tournamentId: Id.encode(match.tournamentId),
         homeTeamId: Id.encode(match.homeTeamId),
         awayTeamId: Id.encode(match.awayTeamId),
+        stadium: match.stadium,
         startsAt: match.startsAt,
         level: match.level,
         group: match.group,

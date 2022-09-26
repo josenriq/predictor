@@ -113,7 +113,7 @@ export const teams: Team[] = [
     name: 'Canada',
   },
   {
-    _id: 'mor',
+    _id: 'mar',
     name: 'Morocco',
   },
   {
@@ -129,7 +129,7 @@ export const teams: Team[] = [
     name: 'Serbia',
   },
   {
-    _id: 'sui',
+    _id: 'swi',
     name: 'Switzerland',
   },
   {
@@ -235,7 +235,7 @@ export const matches: Match[] = [
     stadium: 'Ahmad bin Ali Stadium',
   },
   {
-    homeTeamId: 'mor',
+    homeTeamId: 'mar',
     awayTeamId: 'cro',
     startsAt: new Date(Date.UTC(2022, 10, 23, 10)),
     group: 'F',
@@ -249,7 +249,7 @@ export const matches: Match[] = [
     stadium: 'Lusail Iconic Stadium',
   },
   {
-    homeTeamId: 'sui',
+    homeTeamId: 'swi',
     awayTeamId: 'cmr',
     startsAt: new Date(Date.UTC(2022, 10, 24, 10)),
     group: 'G',
@@ -341,7 +341,7 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'bel',
-    awayTeamId: 'mor',
+    awayTeamId: 'mar',
     startsAt: new Date(Date.UTC(2022, 10, 27, 13)),
     group: 'F',
     stadium: 'Al Thumama Stadium',
@@ -355,7 +355,7 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'bra',
-    awayTeamId: 'sui',
+    awayTeamId: 'swi',
     startsAt: new Date(Date.UTC(2022, 10, 28, 16)),
     group: 'G',
     stadium: 'Stadium 974',
@@ -460,7 +460,7 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'can',
-    awayTeamId: 'mor',
+    awayTeamId: 'mar',
     startsAt: new Date(Date.UTC(2022, 11, 1, 15)),
     group: 'F',
     stadium: 'Al Thumama Stadium',
@@ -474,7 +474,7 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'srb',
-    awayTeamId: 'sui',
+    awayTeamId: 'swi',
     startsAt: new Date(Date.UTC(2022, 11, 2, 19)),
     group: 'G',
     stadium: 'Stadium 974',

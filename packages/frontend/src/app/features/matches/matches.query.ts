@@ -14,6 +14,7 @@ export const MatchesQuery = gql`
         id
         name
       }
+      stadium
       startsAt
       level
       group

@@ -25,8 +25,9 @@ export type Match = {
   group?: Maybe<Scalars['String']>;
   homeTeam: Team;
   id: Scalars['ID'];
+  isOpenForPredictions: Scalars['Boolean'];
   level: MatchLevel;
-  prediction?: Maybe<Scalars['String']>;
+  prediction?: Maybe<Prediction>;
   score?: Maybe<Scalars['Score']>;
   startsAt: Scalars['DateTime'];
   status: MatchStatus;
@@ -51,9 +52,39 @@ export enum MatchStatus {
   Unstarted = 'Unstarted',
 }
 
+export type Mutation = {
+  savePrediction?: Maybe<SavePredictionOutput>;
+};
+
+export type MutationSavePredictionArgs = {
+  input: SavePredictionInput;
+};
+
+export type Prediction = {
+  id: Scalars['ID'];
+  outcome?: Maybe<PredictionOutcome>;
+  points?: Maybe<Scalars['Int']>;
+  score: Scalars['Score'];
+};
+
+export enum PredictionOutcome {
+  Correct = 'Correct',
+  Exact = 'Exact',
+  Incorrect = 'Incorrect',
+}
+
 export type Query = {
   matches: Array<Match>;
   me?: Maybe<User>;
+};
+
+export type SavePredictionInput = {
+  matchId: Scalars['ID'];
+  score: Scalars['Score'];
+};
+
+export type SavePredictionOutput = {
+  prediction: Prediction;
 };
 
 export type Team = {

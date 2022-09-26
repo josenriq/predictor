@@ -1,6 +1,7 @@
 import { Id, Entity } from '@predictor/domain';
 import { Maybe } from '@predictor/core';
 import { Score } from '@predictor/domain/score';
+import { isBefore, subMinutes } from 'date-fns';
 
 export enum MatchLevel {
   Regular = 'Regular',
@@ -37,11 +38,19 @@ export class Match extends Entity<Match> {
     super(id);
   }
 
+  get isOpenForPredictions(): boolean {
+    if (this.status !== MatchStatus.Unstarted) return false;
+
+    const kickoffMinusFive = subMinutes(this.startsAt, 5);
+    return isBefore(Date.now(), kickoffMinusFive);
+  }
+
   toString(): string {
     return `[${this.startsAt}] ${this.homeTeamId} vs ${this.awayTeamId}`;
   }
 }
 
 export type MatchStorage = {
+  find(matchId: Id): Promise<Maybe<Match>>;
   listByTournament(tournamentId: Id): Promise<Array<Match>>;
 };

@@ -4,3 +4,4 @@ export * from './cqrs';
 export * from './storage';
 export * from './pagination';
 export * from './mapper';
+export * from './domain-error';

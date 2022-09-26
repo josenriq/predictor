@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { Context } from '../context';
-import { None } from '@predictor/core';
+import { Maybe, None } from '@predictor/core';
 import {
   ListMatches,
   Match,
@@ -9,6 +9,7 @@ import {
 } from '@predictor/domain/match';
 import { GetTeam, Team } from '@predictor/domain/team';
 import { Id } from '@predictor/domain';
+import { FindPrediction, Prediction } from '@predictor/domain/prediction';
 
 export const MatchTypeDef = gql`
   enum MatchLevel {
@@ -39,7 +40,8 @@ export const MatchTypeDef = gql`
     status: MatchStatus!
     score: Score
     time: String
-    prediction: String
+    isOpenForPredictions: Boolean!
+    prediction: Prediction
   }
 
   type Query {
@@ -56,15 +58,24 @@ export const MatchResolver = {
       const query = new GetTeam(ctx.teamStorage);
       return query.execute(match.homeTeamId);
     },
+
     awayTeam(match: Match, _: None, ctx: Context): Promise<Team> {
       const query = new GetTeam(ctx.teamStorage);
       return query.execute(match.awayTeamId);
     },
-    time(): string {
-      return `21`;
+
+    time(match: Match): Maybe<string> {
+      return void 0;
     },
-    prediction(): string {
-      return 'TODO!';
+
+    async prediction(
+      match: Match,
+      _: None,
+      ctx: Context,
+    ): Promise<Maybe<Prediction>> {
+      if (!ctx.viewer) return void 0;
+      const query = new FindPrediction(ctx.predictionStorage);
+      return await query.execute({ matchId: match.id, userId: ctx.viewer.id });
     },
   },
 

@@ -6,18 +6,11 @@ import {
 import http from 'http';
 import express from 'express';
 import { Request, Response, NextFunction, json } from 'express';
-import { resolvers, typeDefs } from './graphql';
+import { formatError, resolvers, typeDefs } from './graphql';
 import { createContext } from './context';
 import { secure } from './security';
 // import cookieParser from 'cookie-parser';
-import { GraphQLError, GraphQLFormattedError } from 'graphql';
-import {
-  DatabaseConfig,
-  getTeamDb,
-  getMatchDb,
-  MatchMongooseStorage,
-  TeamMongooseStorage,
-} from '@predictor/infra/database';
+import { DatabaseConfig, createDatabase } from '@predictor/infra/database';
 import { connectToDatabase } from '@predictor/infra/mongo';
 
 export interface ApiConfiguration {
@@ -29,28 +22,10 @@ export interface ApiConfiguration {
 
 function useDatabase(config: DatabaseConfig) {
   return (req: Request, _: Response, next: NextFunction): void => {
-    (req as any)['teamStorage'] = new TeamMongooseStorage(getTeamDb(config));
-    (req as any)['matchStorage'] = new MatchMongooseStorage(getMatchDb(config));
+    (req as any)['db'] = createDatabase(config);
     next();
   };
 }
-
-// function isDomainError(error: any): error is DomainError {
-//   return error?.message && error?.code;
-// }
-
-// function formatError(error: GraphQLError): GraphQLFormattedError {
-//   if (isDomainError(error?.originalError)) {
-//     const domainError = error.originalError as DomainError;
-//     return {
-//       message: domainError.message,
-//       extensions: {
-//         code: domainError.code,
-//       },
-//     };
-//   }
-//   return error;
-// }
 
 export async function bootstrap(config: ApiConfiguration): Promise<void> {
   const app = express();
@@ -85,7 +60,7 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
       // TODO: Only in dev
       ApolloServerPluginLandingPageLocalDefault({ embed: true }),
     ],
-    // formatError,
+    formatError,
     introspection: true,
   });
   await server.start();

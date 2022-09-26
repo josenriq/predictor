@@ -1,5 +1,6 @@
 import { Guard } from '@predictor/core';
 import { Id, Query } from '@predictor/domain';
+import { TeamNotFound } from '../errors';
 import { Team, TeamStorage } from '../team';
 
 export class GetTeam implements Query<Id, Team> {
@@ -12,8 +13,7 @@ export class GetTeam implements Query<Id, Team> {
 
     const team = await this.storage.find(teamId);
     if (!team) {
-      // TODO: Replace with domain error
-      throw new Error(`Team with id ${teamId.toString()} not found`);
+      throw new TeamNotFound(teamId);
     }
     return team;
   }

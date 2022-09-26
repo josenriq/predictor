@@ -12,6 +12,7 @@
     "convict": "^6.2.3",
     "convict-format-with-validator": "^6.2.0",
     "dataloader": "^2.1.0",
+    "date-fns": "^2.29.3",
     "express": "^4.18.1",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",

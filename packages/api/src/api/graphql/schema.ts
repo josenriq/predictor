@@ -4,6 +4,7 @@ import { ScalarTypeDef, ScalarResolver } from './scalars';
 import { UserTypeDef, UserResolver } from './user';
 import { TeamTypeDef, TeamResolver } from './team';
 import { MatchTypeDef, MatchResolver } from './match';
+import { PredictionTypeDef, PredictionResolver } from './prediction';
 
 // import { RelayPaginationTypeDef } from './pagination';
 
@@ -12,6 +13,7 @@ export const typeDefs = mergeTypeDefs([
   UserTypeDef,
   TeamTypeDef,
   MatchTypeDef,
+  PredictionTypeDef,
   // RelayPaginationTypeDef,
 ]);
 
@@ -20,4 +22,5 @@ export const resolvers = mergeResolvers([
   UserResolver,
   TeamResolver,
   MatchResolver,
+  PredictionResolver,
 ]);

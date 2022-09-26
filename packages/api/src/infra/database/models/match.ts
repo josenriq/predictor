@@ -8,10 +8,15 @@ import {
   TournamentGroup,
 } from '@predictor/domain/match';
 import { Score } from '@predictor/domain/score';
-import { DbModel, DEFAULT_SCHEMA_OPTIONS } from '@predictor/infra/mongo';
+import {
+  DbModel,
+  DEFAULT_SCHEMA_OPTIONS,
+  MongooseStorage,
+} from '@predictor/infra/mongo';
 import {
   DocumentType,
   getModelForClass,
+  index,
   modelOptions,
   prop,
   ReturnModelType,
@@ -94,12 +99,12 @@ function createMatchMapper(
   };
 }
 
-export class MatchMongooseStorage implements MatchStorage {
-  private mapper: Mapper<Match, DocumentType<MatchDbModel>>;
-
-  constructor(private readonly db: MatchDb) {
-    Guard.require(db, 'db');
-    this.mapper = createMatchMapper(db);
+export class MatchMongooseStorage
+  extends MongooseStorage<Match, MatchDbModel>
+  implements MatchStorage
+{
+  constructor(db: MatchDb) {
+    super(db, createMatchMapper(db));
   }
 
   async listByTournament(tournamentId: Id): Promise<Match[]> {
@@ -107,6 +112,9 @@ export class MatchMongooseStorage implements MatchStorage {
       .find({ tournamentId: Id.encode(tournamentId) })
       .sort('startsAt')
       .exec();
-    return records.map(this.mapper.from);
+    return records.map(record => {
+      this.loader.prime(Id.encode(record.id), record);
+      return this.mapper.from(record);
+    });
   }
 }

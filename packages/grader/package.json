@@ -1,0 +1,20 @@
+{
+  "name": "@predictor/grader",
+  "version": "0.0.0",
+  "description": "Live match status checker and grader for the predictor game",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "puppeteer": "^18.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.18",
+    "ts-node-dev": "^2.0.0",
+    "ttypescript": "^1.5.13",
+    "typescript-transform-paths": "^3.3.1"
+  },
+  "scripts": {
+    "start": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -- src/index.ts"
+  }
+}

@@ -16,7 +16,6 @@ import {
 import {
   DocumentType,
   getModelForClass,
-  index,
   modelOptions,
   prop,
   ReturnModelType,
@@ -40,7 +39,7 @@ export class MatchDbModel extends DbModel {
   @prop()
   public stadium?: string;
 
-  @prop({ required: true })
+  @prop({ required: true, index: true })
   public startsAt: Date;
 
   @prop({ required: true, enum: MatchLevel })

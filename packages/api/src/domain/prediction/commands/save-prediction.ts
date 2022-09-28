@@ -6,6 +6,7 @@ import {
   MatchStorage,
 } from '@predictor/domain/match';
 import { Score } from '@predictor/domain/score';
+import { TournamentEntryStorage } from '@predictor/domain/tournament-entry';
 import { Prediction, PredictionStorage } from '../prediction';
 
 export type SavePredictionCommandInput = {
@@ -20,9 +21,11 @@ export class SavePrediction
   constructor(
     private readonly predictionStorage: PredictionStorage,
     private readonly matchStorage: MatchStorage,
+    private readonly entryStorage: TournamentEntryStorage,
   ) {
     Guard.require(this.predictionStorage, 'predictionStorage');
     Guard.require(this.matchStorage, 'matchStorage');
+    Guard.require(this.entryStorage, 'entryStorage');
   }
 
   async execute(input: SavePredictionCommandInput): Promise<Prediction> {
@@ -34,6 +37,15 @@ export class SavePrediction
     }
     if (!match.isOpenForPredictions) {
       throw new MatchIsClosedForPredictions(input.matchId);
+    }
+
+    const entryInput = {
+      userId: input.userId,
+      tournamentId: match.tournamentId,
+    };
+    const entry = await this.entryStorage.find(entryInput);
+    if (!entry) {
+      await this.entryStorage.create(entryInput);
     }
 
     return await this.predictionStorage.save(input);

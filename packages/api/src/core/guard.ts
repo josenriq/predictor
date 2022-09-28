@@ -31,7 +31,32 @@ export class Guard {
   static greaterThan(threshold: number, arg: number, name: string): void {
     return Guard.clause(
       arg > threshold,
-      `Argument ${name} cannot be greater than ${threshold}, got ${arg}`,
+      `Argument ${name} must be greater than ${threshold}, got ${arg}`,
+    );
+  }
+
+  static greaterThanOrEqual(
+    threshold: number,
+    arg: number,
+    name: string,
+  ): void {
+    return Guard.clause(
+      arg >= threshold,
+      `Argument ${name} must be greater than or equal to ${threshold}, got ${arg}`,
+    );
+  }
+
+  static lessThan(threshold: number, arg: number, name: string): void {
+    return Guard.clause(
+      arg < threshold,
+      `Argument ${name} must be less than ${threshold}, got ${arg}`,
+    );
+  }
+
+  static lessThanOrEqual(threshold: number, arg: number, name: string): void {
+    return Guard.clause(
+      arg <= threshold,
+      `Argument ${name} must be less than or equal to ${threshold}, got ${arg}`,
     );
   }
 

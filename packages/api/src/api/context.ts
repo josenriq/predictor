@@ -5,12 +5,14 @@ import { TeamStorage } from '@predictor/domain/team';
 import { MatchStorage } from '@predictor/domain/match';
 import { PredictionStorage } from '@predictor/domain/prediction';
 import { Database } from '@predictor/infra/database';
+import { TournamentEntryStorage } from '@predictor/domain/tournament-entry';
 
 export interface Context {
   viewer?: User;
   teamStorage: TeamStorage;
   matchStorage: MatchStorage;
   predictionStorage: PredictionStorage;
+  tournamentEntryStorage: TournamentEntryStorage;
 }
 
 export interface ContextParameters {
@@ -28,5 +30,6 @@ export async function createContext({
     teamStorage: db.team,
     matchStorage: db.match,
     predictionStorage: db.prediction,
+    tournamentEntryStorage: db.tournamentEntry,
   };
 }

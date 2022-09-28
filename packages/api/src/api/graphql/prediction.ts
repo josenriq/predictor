@@ -54,6 +54,7 @@ export const PredictionResolver = {
       const command = new SavePrediction(
         ctx.predictionStorage,
         ctx.matchStorage,
+        ctx.tournamentEntryStorage,
       );
 
       const prediction = await command.execute({

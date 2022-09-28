@@ -10,8 +10,8 @@ import {
 import { Score } from '@predictor/domain/score';
 import {
   createMultiKeyDataLoader,
-  DbModel,
   DEFAULT_SCHEMA_OPTIONS,
+  TimestampedDbModel,
 } from '@predictor/infra/mongo';
 import {
   DocumentType,
@@ -23,14 +23,13 @@ import {
   Severity,
 } from '@typegoose/typegoose';
 import DataLoader from 'dataloader';
-import { uid } from 'uid';
 import { DatabaseConfig } from '../config';
 
 const TABLE_NAME = 'Prediction';
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @index({ userId: 1, matchId: 1 }, { unique: true })
-export class PredictionDbModel extends DbModel {
+export class PredictionDbModel extends TimestampedDbModel {
   @prop({ required: true, index: true })
   public userId: string;
 
@@ -132,7 +131,7 @@ export class PredictionMongooseStorage implements PredictionStorage {
           )
           .exec()
       : await this.db.create({
-          id: uid(),
+          id: Id.encode(Id.generate()),
           userId,
           matchId,
           score,

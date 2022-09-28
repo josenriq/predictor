@@ -1,3 +1,4 @@
+import { Id } from '@predictor/domain';
 import {
   MatchLevel,
   MatchStatus,
@@ -497,7 +498,7 @@ export const matches: Match[] = [
   record =>
     ({
       ...record,
-      _id: uid(),
+      _id: Id.encode(Id.generate()),
       tournamentId: QATAR_2022,
       level: MatchLevel.GroupStage,
       status: MatchStatus.Unstarted,

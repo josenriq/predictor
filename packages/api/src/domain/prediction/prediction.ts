@@ -1,4 +1,4 @@
-import { Id, Entity } from '@predictor/domain';
+import { Id, Entity, Storage } from '@predictor/domain';
 import { Guard, Maybe } from '@predictor/core';
 import { Score } from '@predictor/domain/score';
 
@@ -23,23 +23,39 @@ export class Prediction extends Entity<Prediction> {
     Guard.require(score, 'score');
   }
 
+  withScore(score: Score): Prediction {
+    Guard.require(score, 'score');
+    Guard.clause(
+      !this.isGraded,
+      'Cannot change the score of a graded prediction',
+    );
+
+    return new Prediction(
+      this.id,
+      this.userId,
+      this.matchId,
+      score,
+      void 0,
+      void 0,
+    );
+  }
+
   get isGraded(): boolean {
     return !!this.outcome;
   }
+
+  static create(userId: Id, matchId: Id, score: Score): Prediction {
+    return new Prediction(
+      Id.generate(),
+      userId,
+      matchId,
+      score,
+      void 0,
+      void 0,
+    );
+  }
 }
 
-export type FindPredictionInput = {
-  matchId: Id;
-  userId: Id;
-};
-
-export type SavePredictionInput = {
-  matchId: Id;
-  userId: Id;
-  score: Score;
-};
-
-export type PredictionStorage = {
-  save(input: SavePredictionInput): Promise<Prediction>;
-  find(input: FindPredictionInput): Promise<Maybe<Prediction>>;
+export type PredictionStorage = Storage<Prediction> & {
+  findByUserAndMatch(userId: Id, matchId: Id): Promise<Maybe<Prediction>>;
 };

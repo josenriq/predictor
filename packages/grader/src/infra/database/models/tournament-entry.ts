@@ -1,8 +1,6 @@
 import { Guard, Maybe } from '@predictor/core';
 import { Id, Mapper } from '@predictor/domain';
 import {
-  FindTournamentEntryInput,
-  CreateTournamentEntryInput,
   TournamentEntry,
   TournamentEntryStorage,
 } from '@predictor/domain/tournament-entry';
@@ -92,9 +90,9 @@ export class TournamentEntryMongooseStorage
     });
   }
 
-  async findByUserAndTournament(
-    userId: Id,
+  async findByTournamentAndUser(
     tournamentId: Id,
+    userId: Id,
   ): Promise<Maybe<TournamentEntry>> {
     const record = await this.findByUserAndTournamentLoader.load(
       [Id.encode(userId), Id.encode(tournamentId)].join(','),

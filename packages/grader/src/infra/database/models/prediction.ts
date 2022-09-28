@@ -7,7 +7,6 @@ import {
 } from '@predictor/domain/prediction';
 import { Score } from '@predictor/domain/score';
 import {
-  createMultiKeyDataLoader,
   DEFAULT_SCHEMA_OPTIONS,
   MongooseStorage,
   TimestampedDbModel,
@@ -21,7 +20,6 @@ import {
   ReturnModelType,
   Severity,
 } from '@typegoose/typegoose';
-import DataLoader from 'dataloader';
 import { DatabaseConfig } from '../config';
 
 const TABLE_NAME = 'Prediction';
@@ -89,27 +87,15 @@ export class PredictionMongooseStorage
   extends MongooseStorage<Prediction, PredictionDbModel>
   implements PredictionStorage
 {
-  private readonly findByUserAndMatchLoader: DataLoader<
-    string,
-    Maybe<DocumentType<PredictionDbModel>>
-  >;
-
   constructor(db: PredictionDb) {
     super(db, createPredictionMapper(db));
-
-    this.findByUserAndMatchLoader = createMultiKeyDataLoader({
-      db,
-      keys: ['userId', 'matchId'],
-    });
   }
 
-  async findByUserAndMatch(
-    userId: Id,
-    matchId: Id,
-  ): Promise<Maybe<Prediction>> {
-    const record = await this.findByUserAndMatchLoader.load(
-      [Id.encode(userId), Id.encode(matchId)].join(','),
-    );
-    return record ? this.mapper.from(record) : void 0;
+  async listByMatch(matchId: Id): Promise<Prediction[]> {
+    const records = await this.db.find({ matchId: Id.encode(matchId) }).exec();
+    return records.map(record => {
+      this.loader.prime(Id.encode(record.id), record);
+      return this.mapper.from(record);
+    });
   }
 }

@@ -13,21 +13,22 @@ export class TournamentEntry extends Entity<TournamentEntry> {
     Guard.require(tournamentId, 'tournamentId');
     Guard.greaterThanOrEqual(0, points, 'points');
   }
+
+  addPoints(points: number): TournamentEntry {
+    Guard.greaterThan(0, points, 'points');
+
+    return new TournamentEntry(
+      this.id,
+      this.userId,
+      this.tournamentId,
+      this.points + points,
+    );
+  }
 }
 
-export type FindTournamentEntryInput = {
-  tournamentId: Id;
-  userId: Id;
-};
-
-export type CreateTournamentEntryInput = {
-  tournamentId: Id;
-  userId: Id;
-};
-
 export type TournamentEntryStorage = Storage<TournamentEntry> & {
-  findByUserAndTournament(
-    userId: Id,
+  findByTournamentAndUser(
     tournamentId: Id,
+    userId: Id,
   ): Promise<Maybe<TournamentEntry>>;
 };

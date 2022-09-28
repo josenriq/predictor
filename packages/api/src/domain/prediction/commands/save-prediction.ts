@@ -6,17 +6,20 @@ import {
   MatchStorage,
 } from '@predictor/domain/match';
 import { Score } from '@predictor/domain/score';
-import { TournamentEntryStorage } from '@predictor/domain/tournament-entry';
+import {
+  TournamentEntry,
+  TournamentEntryStorage,
+} from '@predictor/domain/tournament-entry';
 import { Prediction, PredictionStorage } from '../prediction';
 
-export type SavePredictionCommandInput = {
+export type SavePredictionInput = {
   matchId: Id;
   userId: Id;
   score: Score;
 };
 
 export class SavePrediction
-  implements Command<SavePredictionCommandInput, Prediction>
+  implements Command<SavePredictionInput, Prediction>
 {
   constructor(
     private readonly predictionStorage: PredictionStorage,
@@ -28,26 +31,38 @@ export class SavePrediction
     Guard.require(this.entryStorage, 'entryStorage');
   }
 
-  async execute(input: SavePredictionCommandInput): Promise<Prediction> {
+  async execute(input: SavePredictionInput): Promise<Prediction> {
     Guard.require(input, 'input');
+    const { userId, matchId, score } = input;
 
-    const match = await this.matchStorage.find(input.matchId);
+    const match = await this.matchStorage.find(matchId);
     if (!match) {
-      throw new MatchNotFound(input.matchId);
+      throw new MatchNotFound(matchId);
     }
     if (!match.isOpenForPredictions) {
-      throw new MatchIsClosedForPredictions(input.matchId);
+      throw new MatchIsClosedForPredictions(matchId);
     }
 
-    const entryInput = {
-      userId: input.userId,
-      tournamentId: match.tournamentId,
-    };
-    const entry = await this.entryStorage.find(entryInput);
+    // Make sure tournament entry exists
+    const entry = await this.entryStorage.findByUserAndTournament(
+      userId,
+      match.tournamentId,
+    );
     if (!entry) {
-      await this.entryStorage.create(entryInput);
+      await this.entryStorage.save(
+        new TournamentEntry(Id.generate(), userId, match.tournamentId, 0),
+      );
     }
 
-    return await this.predictionStorage.save(input);
+    const existingPrediction = await this.predictionStorage.findByUserAndMatch(
+      userId,
+      matchId,
+    );
+    const prediction =
+      existingPrediction?.withScore(score) ??
+      Prediction.create(userId, matchId, score);
+
+    await this.predictionStorage.save(prediction);
+    return prediction;
   }
 }

@@ -1,6 +1,7 @@
 import { Guard, Maybe } from '@predictor/core';
-import { Id, Mapper } from '@predictor/domain';
+import { Id, Mapper, PageOptions } from '@predictor/domain';
 import {
+  ListByMatchOptions,
   Prediction,
   PredictionOutcome,
   PredictionStorage,
@@ -91,8 +92,17 @@ export class PredictionMongooseStorage
     super(db, createPredictionMapper(db));
   }
 
-  async listByMatch(matchId: Id): Promise<Prediction[]> {
-    const records = await this.db.find({ matchId: Id.encode(matchId) }).exec();
+  async listByMatch({
+    matchId,
+    pageNumber,
+    pageSize,
+  }: ListByMatchOptions): Promise<Prediction[]> {
+    const records = await this.db
+      .find({ matchId: Id.encode(matchId) })
+      .sort('_id')
+      .limit(pageSize)
+      .skip(pageNumber)
+      .exec();
     return records.map(record => {
       this.loader.prime(Id.encode(record.id), record);
       return this.mapper.from(record);

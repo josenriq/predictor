@@ -1,4 +1,4 @@
-import { Id, Entity, Storage } from '@predictor/domain';
+import { Id, Entity, Storage, PageOptions } from '@predictor/domain';
 import { Guard, Maybe } from '@predictor/core';
 import { Score } from '@predictor/domain/score';
 import { MatchLevel } from '../match';
@@ -70,17 +70,10 @@ export class Prediction extends Entity<Prediction> {
   }
 }
 
-export type FindPredictionInput = {
+export type ListByMatchOptions = PageOptions & {
   matchId: Id;
-  userId: Id;
-};
-
-export type SavePredictionInput = {
-  matchId: Id;
-  userId: Id;
-  score: Score;
 };
 
 export type PredictionStorage = Storage<Prediction> & {
-  listByMatch(matchId: Id): Promise<Prediction[]>;
+  listByMatch(options: ListByMatchOptions): Promise<Prediction[]>;
 };

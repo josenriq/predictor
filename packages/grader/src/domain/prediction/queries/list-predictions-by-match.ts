@@ -1,20 +1,20 @@
-import { Guard, Maybe } from '@predictor/core';
-import { Id, Query } from '@predictor/domain';
+import { Guard } from '@predictor/core';
+import { Id, PageOptions, Query } from '@predictor/domain';
 import { Prediction, PredictionStorage } from '../prediction';
 
-export type ListPredictionsByMatchQueryInput = {
+export type ListPredictionsByMatchInput = PageOptions & {
   matchId: Id;
 };
 
 export class ListPredictionsByMatch
-  implements Query<ListPredictionsByMatchQueryInput, Prediction[]>
+  implements Query<ListPredictionsByMatchInput, Prediction[]>
 {
   constructor(private readonly storage: PredictionStorage) {
     Guard.require(this.storage, 'storage');
   }
 
-  execute(input: ListPredictionsByMatchQueryInput): Promise<Prediction[]> {
+  execute(input: ListPredictionsByMatchInput): Promise<Prediction[]> {
     Guard.require(input, 'input');
-    return this.storage.listByMatch(input.matchId);
+    return this.storage.listByMatch(input);
   }
 }

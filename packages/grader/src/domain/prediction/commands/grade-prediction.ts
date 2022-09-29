@@ -8,7 +8,6 @@ import {
 } from '@predictor/domain/match';
 import {
   TournamentEntry,
-  TournamentEntryNotFound,
   TournamentEntryStorage,
 } from '@predictor/domain/tournament-entry';
 import { PredictionNotFound } from '../errors';

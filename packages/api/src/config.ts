@@ -31,6 +31,6 @@ const config = convict<ApiConfiguration>({
 });
 
 config.validate({ allowed: 'strict' });
-export function read(): ApiConfiguration {
+export function readConfig(): ApiConfiguration {
   return config.get();
 }

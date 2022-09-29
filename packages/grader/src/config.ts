@@ -30,6 +30,6 @@ const config = convict<AppConfiguration>({
 });
 
 config.validate({ allowed: 'strict' });
-export function read(): AppConfiguration {
+export function readConfig(): AppConfiguration {
   return config.get();
 }

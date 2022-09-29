@@ -90,9 +90,9 @@ export class TournamentEntryMongooseStorage
     });
   }
 
-  async findByTournamentAndUser(
-    tournamentId: Id,
+  async findByUserAndTournament(
     userId: Id,
+    tournamentId: Id,
   ): Promise<Maybe<TournamentEntry>> {
     const record = await this.findByUserAndTournamentLoader.load(
       [Id.encode(userId), Id.encode(tournamentId)].join(','),

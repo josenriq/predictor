@@ -15,7 +15,7 @@ export class TournamentEntry extends Entity<TournamentEntry> {
   }
 
   addPoints(points: number): TournamentEntry {
-    Guard.greaterThan(0, points, 'points');
+    Guard.integer(points, 'points');
 
     return new TournamentEntry(
       this.id,
@@ -27,8 +27,8 @@ export class TournamentEntry extends Entity<TournamentEntry> {
 }
 
 export type TournamentEntryStorage = Storage<TournamentEntry> & {
-  findByTournamentAndUser(
-    tournamentId: Id,
+  findByUserAndTournament(
     userId: Id,
+    tournamentId: Id,
   ): Promise<Maybe<TournamentEntry>>;
 };

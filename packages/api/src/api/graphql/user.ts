@@ -7,6 +7,7 @@ export const UserTypeDef = gql`
   type User {
     id: ID!
     name: String!
+    picture: Url
   }
 
   type Query {

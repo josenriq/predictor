@@ -9,12 +9,13 @@ import { Request, Response, NextFunction, json } from 'express';
 import { formatError, resolvers, typeDefs } from './graphql';
 import { createContext } from './context';
 import { secure } from './security';
-// import cookieParser from 'cookie-parser';
 import { DatabaseConfig, createDatabase } from '@predictor/infra/database';
 import { connectToDatabase } from '@predictor/infra/mongo';
+import * as Auth from './auth';
 
 export interface ApiConfiguration {
   port: number;
+  auth: Auth.AuthConfiguration;
   storage: {
     mongoUri: string;
   };
@@ -42,12 +43,7 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
   app.use(json());
   app.use(useDatabase({ connection: dbConnection }));
 
-  // .use(cookieParser(config.auth.cookie.secret))
-  // .use(useRefreshTokens(authTokenRedis));
-
-  // registerAuth(app, {
-  //   ...config.auth,
-  // });
+  Auth.register(app, config.auth);
 
   const server = new ApolloServer({
     typeDefs,

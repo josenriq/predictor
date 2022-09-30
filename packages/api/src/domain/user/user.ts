@@ -1,8 +1,12 @@
-import { Id, Entity, Storage } from '@predictor/domain';
-import { Guard } from '@predictor/core';
+import { Id, Entity, Url, Storage } from '@predictor/domain';
+import { Guard, Maybe } from '@predictor/core';
 
 export class User extends Entity<User> {
-  constructor(public readonly id: Id, public readonly name: string) {
+  constructor(
+    public readonly id: Id,
+    public readonly name: string,
+    public readonly picture: Maybe<Url>,
+  ) {
     super(id);
     Guard.nonempty(this.name, 'name');
   }

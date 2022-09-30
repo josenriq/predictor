@@ -6,7 +6,7 @@ import {
   PredictionOutcome,
   SavePrediction,
 } from '@predictor/domain/prediction';
-import { Id } from '@predictor/domain';
+import { AuthenticationRequired, Id } from '@predictor/domain';
 import { Score } from '@predictor/domain/score';
 
 export const PredictionTypeDef = gql`
@@ -49,7 +49,10 @@ export const PredictionResolver = {
       ctx: Context,
     ): Promise<{ prediction: Prediction }> {
       Guard.require(input, 'input');
-      Guard.require(ctx.viewer, 'viewer');
+
+      if (!ctx.viewer) {
+        throw new AuthenticationRequired();
+      }
 
       const command = new SavePrediction(
         ctx.predictionStorage,

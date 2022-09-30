@@ -19,6 +19,34 @@ const config = convict<ApiConfiguration>({
     default: 4000,
     env: 'PORT',
   },
+  auth: {
+    baseURL: {
+      doc: 'The application root url, e.g. http://localhost:4000',
+      format: 'url',
+      env: 'AUTH_BASE_URL',
+      default: null,
+    },
+    clientID: {
+      doc: 'Auth0 client ID',
+      format: 'secret',
+      env: 'AUTH_CLIENT_ID',
+      default: null,
+      sensitive: true,
+    },
+    issuerBaseURL: {
+      doc: 'Auth0 issuer base url',
+      format: 'url',
+      env: 'AUTH_ISSUER_BASE_URL',
+      default: null,
+    },
+    secret: {
+      doc: 'Auth0 token secret',
+      format: 'secret',
+      env: 'AUTH_SECRET',
+      default: null,
+      sensitive: true,
+    },
+  },
   storage: {
     mongoUri: {
       doc: 'Connection string (uri) for the mongo database',

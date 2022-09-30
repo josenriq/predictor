@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Id } from '@predictor/domain';
+import { Id, Url } from '@predictor/domain';
 import { User } from '@predictor/domain/user';
 import { TeamStorage } from '@predictor/domain/team';
 import { MatchStorage } from '@predictor/domain/match';
@@ -23,10 +23,22 @@ export async function createContext({
   req,
 }: ContextParameters): Promise<Context> {
   const db = (req as any)['db'] as Database;
+
+  let viewer: User | undefined;
+  if (req.oidc.isAuthenticated() && !!req.oidc.user) {
+    const user = req.oidc.user;
+
+    // console.log('User data', user);
+
+    viewer = new User(
+      Id.decode(user['sid'] ?? user['id']),
+      user['given_name'] ?? user['name'] ?? user['email'],
+      user['picture'] ? Url.decode(user['picture']) : void 0,
+    );
+  }
+
   return {
-    // TODO: hard coding a user :)
-    // viewer: (req as any)['user'],
-    viewer: new User(Id.decode('123'), 'Jose Enrique'),
+    viewer,
     teamStorage: db.team,
     matchStorage: db.match,
     predictionStorage: db.prediction,

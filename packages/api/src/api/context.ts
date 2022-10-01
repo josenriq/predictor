@@ -6,6 +6,7 @@ import { MatchStorage } from '@predictor/domain/match';
 import { PredictionStorage } from '@predictor/domain/prediction';
 import { Database } from '@predictor/infra/database';
 import { TournamentEntryStorage } from '@predictor/domain/tournament-entry';
+import { deserializeUser } from './auth';
 
 export interface Context {
   viewer?: User;
@@ -26,15 +27,7 @@ export async function createContext({
 
   let viewer: User | undefined;
   if (req.oidc.isAuthenticated() && !!req.oidc.user) {
-    const user = req.oidc.user;
-
-    // console.log('User data', user);
-
-    viewer = new User(
-      Id.decode(user['sid'] ?? user['id']),
-      user['given_name'] ?? user['name'] ?? user['email'],
-      user['picture'] ? Url.decode(user['picture']) : void 0,
-    );
+    viewer = deserializeUser(req.oidc.user) ?? void 0;
   }
 
   return {

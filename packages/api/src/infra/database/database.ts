@@ -12,9 +12,13 @@ import {
   getPredictionDb,
   getTournamentEntryDb,
   TournamentEntryMongooseStorage,
+  UserMongooseStorage,
+  getUserDb,
 } from './models';
+import { UserStorage } from '@predictor/domain/user';
 
 export type Database = {
+  user: UserStorage;
   team: TeamStorage;
   match: MatchStorage;
   prediction: PredictionStorage;
@@ -23,6 +27,7 @@ export type Database = {
 
 export function createDatabase(config: DatabaseConfig): Database {
   return {
+    user: new UserMongooseStorage(getUserDb(config)),
     team: new TeamMongooseStorage(getTeamDb(config)),
     match: new MatchMongooseStorage(getMatchDb(config)),
     tournamentEntry: new TournamentEntryMongooseStorage(

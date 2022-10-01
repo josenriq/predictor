@@ -24,6 +24,12 @@ const config = convict<ApiConfiguration>({
       doc: 'The application root url, e.g. http://localhost:4000',
       format: 'url',
       env: 'AUTH_BASE_URL',
+      default: 'http://localhost:4000',
+    },
+    issuerBaseURL: {
+      doc: 'Auth0 issuer base url',
+      format: 'url',
+      env: 'AUTH_ISSUER_BASE_URL',
       default: null,
     },
     clientID: {
@@ -33,16 +39,17 @@ const config = convict<ApiConfiguration>({
       default: null,
       sensitive: true,
     },
-    issuerBaseURL: {
-      doc: 'Auth0 issuer base url',
-      format: 'url',
-      env: 'AUTH_ISSUER_BASE_URL',
-      default: null,
-    },
-    secret: {
-      doc: 'Auth0 token secret',
+    clientSecret: {
+      doc: 'Auth0 client secret',
       format: 'secret',
-      env: 'AUTH_SECRET',
+      env: 'AUTH_CLIENT_SECRET',
+      default: null,
+      sensitive: true,
+    },
+    cookieSecret: {
+      doc: 'Secret to use with cookies',
+      format: 'secret',
+      env: 'AUTH_COOKIE_SECRET',
       default: null,
       sensitive: true,
     },

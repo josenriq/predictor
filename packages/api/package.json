@@ -19,6 +19,7 @@
     "graphql-tag": "^2.12.6",
     "helmet": "^6.0.0",
     "hpp": "^0.2.3",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.9.1",
     "mongoose": "^6.6.1",
     "uid": "^2.0.0"

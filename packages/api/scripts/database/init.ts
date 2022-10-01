@@ -34,6 +34,11 @@ client.connect(async err => {
   }
   await match.insertMany(matches);
 
+  console.log('Clearing users');
+  if (collectionExists('User')) {
+    await db.collection('User').drop();
+  }
+
   console.log('Clearing predictions');
   if (collectionExists('TournamentEntry')) {
     await db.collection('TournamentEntry').drop();

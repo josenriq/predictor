@@ -8,17 +8,11 @@ import {
 
 @Component({
   selector: 'app-team-banner',
-  template: `<img src="/assets/teams/{{ teamId }}.svg" />`,
-  styles: [
-    `
-      img {
-        width: 3rem;
-        height: 3rem * 3 / 4;
-        border-radius: 4px;
-        box-shadow: rgb(99 99 99 / 20%) 0px 2px 8px 0px;
-      }
-    `,
-  ],
+  template: `<img
+    class="tw-w-12 tw-h-9 tw-rounded tw-shadow"
+    src="/assets/teams/{{ teamId }}.svg"
+  />`,
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamBannerComponent {

@@ -18,28 +18,23 @@ import { UIModule } from 'app/ui';
     <p *ngIf="isLoading$ | async">Loading...</p>
 
     <ng-container *ngIf="!(isLoading$ | async)">
-      <div
-        *ngFor="let match of matches$ | async"
-        style="padding-bottom: 20px; width: 500px; max-width: 90vw"
-      >
-        <p style="text-align: center">{{ match.startsAt | date: 'medium' }}</p>
-        <div style="display: flex; flex-flow: row nowrap; align-items: center">
-          <div style="flex: 1 1 0; text-align: right"
-            ><b>{{ match.homeTeam.name }}</b></div
-          >
-          <div style="width: 1rem"></div>
+      <div *ngFor="let match of matches$ | async" class="tw-pb-12">
+        <div class="tw-text-center tw-text-sm tw-text-gray-600">{{
+          match.startsAt | date: 'medium'
+        }}</div>
+        <div class="tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-py-3">
+          <div class="tw-flex-1 tw-font-bold tw-text-right tw-pr-3">{{
+            match.homeTeam.name
+          }}</div>
           <app-team-banner [teamId]="match.homeTeam.id"></app-team-banner>
-          <div style="width: 1rem"></div>
-          <div>vs</div>
-          <div style="width: 1rem"></div>
+          <div class="tw-px-3">vs</div>
           <app-team-banner [teamId]="match.awayTeam.id"></app-team-banner>
-          <div style="width: 1rem"></div>
-          <div style="flex: 1 1 0"
-            ><b>{{ match.awayTeam.name }}</b></div
-          >
+          <div class="tw-flex-1 tw-font-bold tw-pl-3">{{
+            match.awayTeam.name
+          }}</div>
         </div>
-        <p style="text-align: center"
-          ><small>Group {{ match.group }}<br />{{ match.stadium }}</small></p
+        <p class="tw-text-center tw-text-xs tw-text-gray-600"
+          >Group {{ match.group }}<br />{{ match.stadium }}</p
         >
       </div>
     </ng-container>

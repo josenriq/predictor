@@ -1,0 +1,21 @@
+.btn {
+  @apply tw-font-semibold tw-py-2 tw-px-4 tw-border tw-border-gray-400 tw-rounded tw-shadow;
+  transition: transform 0.15s;
+}
+.btn:active {
+  transform: scale(0.75);
+}
+
+.btn-secondary {
+  @apply tw-bg-white tw-text-gray-800;
+}
+.btn-secondary:hover {
+  @apply tw-bg-gray-100;
+}
+
+.btn-primary {
+  @apply tw-bg-blue-500 tw-text-white;
+}
+.btn-primary:hover {
+  @apply tw-bg-blue-700;
+}

@@ -3,8 +3,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   template: `
-    <h1>GoalCasters</h1>
-    <router-outlet></router-outlet>
+    <div class="tw-container tw-mx-auto tw-py-20">
+      <router-outlet></router-outlet>
+    </div>
   `,
   styles: [],
 })

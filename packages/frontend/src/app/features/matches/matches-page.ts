@@ -6,9 +6,8 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Apollo } from 'apollo-angular';
-import { MatchesQuery, watchMatchesQuery } from './matches.query';
-import { Match, WatchQuery } from 'app/graphql';
+import { MatchesQuery } from './matches.query';
+import { Match } from 'app/graphql';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
 import { PageLayoutModule } from 'app/page-layout';
@@ -51,16 +50,15 @@ import { PageLayoutModule } from 'app/page-layout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatchesPageComponent implements OnInit {
-  matchesQuery!: WatchQuery<MatchesQuery>;
   matches$!: Observable<Match[]>;
   isLoading$!: Observable<boolean>;
 
-  constructor(private readonly apollo: Apollo) {}
+  constructor(private readonly matchesQuery: MatchesQuery) {}
 
   ngOnInit(): void {
-    this.matchesQuery = watchMatchesQuery(this.apollo);
-    this.matches$ = this.matchesQuery.data$.pipe(map(data => data.matches));
-    this.isLoading$ = this.matchesQuery.isLoading$;
+    const { data$, isLoading$ } = this.matchesQuery.watch();
+    this.matches$ = data$.pipe(map(data => data.matches));
+    this.isLoading$ = isLoading$;
   }
 }
 

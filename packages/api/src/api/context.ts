@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { Id, Url } from '@predictor/domain';
 import { User } from '@predictor/domain/user';
 import { TeamStorage } from '@predictor/domain/team';
 import { MatchStorage } from '@predictor/domain/match';

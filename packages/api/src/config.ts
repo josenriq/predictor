@@ -19,14 +19,20 @@ const config = convict<ApiConfiguration>({
     default: 4000,
     env: 'PORT',
   },
+  frontendUrl: {
+    doc: 'The frontend app url',
+    format: 'url',
+    default: 'http://localhost:4200',
+    env: 'FRONTEND_URL',
+  },
   auth: {
-    baseURL: {
+    baseUrl: {
       doc: 'The application root url, e.g. http://localhost:4000',
       format: 'url',
       env: 'AUTH_BASE_URL',
       default: 'http://localhost:4000',
     },
-    issuerBaseURL: {
+    issuerBaseUrl: {
       doc: 'Auth0 issuer base url',
       format: 'url',
       env: 'AUTH_ISSUER_BASE_URL',

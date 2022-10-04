@@ -7,8 +7,9 @@ import { auth } from 'express-openid-connect';
 import { verify } from 'jsonwebtoken';
 
 export type AuthConfiguration = {
-  baseURL: string;
-  issuerBaseURL: string;
+  baseUrl: string;
+  issuerBaseUrl: string;
+  redirectionUrl: string;
   clientID: string;
   clientSecret: string;
   cookieSecret: string;
@@ -26,14 +27,18 @@ export function register(
   // Attach /login, /logout, and /callback routes to the baseURL
   authRoute.use(
     auth({
-      baseURL: config.baseURL,
-      issuerBaseURL: config.issuerBaseURL,
+      baseURL: config.baseUrl,
+      issuerBaseURL: config.issuerBaseUrl,
       clientID: config.clientID,
       clientSecret: config.clientSecret,
       secret: config.cookieSecret,
       authRequired: false,
       auth0Logout: true,
       idTokenSigningAlg: 'HS256',
+      routes: {
+        login: false,
+        postLogoutRedirect: config.redirectionUrl,
+      },
       afterCallback: async (req, res, session) => {
         const db = (req as any)['db'] as Database;
 
@@ -52,6 +57,10 @@ export function register(
         return session;
       },
     }),
+  );
+
+  authRoute.get('/login', (req, res) =>
+    res.oidc.login({ returnTo: config.redirectionUrl }),
   );
 
   return app.use('/', authRoute);

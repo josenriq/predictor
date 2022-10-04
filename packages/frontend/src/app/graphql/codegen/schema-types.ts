@@ -18,6 +18,7 @@ export type Scalars = {
   Float: number;
   DateTime: Date;
   Score: any;
+  Url: string;
 };
 
 export type Match = {
@@ -96,4 +97,5 @@ export type Team = {
 export type User = {
   id: Scalars['ID'];
   name: Scalars['String'];
+  picture?: Maybe<Scalars['Url']>;
 };

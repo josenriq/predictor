@@ -15,7 +15,8 @@ import * as Auth from './auth';
 
 export interface ApiConfiguration {
   port: number;
-  auth: Auth.AuthConfiguration;
+  frontendUrl: string;
+  auth: Omit<Auth.AuthConfiguration, 'redirectionUrl'>;
   storage: {
     mongoUri: string;
   };
@@ -35,15 +36,15 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
   const dbConnection = await connectToDatabase(config.storage.mongoUri);
 
   const cors = {
-    // credentials: true,
-    // origin: config.corsOrigin,
+    credentials: true,
+    origin: [config.frontendUrl],
   };
-  // secure(app, { cors })
+  secure(app, { cors });
 
   app.use(json());
   app.use(useDatabase({ connection: dbConnection }));
 
-  Auth.register(app, config.auth);
+  Auth.register(app, { ...config.auth, redirectionUrl: config.frontendUrl });
 
   const server = new ApolloServer({
     typeDefs,
@@ -61,6 +62,7 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
   });
   await server.start();
 
+  server.applyMiddleware({ app, cors });
   server.applyMiddleware({ app, path: '/graphql' });
 
   // app.use(errorHandler);

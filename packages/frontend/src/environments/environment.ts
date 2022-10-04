@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  GRAPHQL_URI: '',
+  API_BASE_URI: '',
 };
 
 /*

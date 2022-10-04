@@ -5,6 +5,8 @@ import {
   Component,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { Session } from 'app/session';
+import { UIModule } from 'app/ui';
 
 @Directive({ selector: '[app-top-bar-slot]' })
 export class TopBarSlot {}
@@ -60,7 +62,20 @@ export class TopBarComponent {}
       <div
         class="tw-grid tw-grid-cols-1 md:tw-grid-cols-4 tw-gap-4 tw-items-start"
       >
-        <aside class="md:tw-sticky md:tw-top-20 tw-p-4">Sidebar</aside>
+        <aside class="md:tw-sticky md:tw-top-20 tw-p-4">
+          {{ session.isLoading$ | async | json }}
+
+          <ng-container *ngIf="!(session.user$ | async)">
+            <a [href]="session.loginUrl" app-button variant="primary"
+              >Sign in!</a
+            >
+          </ng-container>
+
+          <ng-container *ngIf="!!(session.user$ | async)">
+            <p>Welcome {{ session.user$ | async | json }}</p>
+            <a [href]="session.logoutUrl" app-button>Sign out!</a>
+          </ng-container>
+        </aside>
         <section class="md:tw-col-span-2 tw-p-4">
           <ng-content></ng-content>
         </section>
@@ -69,12 +84,14 @@ export class TopBarComponent {}
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainLayoutComponent {}
+export class MainLayoutComponent {
+  constructor(public readonly session: Session) {}
+}
 
 const DIRECTIVES = [SideBarSlot, TopBarSlot, MainLayoutComponent];
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, UIModule],
   declarations: [...DIRECTIVES, BrandComponent, TopBarComponent],
   exports: DIRECTIVES,
 })

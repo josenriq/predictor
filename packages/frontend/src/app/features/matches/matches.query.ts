@@ -1,34 +1,33 @@
+import { Injectable } from '@angular/core';
 import { gql } from '@apollo/client/core';
-import { Apollo } from 'apollo-angular';
-import { watchQuery, WatchQuery, Match } from 'app/graphql';
+import { Match, QueryOperation } from 'app/graphql';
 
-export const MatchesQuery = gql`
-  query matches {
-    matches {
-      id
-      homeTeam {
-        id
-        name
-      }
-      awayTeam {
-        id
-        name
-      }
-      stadium
-      startsAt
-      level
-      group
-      status
-      time
-      score
-    }
-  }
-`;
-
-export interface MatchesQuery {
+export type MatchesQueryResult = {
   matches: Match[];
-}
-
-export const watchMatchesQuery = (apollo: Apollo): WatchQuery<MatchesQuery> => {
-  return watchQuery<MatchesQuery>(MatchesQuery)(apollo);
 };
+
+@Injectable({ providedIn: 'root' })
+export class MatchesQuery extends QueryOperation<MatchesQueryResult> {
+  override query = gql`
+    query matches {
+      matches {
+        id
+        homeTeam {
+          id
+          name
+        }
+        awayTeam {
+          id
+          name
+        }
+        stadium
+        startsAt
+        level
+        group
+        status
+        time
+        score
+      }
+    }
+  `;
+}

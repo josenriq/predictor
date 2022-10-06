@@ -7,13 +7,15 @@ import {
   OnChanges,
 } from '@angular/core';
 
+export type ButtonVariant = 'primary' | 'secondary';
+
 @Directive({
   selector: 'button[app-button], a[app-button]',
 })
 export class ButtonDirective implements OnChanges {
   @HostBinding('class') class = 'btn btn-secondary';
 
-  @Input() variant: 'primary' | 'secondary' = 'secondary';
+  @Input() variant: ButtonVariant = 'secondary';
 
   ngOnChanges(): void {
     if (this.variant === 'primary') {

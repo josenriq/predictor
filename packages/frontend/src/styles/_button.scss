@@ -1,5 +1,6 @@
 .btn {
-  @apply tw-font-semibold tw-py-2 tw-px-4 tw-border tw-border-gray-400 tw-rounded tw-shadow;
+  display: block;
+  @apply tw-font-semibold tw-text-center tw-py-2 tw-px-4 tw-border tw-border-gray-400 tw-rounded tw-shadow;
   transition: transform 0.15s;
 }
 .btn:active {
@@ -7,15 +8,16 @@
 }
 
 .btn-secondary {
-  @apply tw-bg-white tw-text-gray-800;
+  // @apply tw-bg-white tw-text-gray-800;
+  @apply tw-bg-white tw-text-brand;
 }
 .btn-secondary:hover {
   @apply tw-bg-gray-100;
 }
 
 .btn-primary {
-  @apply tw-bg-blue-500 tw-text-white;
+  @apply tw-bg-brand tw-text-white;
 }
 .btn-primary:hover {
-  @apply tw-bg-blue-700;
+  @apply tw-bg-brand;
 }

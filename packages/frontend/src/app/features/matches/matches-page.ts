@@ -10,21 +10,19 @@ import { MatchesQuery } from './matches.query';
 import { Match } from 'app/graphql';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
-import { PageLayoutModule } from 'app/page-layout';
+import { LayoutModule } from 'app/layout';
 
 @Component({
   selector: 'app-matches-page',
   template: `
     <app-main-layout>
-      <div app-top-bar-slot class="tw-text-center">TOP BAR SLOT</div>
-
       <section>
         <p *ngIf="isLoading$ | async">Loading...</p>
 
         <ng-container *ngIf="!(isLoading$ | async)">
           <div *ngFor="let match of matches$ | async" class="tw-pb-12">
             <div class="tw-text-center tw-text-sm tw-text-gray-600">{{
-              match.startsAt | date: 'medium'
+              match.startsAt | date: 'MMM d, h:mm a'
             }}</div>
             <div
               class="tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-py-3"
@@ -65,7 +63,7 @@ export class MatchesPageComponent implements OnInit {
 const DIRECTIVES = [MatchesPageComponent];
 
 @NgModule({
-  imports: [CommonModule, UIModule, PageLayoutModule],
+  imports: [CommonModule, UIModule, LayoutModule],
   declarations: [...DIRECTIVES],
   exports: DIRECTIVES,
 })

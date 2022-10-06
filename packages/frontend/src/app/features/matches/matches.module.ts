@@ -5,7 +5,6 @@ import { MatchesPageModule, MatchesPageComponent } from './matches-page';
 const routes: Routes = [
   {
     path: '',
-    // canActivate: [SessionRouterGuardService],
     component: MatchesPageComponent,
     data: {
       title: 'Matches',

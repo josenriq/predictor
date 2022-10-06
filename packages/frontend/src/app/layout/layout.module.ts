@@ -4,4 +4,4 @@ import { MainLayoutModule } from './main-layout';
 @NgModule({
   exports: [MainLayoutModule],
 })
-export class PageLayoutModule {}
+export class LayoutModule {}

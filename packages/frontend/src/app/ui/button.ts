@@ -6,6 +6,7 @@ import {
   Input,
   OnChanges,
 } from '@angular/core';
+import { Size } from './size';
 
 export type ButtonVariant = 'primary' | 'secondary';
 
@@ -16,13 +17,14 @@ export class ButtonDirective implements OnChanges {
   @HostBinding('class') class = 'btn btn-secondary';
 
   @Input() variant: ButtonVariant = 'secondary';
+  @Input() size: Size = 'md';
 
   ngOnChanges(): void {
-    if (this.variant === 'primary') {
-      this.class = 'btn btn-primary';
-    } else {
-      this.class = 'btn btn-secondary';
+    const classes = ['btn', `btn-${this.variant}`];
+    if (this.size !== 'md') {
+      classes.push(`btn-${this.size}`);
     }
+    this.class = classes.join(' ');
   }
 }
 

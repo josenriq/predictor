@@ -4,7 +4,14 @@
   transition: transform 0.15s;
 }
 .btn:active {
-  transform: scale(0.75);
+  transform: scale(0.95);
+}
+
+.btn-sm {
+  @apply tw-py-1 tw-px-2 tw-text-sm;
+}
+.btn-lg {
+  @apply tw-py-3 tw-px-6 tw-text-lg tw-rounded-lg;
 }
 
 .btn-secondary {
@@ -16,7 +23,7 @@
 }
 
 .btn-primary {
-  @apply tw-bg-brand tw-text-white;
+  @apply tw-bg-brand tw-text-white tw-border-gray-100;
 }
 .btn-primary:hover {
   @apply tw-bg-brand;

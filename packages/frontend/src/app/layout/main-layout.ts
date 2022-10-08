@@ -52,8 +52,10 @@ export class TopBarComponent {}
   template: `
     <app-card>
       <app-card-section>
-        <div class="tw-text-center tw-text-xl tw-pb-2">Welcome 👋🏻</div>
-        <a [href]="loginUrl" app-button variant="primary">Sign in to play</a>
+        <div class="tw-text-center tw-text-xl tw-py-4">Hey there 👋🏻</div>
+        <a [href]="loginUrl" app-button variant="primary" size="lg"
+          >Sign in to play</a
+        >
       </app-card-section>
     </app-card>
   `,

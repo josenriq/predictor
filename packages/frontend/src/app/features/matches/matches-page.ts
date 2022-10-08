@@ -4,23 +4,28 @@ import {
   OnInit,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MatchesQuery } from './matches.query';
 import { Match } from 'app/graphql';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
 import { LayoutModule } from 'app/layout';
+import { TrackByIdModule } from 'ng-track-by';
 
 @Component({
   selector: 'app-matches-page',
   template: `
     <app-main-layout>
       <section>
-        <p *ngIf="isLoading$ | async">Loading...</p>
+        <!-- <p *ngIf="isLoading$ | async">Loading...</p> -->
 
         <ng-container *ngIf="!(isLoading$ | async)">
-          <div *ngFor="let match of matches$ | async" class="tw-pb-12">
+          <div
+            *ngFor="let match of matches$ | async"
+            trackById
+            class="tw-pb-12"
+          >
             <div class="tw-text-center tw-text-sm tw-text-gray-600">{{
               match.startsAt | date: 'MMM d, h:mm a'
             }}</div>
@@ -41,6 +46,15 @@ import { LayoutModule } from 'app/layout';
               >Group {{ match.group }} • {{ match.stadium }}</p
             >
           </div>
+
+          <div
+            *ngIf="hasMore$ | async"
+            class="tw-p-4 tw-flex tw-items-center tw-justify-center"
+          >
+            <button type="button" app-button (click)="loadMore()"
+              >Load More</button
+            >
+          </div>
         </ng-container>
       </section>
     </app-main-layout>
@@ -49,21 +63,40 @@ import { LayoutModule } from 'app/layout';
 })
 export class MatchesPageComponent implements OnInit {
   matches$!: Observable<Match[]>;
+  hasMore$!: Observable<boolean>;
   isLoading$!: Observable<boolean>;
+
+  private readonly PAGE_SIZE = 8;
+  private readonly limit$ = new BehaviorSubject(this.PAGE_SIZE);
 
   constructor(private readonly matchesQuery: MatchesQuery) {}
 
   ngOnInit(): void {
     const { data$, isLoading$ } = this.matchesQuery.watch();
-    this.matches$ = data$.pipe(map(data => data.matches));
+
+    this.matches$ = combineLatest([
+      this.limit$,
+      data$.pipe(map(data => data.matches)),
+    ]).pipe(map(([limit, matches]) => matches.slice(0, limit)));
+
+    this.hasMore$ = combineLatest([
+      this.limit$,
+      data$.pipe(map(data => data.matches)),
+    ]).pipe(map(([limit, matches]) => limit < matches.length));
+
     this.isLoading$ = isLoading$;
+  }
+
+  loadMore(): void {
+    const limit = this.limit$.getValue();
+    this.limit$.next(limit + this.PAGE_SIZE);
   }
 }
 
 const DIRECTIVES = [MatchesPageComponent];
 
 @NgModule({
-  imports: [CommonModule, UIModule, LayoutModule],
+  imports: [CommonModule, UIModule, LayoutModule, TrackByIdModule],
   declarations: [...DIRECTIVES],
   exports: DIRECTIVES,
 })

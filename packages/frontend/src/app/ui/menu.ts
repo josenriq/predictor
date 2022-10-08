@@ -16,7 +16,7 @@ import {
 })
 export class MenuItemComponent {
   @HostBinding('class') class =
-    'tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-px-4 tw-py-2 tw-bg-gray-50 hover:tw-bg-gray-100 tw-border-t first:tw-border-t-0';
+    'tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-px-4 tw-py-3 tw-bg-gray-50 hover:tw-bg-gray-100 tw-border-t first:tw-border-t-0';
 }
 
 @Component({

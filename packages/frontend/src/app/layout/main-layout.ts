@@ -65,8 +65,19 @@ export class LoginCardComponent {
 
 @Component({
   selector: 'app-user-card',
+  styles: [
+    `
+      .menu-open {
+        transform: translateY(0) !important;
+      }
+    `,
+  ],
   template: `
-    <app-card class="tw-mt-12">
+    <app-card
+      class="tw-mt-12 tw-translate-y-[195px] tw-transition-transform tw-duration-500 sm:tw-translate-y-0"
+      [class.menu-open]="isMenuOpen"
+      (click)="toggleMenu()"
+    >
       <app-avatar
         size="lg"
         [name]="user?.name"
@@ -88,7 +99,7 @@ export class LoginCardComponent {
       </app-card-section>
 
       <!-- Menu -->
-      <div class="tw-rounded-b-xl tw-overflow-hidden">
+      <div class="sm:tw-rounded-b-xl sm:tw-overflow-hidden">
         <app-menu>
           <a href="/" app-menu-item>Matches</a>
           <a href="/activity" app-menu-item>
@@ -108,6 +119,12 @@ export class LoginCardComponent {
 export class UserCardComponent {
   @Input() user!: Maybe<User>;
   @Input() logoutUrl!: string;
+
+  isMenuOpen = false;
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 }
 
 @Component({
@@ -122,15 +139,17 @@ export class UserCardComponent {
           <app-login-card
             *ngIf="!(session.user$ | async)"
             [loginUrl]="session.loginUrl"
+            class="tw-fixed tw-left-0 tw-right-0 tw-bottom-0 sm:tw-static"
           ></app-login-card>
           <app-user-card
             *ngIf="!!(session.user$ | async)"
             [user]="session.user$ | async"
             [logoutUrl]="session.logoutUrl"
+            class="tw-fixed tw-left-0 tw-right-0 tw-bottom-0 sm:tw-static"
           ></app-user-card>
         </aside>
 
-        <section class="sm:tw-col-span-2">
+        <section class="sm:tw-col-span-2 tw-pb-[50vh]">
           <ng-content></ng-content>
         </section>
       </div>

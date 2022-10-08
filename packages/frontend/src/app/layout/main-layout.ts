@@ -26,7 +26,7 @@ export class BrandComponent {}
   template: `
     <nav class="tw-fixed tw-top-0 tw-left-0 tw-right-0 tw-z-10">
       <div
-        class="tw-absolute tw-inset-0 tw-bg-white tw-bg-opacity-70 fader"
+        class="tw-absolute tw-inset-0 tw-bg-white tw-bg-opacity-80 blurred"
       ></div>
       <div class="tw-relative tw-container tw-mx-auto">
         <div class="tw-p-4">
@@ -37,7 +37,7 @@ export class BrandComponent {}
   `,
   styles: [
     `
-      .fader {
+      .blurred {
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(5px);
       }

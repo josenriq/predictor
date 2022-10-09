@@ -5,16 +5,16 @@ import {
   ListMatches,
   Match,
   MatchStatus,
-  MatchLevel,
+  MatchStage,
 } from '@predictor/domain/match';
 import { GetTeam, Team } from '@predictor/domain/team';
 import { Id } from '@predictor/domain';
 import { FindPrediction, Prediction } from '@predictor/domain/prediction';
 
 export const MatchTypeDef = gql`
-  enum MatchLevel {
+  enum MatchStage {
     Regular
-    GroupStage
+    Group
     RoundOf16
     QuaterFinal
     SemiFinal
@@ -36,7 +36,7 @@ export const MatchTypeDef = gql`
     awayTeam: Team!
     stadium: String
     startsAt: DateTime!
-    level: MatchLevel!
+    stage: MatchStage!
     group: String
     status: MatchStatus!
     score: Score
@@ -51,7 +51,7 @@ export const MatchTypeDef = gql`
 `;
 
 export const MatchResolver = {
-  MatchLevel,
+  MatchStage,
   MatchStatus,
 
   Match: {

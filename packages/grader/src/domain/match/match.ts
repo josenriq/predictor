@@ -2,9 +2,9 @@ import { Id, Entity, Storage } from '@predictor/domain';
 import { Guard, Maybe } from '@predictor/core';
 import { Score } from '@predictor/domain/score';
 
-export enum MatchLevel {
+export enum MatchStage {
   Regular = 'Regular',
-  GroupStage = 'GroupStage',
+  Group = 'Group',
   RoundOf16 = 'RoundOf16',
   QuaterFinal = 'QuaterFinal',
   SemiFinal = 'SemiFinal',
@@ -27,7 +27,7 @@ export class Match extends Entity<Match> {
     public readonly homeTeamId: Id,
     public readonly awayTeamId: Id,
     public readonly startsAt: Date,
-    public readonly level: MatchLevel,
+    public readonly stage: MatchStage,
     public readonly status: MatchStatus,
     public readonly score: Maybe<Score>,
     public readonly time: Maybe<string>,
@@ -50,7 +50,7 @@ export class Match extends Entity<Match> {
       this.homeTeamId,
       this.awayTeamId,
       this.startsAt,
-      this.level,
+      this.stage,
       status,
       score,
       time,

@@ -42,7 +42,7 @@ function createTeamMapper(db: TeamDb): Mapper<Team, DocumentType<TeamDbModel>> {
       Guard.require(match, 'match');
       return new db({
         id: Id.encode(match.id),
-        level: match.name,
+        name: match.name,
       });
     },
   };

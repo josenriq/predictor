@@ -1,10 +1,9 @@
 import { Id } from '@predictor/domain';
 import {
-  MatchLevel,
+  MatchStage,
   MatchStatus,
   TournamentGroup,
 } from '@predictor/domain/match';
-import { uid } from 'uid';
 
 export type Team = {
   _id: string;
@@ -17,7 +16,7 @@ export type Match = {
   homeTeamId: string;
   awayTeamId: string;
   startsAt: Date;
-  level: MatchLevel;
+  stage: MatchStage;
   group?: TournamentGroup;
   stadium?: string;
   status: MatchStatus;
@@ -500,7 +499,7 @@ export const matches: Match[] = [
       ...record,
       _id: Id.encode(Id.generate()),
       tournamentId: QATAR_2022,
-      level: MatchLevel.GroupStage,
+      stage: MatchStage.Group,
       status: MatchStatus.Unstarted,
     } as Match),
 );

@@ -54,7 +54,7 @@ export class GradePrediction implements Command<GradePredictionCommandInput> {
         match.tournamentId,
       )) ?? new TournamentEntry(Id.generate(), userId, match.tournamentId, 0);
 
-    const gradedPrediction = originalPrediction.grade(match.score, match.level);
+    const gradedPrediction = originalPrediction.grade(match.score, match.stage);
     await this.predictionStorage.save(gradedPrediction);
 
     const newPoints =

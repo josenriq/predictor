@@ -1,7 +1,7 @@
 import { Id, Entity, Storage, PageOptions } from '@predictor/domain';
 import { Guard, Maybe } from '@predictor/core';
 import { Score } from '@predictor/domain/score';
-import { MatchLevel } from '../match';
+import { MatchStage } from '../match';
 
 export enum PredictionOutcome {
   Exact = 'Exact',
@@ -24,9 +24,9 @@ export class Prediction extends Entity<Prediction> {
     Guard.require(score, 'score');
   }
 
-  grade(finalScore: Score, matchLevel: MatchLevel): Prediction {
+  grade(finalScore: Score, matchStage: MatchStage): Prediction {
     Guard.require(finalScore, 'finalScore');
-    Guard.require(matchLevel, 'matchLevel');
+    Guard.require(matchStage, 'matchStage');
 
     const outcome = this.score.equals(finalScore)
       ? PredictionOutcome.Exact
@@ -34,7 +34,7 @@ export class Prediction extends Entity<Prediction> {
       ? PredictionOutcome.Correct
       : PredictionOutcome.Incorrect;
 
-    const points = Prediction.pointsForOutcome(outcome, matchLevel);
+    const points = Prediction.pointsForOutcome(outcome, matchStage);
 
     return new Prediction(
       this.id,
@@ -48,21 +48,21 @@ export class Prediction extends Entity<Prediction> {
 
   static pointsForOutcome(
     outcome: PredictionOutcome,
-    level: MatchLevel,
+    stage: MatchStage,
   ): number {
     if (outcome === PredictionOutcome.Incorrect) return 0;
 
     const isExact = outcome === PredictionOutcome.Exact;
-    switch (level) {
-      case MatchLevel.RoundOf16:
+    switch (stage) {
+      case MatchStage.RoundOf16:
         return isExact ? 5 : 2;
-      case MatchLevel.QuaterFinal:
+      case MatchStage.QuaterFinal:
         return isExact ? 7 : 3;
-      case MatchLevel.SemiFinal:
+      case MatchStage.SemiFinal:
         return isExact ? 9 : 4;
-      case MatchLevel.ThirdPlace:
+      case MatchStage.ThirdPlace:
         return isExact ? 10 : 4;
-      case MatchLevel.Final:
+      case MatchStage.Final:
         return isExact ? 11 : 5;
       default:
         return isExact ? 3 : 1;

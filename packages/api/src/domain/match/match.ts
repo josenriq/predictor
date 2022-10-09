@@ -3,9 +3,9 @@ import { Maybe } from '@predictor/core';
 import { Score } from '@predictor/domain/score';
 import { isBefore, subMinutes } from 'date-fns';
 
-export enum MatchLevel {
+export enum MatchStage {
   Regular = 'Regular',
-  GroupStage = 'GroupStage',
+  Group = 'Group',
   RoundOf16 = 'RoundOf16',
   QuaterFinal = 'QuaterFinal',
   SemiFinal = 'SemiFinal',
@@ -31,7 +31,7 @@ export class Match extends Entity<Match> {
     public readonly awayTeamId: Id,
     public readonly stadium: Maybe<string>,
     public readonly startsAt: Date,
-    public readonly level: MatchLevel,
+    public readonly stage: MatchStage,
     public readonly group: Maybe<TournamentGroup>,
     public readonly status: MatchStatus,
     public readonly score: Maybe<Score>,

@@ -2,7 +2,7 @@ import { Guard } from '@predictor/core';
 import { Id, Mapper } from '@predictor/domain';
 import {
   Match,
-  MatchLevel,
+  MatchStage,
   MatchStatus,
   MatchStorage,
   TournamentGroup,
@@ -42,8 +42,8 @@ export class MatchDbModel extends DbModel {
   @prop({ required: true, index: true })
   public startsAt: Date;
 
-  @prop({ required: true, enum: MatchLevel })
-  public level: MatchLevel;
+  @prop({ required: true, enum: MatchStage })
+  public stage: MatchStage;
 
   @prop()
   public group?: TournamentGroup;
@@ -78,7 +78,7 @@ function createMatchMapper(
         Id.decode(model.awayTeamId),
         model.stadium,
         model.startsAt,
-        model.level,
+        model.stage,
         model.group,
         model.status,
         model.score ? Score.decode(model.score) : void 0,
@@ -94,7 +94,7 @@ function createMatchMapper(
         awayTeamId: Id.encode(match.awayTeamId),
         stadium: match.stadium,
         startsAt: match.startsAt,
-        level: match.level,
+        stage: match.stage,
         group: match.group,
         status: match.status,
         score: match.score ? Score.encode(match.score) : void 0,

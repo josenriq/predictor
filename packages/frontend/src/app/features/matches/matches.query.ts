@@ -22,7 +22,7 @@ export class MatchesQuery extends QueryOperation<MatchesQueryResult> {
         }
         stadium
         startsAt
-        level
+        stage
         group
         status
         time

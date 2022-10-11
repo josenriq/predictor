@@ -1,10 +1,13 @@
 .btn {
-  display: block;
-  @apply tw-font-semibold tw-text-center tw-py-2 tw-px-4 tw-border tw-border-gray-400 tw-rounded tw-shadow;
-  transition: transform 0.15s;
+  @apply tw-block tw-whitespace-nowrap tw-font-semibold tw-text-center tw-py-2 tw-px-4 tw-border tw-border-gray-300 tw-rounded tw-shadow-sm;
+  transition: transform 0.12s;
 }
 .btn:active {
   transform: scale(0.95);
+}
+
+.btn-pill {
+  @apply tw-rounded-full;
 }
 
 .btn-sm {
@@ -21,10 +24,16 @@
 .btn-secondary:hover {
   @apply tw-bg-gray-100;
 }
+.btn-secondary.btn-selected {
+  @apply tw-bg-brand tw-text-white;
+}
 
 .btn-primary {
   @apply tw-bg-brand tw-text-white tw-border-gray-100;
 }
 .btn-primary:hover {
   @apply tw-bg-brand;
+}
+.btn-primary.btn-selected {
+  @apply tw-bg-white tw-text-brand;
 }

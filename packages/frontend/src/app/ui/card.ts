@@ -4,6 +4,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   HostBinding,
+  Input,
 } from '@angular/core';
 
 @Component({
@@ -15,29 +16,30 @@ export class CardSectionComponent {
   @HostBinding('class') class = 'tw-block tw-p-4';
 }
 
+export type CardVariant = 'white' | 'light' | 'brand';
+
 @Component({
   selector: 'app-card',
   template: `
     <div
-      class="tw-absolute tw-inset-0 tw-rounded-xl tw-bg-white tw-bg-opacity-80 blurred"
+      class="tw-absolute tw-inset-0 tw-rounded-lg"
+      [class.tw-bg-white]="variant === 'white'"
+      [class.tw-bg-light]="variant === 'light'"
+      [class.tw-bg-brand]="variant === 'brand'"
+      [class.tw-bg-opacity-80]="translucent"
+      [class.tw-backdrop-blur-sm]="translucent"
     ></div>
     <div class="tw-relative">
       <ng-content></ng-content>
     </div>
   `,
-  styles: [
-    `
-      .blurred {
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {
-  @HostBinding('class') class =
-    'tw-block tw-relative tw-rounded-xl tw-shadow-lg';
+  @HostBinding('class') class = 'tw-block tw-relative tw-rounded-lg tw-shadow';
+
+  @Input() variant: CardVariant = 'white';
+  @Input() translucent = false;
 }
 
 const DIRECTIVES = [CardComponent, CardSectionComponent];

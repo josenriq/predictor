@@ -18,11 +18,19 @@ export class ButtonDirective implements OnChanges {
 
   @Input() variant: ButtonVariant = 'secondary';
   @Input() size: Size = 'md';
+  @Input() pill = false;
+  @Input() selected = false;
 
   ngOnChanges(): void {
     const classes = ['btn', `btn-${this.variant}`];
     if (this.size !== 'md') {
       classes.push(`btn-${this.size}`);
+    }
+    if (this.pill) {
+      classes.push('btn-pill');
+    }
+    if (this.selected) {
+      classes.push('btn-selected');
     }
     this.class = classes.join(' ');
   }

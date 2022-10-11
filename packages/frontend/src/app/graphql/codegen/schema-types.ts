@@ -27,7 +27,7 @@ export type Match = {
   homeTeam: Team;
   id: Scalars['ID'];
   isOpenForPredictions: Scalars['Boolean'];
-  level: MatchLevel;
+  stage: MatchStage;
   prediction?: Maybe<Prediction>;
   score?: Maybe<Scalars['Score']>;
   stadium?: Maybe<Scalars['String']>;
@@ -36,9 +36,9 @@ export type Match = {
   time?: Maybe<Scalars['String']>;
 };
 
-export enum MatchLevel {
+export enum MatchStage {
   Final = 'Final',
-  GroupStage = 'GroupStage',
+  Group = 'Group',
   QuaterFinal = 'QuaterFinal',
   Regular = 'Regular',
   RoundOf16 = 'RoundOf16',

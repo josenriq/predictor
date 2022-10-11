@@ -5,6 +5,7 @@ import { ButtonModule } from './button';
 import { CardModule } from './card';
 import { LinkModule } from './link';
 import { MenuModule } from './menu';
+import { SideScrollerModule } from './side-scroller';
 import { TeamBannerModule } from './team-banner';
 
 @NgModule({
@@ -16,6 +17,7 @@ import { TeamBannerModule } from './team-banner';
     CardModule,
     BadgeModule,
     TeamBannerModule,
+    SideScrollerModule,
   ],
 })
 export class UIModule {}

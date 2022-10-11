@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
+const colors = require('tailwindcss/colors');
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 let containerScreens = Object.assign({}, defaultTheme.screens);
@@ -16,6 +17,8 @@ module.exports = {
     extend: {
       colors: {
         brand: '#83243A',
+        muted: colors.gray['500'],
+        light: colors.gray['100'],
       },
     },
   },

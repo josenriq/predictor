@@ -5,6 +5,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
+  HostBinding,
 } from '@angular/core';
 import { Maybe } from 'app/core';
 import { User } from 'app/graphql';
@@ -24,25 +25,12 @@ export class BrandComponent {}
 @Component({
   selector: 'app-top-bar',
   template: `
-    <nav class="tw-fixed tw-top-0 tw-left-0 tw-right-0 tw-z-10">
-      <div
-        class="tw-absolute tw-inset-0 tw-bg-white tw-bg-opacity-80 blurred"
-      ></div>
-      <div class="tw-relative tw-container tw-mx-auto">
-        <div class="tw-p-4">
-          <app-brand></app-brand>
-        </div>
+    <nav>
+      <div class="tw-container tw-p-4 tw-mx-auto">
+        <app-brand></app-brand>
       </div>
     </nav>
   `,
-  styles: [
-    `
-      .blurred {
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopBarComponent {}
@@ -50,7 +38,7 @@ export class TopBarComponent {}
 @Component({
   selector: 'app-login-card',
   template: `
-    <app-card>
+    <app-card [translucent]="true">
       <app-card-section>
         <div class="tw-text-center tw-text-xl tw-py-4">Hey there 👋🏻</div>
         <a [href]="loginUrl" app-button variant="primary" size="lg"
@@ -76,7 +64,8 @@ export class LoginCardComponent {
   ],
   template: `
     <app-card
-      class="tw-mt-12 tw-translate-y-[195px] tw-transition-transform tw-duration-500 sm:tw-translate-y-0"
+      class="tw-pointer-events-auto tw-mt-12 tw-translate-y-[195px] tw-transition-transform tw-duration-300 sm:tw-translate-y-0"
+      [translucent]="true"
       [class.menu-open]="isMenuOpen"
       (click)="toggleMenu()"
     >
@@ -101,7 +90,7 @@ export class LoginCardComponent {
       </app-card-section>
 
       <!-- Menu -->
-      <div class="sm:tw-rounded-b-xl sm:tw-overflow-hidden">
+      <div class="sm:tw-rounded-b-lg sm:tw-overflow-hidden">
         <app-menu>
           <a href="/" app-menu-item>Matches</a>
           <a href="/activity" app-menu-item>
@@ -119,6 +108,8 @@ export class LoginCardComponent {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserCardComponent {
+  @HostBinding('class') class = 'tw-block tw-pointer-events-none';
+
   @Input() user!: Maybe<User>;
   @Input() logoutUrl!: string;
 
@@ -132,26 +123,26 @@ export class UserCardComponent {
 @Component({
   selector: 'app-main-layout',
   template: `
-    <app-top-bar></app-top-bar>
-    <div class="tw-container tw-mx-auto tw-pt-32">
+    <div class="tw-container tw-mx-auto">
       <div
-        class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-8 tw-items-start"
+        class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-x-8 tw-items-start"
       >
         <aside class="sm:tw-sticky sm:tw-top-20">
           <app-login-card
             *ngIf="!(session.user$ | async)"
             [loginUrl]="session.loginUrl"
-            class="tw-fixed tw-left-0 tw-right-0 tw-bottom-0 sm:tw-static"
+            class="tw-fixed tw-z-20 tw-left-0 tw-right-0 tw-bottom-0 sm:tw-static"
           ></app-login-card>
           <app-user-card
             *ngIf="!!(session.user$ | async)"
             [user]="session.user$ | async"
             [logoutUrl]="session.logoutUrl"
-            class="tw-fixed tw-left-0 tw-right-0 tw-bottom-0 sm:tw-static"
+            class="tw-fixed tw-z-20 tw-left-0 tw-right-0 tw-bottom-0 sm:tw-static"
           ></app-user-card>
         </aside>
 
-        <section class="sm:tw-col-span-2 tw-pb-[50vh]">
+        <section class="sm:tw-col-span-2 tw-px-4 sm:tw-px-0 tw-pb-[50vh]">
+          <app-top-bar></app-top-bar>
           <ng-content></ng-content>
         </section>
       </div>

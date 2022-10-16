@@ -208,7 +208,7 @@ export const matches: Match[] = [
   },
   {
     homeTeamId: 'den',
-    awayTeamId: 'aus',
+    awayTeamId: 'tun',
     startsAt: new Date(Date.UTC(2022, 10, 22, 13)),
     group: 'D',
     stadium: 'Education City Stadium',

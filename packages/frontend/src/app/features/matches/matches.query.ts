@@ -27,6 +27,13 @@ export class MatchesQuery extends QueryOperation<MatchesQueryResult> {
         status
         time
         score
+        isOpenForPredictions
+        prediction {
+          id
+          score
+          outcome
+          points
+        }
       }
     }
   `;

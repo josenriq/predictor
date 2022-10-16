@@ -9,7 +9,7 @@ import {
 @Component({
   selector: 'app-team-banner',
   template: `<img
-    class="tw-w-12 tw-h-9 tw-rounded tw-shadow"
+    class="tw-w-16 tw-h-12 tw-rounded tw-shadow"
     src="/assets/teams/{{ teamId }}.svg"
   />`,
 

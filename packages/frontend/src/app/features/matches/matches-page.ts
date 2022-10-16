@@ -21,7 +21,7 @@ import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
 import { LayoutModule } from 'app/layout';
 import { TrackByIdModule, TrackByModule } from 'ng-track-by';
-import { MatchModule } from './match';
+import { MatchModule, Score } from './match';
 import {
   isSameDay,
   format,
@@ -32,6 +32,7 @@ import {
 } from 'date-fns';
 import { localDateFrom } from 'app/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SavePredictionMutation } from './save-prediction.mutation';
 
 type MatchBlock = {
   title: string;
@@ -117,10 +118,13 @@ export class MatchesEmptyStateComponent {
           <app-matches-empty-state
             *ngIf="(matchBlocks$ | async)?.length === 0"
             [sortBy]="(sortBy$ | async) ?? 'upcoming'"
-            class="animate-fadeInUp"
+            class="animate-fadeIn"
           ></app-matches-empty-state>
 
-          <div *ngFor="let block of matchBlocks$ | async" trackBy="title">
+          <div
+            *ngFor="let block of matchBlocks$ | async; let blockIndex = index"
+            trackBy="title"
+          >
             <h2
               class="tw-text-center tw-p-4 tw-font-semibold tw-text-muted sticky-block animate-fadeInUp"
               >{{ block.title }}</h2
@@ -129,11 +133,18 @@ export class MatchesEmptyStateComponent {
             <div
               class="tw-flex tw-flex-col tw-flex-nowrap tw-gap-y-8 tw-mt-2 tw-mb-8"
             >
+              <!-- TODO: Show tutorial only the first time, with flags -->
               <app-match
-                *ngFor="let match of block.matches"
+                *ngFor="let match of block.matches; let matchIndex = index"
                 trackById
-                [match]="match"
                 class="animate-fadeInUp"
+                [match]="match"
+                [tutorial]="
+                  match.isOpenForPredictions &&
+                  blockIndex === 0 &&
+                  matchIndex === 0
+                "
+                (predictionChanged)="savePrediction(match.id, $event)"
               ></app-match>
             </div>
           </div>
@@ -167,6 +178,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
     private readonly matchesQuery: MatchesQuery,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
+    private readonly savePredictionMutation: SavePredictionMutation,
   ) {}
 
   ngOnDestroy(): void {
@@ -337,6 +349,15 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   loadMore(): void {
     const limit = this.limit$.getValue();
     this.limit$.next(limit + this.PAGE_SIZE);
+  }
+
+  async savePrediction(matchId: string, score: Score): Promise<void> {
+    try {
+      await this.savePredictionMutation.mutate({ input: { matchId, score } });
+    } catch (error) {
+      console.warn('Could not save prediction', error);
+      // TODO: Show error
+    }
   }
 }
 

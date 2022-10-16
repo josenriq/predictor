@@ -258,22 +258,20 @@ type TutorialStep = 'press' | 'hold' | 'finished';
   selector: 'app-tutorial',
   template: `
     <div
-      *ngIf="step === 'press'"
-      class="tw-animate-bounce tw-uppercase tw-text-sm tw-font-semibold tw-text-green-500"
+      class="tw-text-center tw-uppercase tw-text-sm tw-font-semibold tw-transition-colors tw-duration-600"
+      [class.tw-animate-bounce]="step === 'press' || step === 'hold'"
+      [class.tw-text-green-500]="step === 'press'"
+      [class.tw-text-blue-500]="step === 'hold'"
+      [class.tw-text-brand]="step === 'finished'"
+      [class.explode]="step === 'finished'"
     >
-      Press the flags to predict the score
-    </div>
-    <div
-      *ngIf="step === 'hold'"
-      class="tw-animate-bounce tw-uppercase tw-text-sm tw-font-semibold tw-text-blue-500 "
-    >
-      Press and hold to reset
-    </div>
-    <div
-      *ngIf="step === 'finished'"
-      class="explode tw-uppercase tw-text-sm tw-font-semibold  tw-text-brand"
-    >
-      You got it!
+      <ng-container *ngIf="step === 'press'">
+        Press the flags to predict the score
+      </ng-container>
+      <ng-container *ngIf="step === 'hold'">
+        Press and hold to reset
+      </ng-container>
+      <ng-container *ngIf="step === 'finished'"> You got it! </ng-container>
     </div>
   `,
   styles: [
@@ -289,7 +287,7 @@ type TutorialStep = 'press' | 'hold' | 'finished';
         }
       }
       .explode {
-        animation: explode 1.2s ease;
+        animation: explode 1s 1s ease;
         aniamtion-fill-mode: both;
       }
     `,
@@ -297,13 +295,12 @@ type TutorialStep = 'press' | 'hold' | 'finished';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TutorialComponent implements OnChanges {
-  @HostBinding('class') classs = 'tw-flex tw-flex-row tw-justify-center';
   @Input() step: TutorialStep = 'press';
   @Output() finished = new EventEmitter<void>();
 
   async ngOnChanges(): Promise<void> {
     if (this.step === 'finished') {
-      await delay(1000);
+      await delay(2000);
       this.finished.emit();
     }
   }

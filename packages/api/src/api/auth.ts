@@ -72,6 +72,7 @@ export function deserializeUser(record: Record<string, any>): Maybe<User> {
       Id.decode(record['sub'] ?? record['id']),
       record['given_name'] ?? record['name'] ?? record['email'],
       record['picture'] ? Url.decode(record['picture']) : void 0,
+      {},
     );
   } catch (error) {
     console.error('Could not deserialize user', error);

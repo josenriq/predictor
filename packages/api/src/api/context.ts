@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
-import { User } from '@predictor/domain/user';
+import { User, UserStorage } from '@predictor/domain/user';
 import { TeamStorage } from '@predictor/domain/team';
 import { MatchStorage } from '@predictor/domain/match';
 import { PredictionStorage } from '@predictor/domain/prediction';
 import { Database } from '@predictor/infra/database';
 import { TournamentEntryStorage } from '@predictor/domain/tournament-entry';
 import { deserializeUser } from './auth';
+import { Maybe } from '@predictor/core';
 
 export interface Context {
-  viewer?: User;
+  viewer: Maybe<User>;
+  userStorage: UserStorage;
   teamStorage: TeamStorage;
   matchStorage: MatchStorage;
   predictionStorage: PredictionStorage;
@@ -24,13 +26,17 @@ export async function createContext({
 }: ContextParameters): Promise<Context> {
   const db = (req as any)['db'] as Database;
 
-  let viewer: User | undefined;
+  let viewer: Maybe<User>;
   if (req.oidc.isAuthenticated() && !!req.oidc.user) {
-    viewer = deserializeUser(req.oidc.user) ?? void 0;
+    const decodedUser = deserializeUser(req.oidc.user) ?? void 0;
+    if (decodedUser) {
+      viewer = await db.user.find(decodedUser.id);
+    }
   }
 
   return {
     viewer,
+    userStorage: db.user,
     teamStorage: db.team,
     matchStorage: db.match,
     predictionStorage: db.prediction,

@@ -17,6 +17,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: Date;
+  JSON: any;
   Score: any;
   Url: string;
 };
@@ -27,10 +28,10 @@ export type Match = {
   homeTeam: Team;
   id: Scalars['ID'];
   isOpenForPredictions: Scalars['Boolean'];
-  stage: MatchStage;
   prediction?: Maybe<Prediction>;
   score?: Maybe<Scalars['Score']>;
   stadium?: Maybe<Scalars['String']>;
+  stage: MatchStage;
   startsAt: Scalars['DateTime'];
   status: MatchStatus;
   time?: Maybe<Scalars['String']>;
@@ -55,6 +56,7 @@ export enum MatchStatus {
 }
 
 export type Mutation = {
+  markHasSeenTutorial?: Maybe<SuccessOutput>;
   savePrediction?: Maybe<SavePredictionOutput>;
 };
 
@@ -77,7 +79,7 @@ export enum PredictionOutcome {
 
 export type Query = {
   matches: Array<Match>;
-  me?: Maybe<User>;
+  me?: Maybe<SessionUser>;
 };
 
 export type SavePredictionInput = {
@@ -87,6 +89,17 @@ export type SavePredictionInput = {
 
 export type SavePredictionOutput = {
   prediction: Prediction;
+};
+
+export type SessionUser = {
+  hasSeenTutorial: Scalars['Boolean'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  picture?: Maybe<Scalars['Url']>;
+};
+
+export type SuccessOutput = {
+  success: Scalars['Boolean'];
 };
 
 export type Team = {

@@ -323,7 +323,7 @@ export class TutorialComponent implements OnChanges {
           <app-tutorial
             [step]="tutorialStep"
             *ngIf="tutorial"
-            (finished)="tutorial = false"
+            (finished)="finishTutorial()"
           ></app-tutorial>
 
           <div
@@ -383,11 +383,14 @@ export class MatchComponent implements OnInit, OnDestroy {
   @HostBinding('class') class = 'tw-block';
 
   @Input() match!: Match;
-  @Input() tutorial = false;
-  tutorialStep: TutorialStep = 'press';
 
   prediction$ = new BehaviorSubject<Partial<Score>>({});
   @Output() predictionChanged = new EventEmitter<Score>();
+
+  @Input() tutorial = false;
+  tutorialStep: TutorialStep = 'press';
+
+  @Output() finishedTutorial = new EventEmitter<void>();
 
   destroy$ = new Subject<void>();
 
@@ -434,6 +437,11 @@ export class MatchComponent implements OnInit, OnDestroy {
     if (this.tutorialStep === 'hold') {
       this.tutorialStep = 'finished';
     }
+  }
+
+  finishTutorial(): void {
+    this.tutorial = false;
+    this.finishedTutorial.emit();
   }
 }
 

@@ -23,18 +23,18 @@ export class SavePredictionMutation extends MutationOperation<
     }
   `;
 
-  // override optimisticResponse = ({
-  //   input,
-  // }: {
-  //   input: SavePredictionInput;
-  // }): SavePredictionResult => ({
-  //   savePrediction: {
-  //     __typename: 'SavePredictionOutput',
-  //     prediction: {
-  //       __typename: 'Prediction',
-  //       id: '123',
-  //       score: input.score,
-  //     },
-  //   } as SavePredictionOutput,
-  // });
+  override optimisticResponse = ({
+    input,
+  }: {
+    input: SavePredictionInput;
+  }): SavePredictionResult => ({
+    savePrediction: {
+      __typename: 'SavePredictionOutput',
+      prediction: {
+        __typename: 'Prediction',
+        id: 'temp-id',
+        score: input.score,
+      },
+    } as SavePredictionOutput,
+  });
 }

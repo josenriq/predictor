@@ -33,6 +33,8 @@ import {
 import { localDateFrom } from 'app/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SavePredictionMutation } from './save-prediction.mutation';
+import { TutorialsQuery } from './tutorials.query';
+import { MarkHasSeenTutorialMutation } from './mark-has-seen-tutorial.mutation';
 
 type MatchBlock = {
   title: string;
@@ -133,18 +135,19 @@ export class MatchesEmptyStateComponent {
             <div
               class="tw-flex tw-flex-col tw-flex-nowrap tw-gap-y-8 tw-mt-2 tw-mb-8"
             >
-              <!-- TODO: Show tutorial only the first time, with flags -->
               <app-match
                 *ngFor="let match of block.matches; let matchIndex = index"
                 trackById
                 class="animate-fadeInUp"
                 [match]="match"
+                (predictionChanged)="savePrediction(match.id, $event)"
                 [tutorial]="
+                  (hasSeenTutorial$ | async) === false &&
                   match.isOpenForPredictions &&
                   blockIndex === 0 &&
                   matchIndex === 0
                 "
-                (predictionChanged)="savePrediction(match.id, $event)"
+                (finishedTutorial)="markHasSeenTutorial()"
               ></app-match>
             </div>
           </div>
@@ -153,7 +156,7 @@ export class MatchesEmptyStateComponent {
             *ngIf="hasMore$ | async"
             class="tw-flex tw-items-center tw-justify-center tw-py-8"
           >
-            <button type="button" app-button (click)="loadMore()"
+            <button type="button" app-button (click)="loadMoreMatches()"
               >View More</button
             >
           </div>
@@ -172,13 +175,17 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   private readonly PAGE_SIZE = 12;
   private readonly limit$ = new BehaviorSubject(this.PAGE_SIZE);
 
+  hasSeenTutorial$!: Observable<boolean>;
+
   private readonly destroy$ = new Subject<void>();
 
   constructor(
-    private readonly matchesQuery: MatchesQuery,
-    private readonly route: ActivatedRoute,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly matchesQuery: MatchesQuery,
     private readonly savePredictionMutation: SavePredictionMutation,
+    private readonly tutorialsQuery: TutorialsQuery,
+    private readonly markTutorialMutation: MarkHasSeenTutorialMutation,
   ) {}
 
   ngOnDestroy(): void {
@@ -187,7 +194,12 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const { data$, isLoading$ } = this.matchesQuery.watch();
+    this.loadMatches();
+    this.loadTutorials();
+  }
+
+  private loadMatches(): void {
+    const matchesQuery = this.matchesQuery.watch();
 
     this.sortBy$ = this.route.fragment.pipe(
       map(
@@ -208,7 +220,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
       .subscribe(() => this.limit$.next(this.PAGE_SIZE));
 
     const matches$ = combineLatest([
-      data$.pipe(map(data => data.matches)),
+      matchesQuery.data$.pipe(map(data => data.matches)),
       this.sortBy$,
     ]).pipe(
       map(([matches, sortBy]) => {
@@ -257,7 +269,15 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
       ),
     ]).pipe(map(([available, visible]) => available > visible));
 
-    this.isLoading$ = isLoading$;
+    this.isLoading$ = matchesQuery.isLoading$;
+  }
+
+  private loadTutorials(): void {
+    const tutorialsQuery = this.tutorialsQuery.watch();
+
+    this.hasSeenTutorial$ = tutorialsQuery.data$.pipe(
+      map(data => data.me?.hasSeenTutorial ?? false),
+    );
   }
 
   changeSort(sortBy: MatchSortOption): void {
@@ -346,7 +366,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
     return blocks;
   }
 
-  loadMore(): void {
+  loadMoreMatches(): void {
     const limit = this.limit$.getValue();
     this.limit$.next(limit + this.PAGE_SIZE);
   }
@@ -357,6 +377,14 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.warn('Could not save prediction', error);
       // TODO: Show error
+    }
+  }
+
+  async markHasSeenTutorial(): Promise<void> {
+    try {
+      await this.markTutorialMutation.mutate();
+    } catch (error) {
+      console.warn('Could not mark tutorial as seen', error);
     }
   }
 }

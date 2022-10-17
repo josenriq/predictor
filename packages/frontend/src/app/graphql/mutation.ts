@@ -23,7 +23,7 @@ export abstract class MutationOperation<T extends any, V = OperationVariables> {
   protected readonly refetchQueries?: Array<
     string | DocumentNode | PureQueryOptions
   >;
-  protected readonly optimisticResponse?: T;
+  protected readonly optimisticResponse?: T | ((vars: V) => T);
 
   constructor(protected readonly apollo: Apollo) {}
 

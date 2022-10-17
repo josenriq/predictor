@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
-import { QueryOperation, User } from 'app/graphql';
+import { QueryOperation, SessionUser } from 'app/graphql';
 
-export type SessionQueryResult = { me?: User };
+export type SessionQueryResult = { me?: SessionUser };
 
 @Injectable({ providedIn: 'root' })
 export class SessionQuery extends QueryOperation<SessionQueryResult> {

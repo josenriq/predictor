@@ -1,6 +1,6 @@
 import { Guard } from '@predictor/core';
 import { Id, Url, Mapper } from '@predictor/domain';
-import { User, UserStorage } from '@predictor/domain/user';
+import { User, UserFlags, UserStorage } from '@predictor/domain/user';
 import {
   DEFAULT_SCHEMA_OPTIONS,
   MongooseStorage,
@@ -9,19 +9,25 @@ import {
 import {
   DocumentType,
   getModelForClass,
+  modelOptions,
   prop,
   ReturnModelType,
+  Severity,
 } from '@typegoose/typegoose';
 import { DatabaseConfig } from '../config';
 
 const TABLE_NAME = 'User';
 
+@modelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class UserDbModel extends TimestampedDbModel {
   @prop({ required: true })
   public name: string;
 
   @prop()
   public picture?: string;
+
+  @prop({ default: {} })
+  public flags: UserFlags;
 }
 
 type UserDb = ReturnModelType<typeof UserDbModel, {}>;
@@ -42,6 +48,7 @@ function createUserMapper(db: UserDb): Mapper<User, DocumentType<UserDbModel>> {
         Id.decode(model.id),
         model.name,
         model.picture ? Url.decode(model.picture) : void 0,
+        model.flags,
       );
     },
 
@@ -51,6 +58,7 @@ function createUserMapper(db: UserDb): Mapper<User, DocumentType<UserDbModel>> {
         id: Id.encode(user.id),
         name: user.name,
         picture: user.picture ? Url.encode(user.picture) : void 0,
+        flags: user.flags,
       });
     },
   };

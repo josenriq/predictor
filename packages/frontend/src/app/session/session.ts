@@ -2,12 +2,11 @@ import {
   Injectable,
   NgModule,
   ModuleWithProviders,
-  OnDestroy,
   InjectionToken,
   Inject,
 } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, distinctUntilChanged, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { distinctUntilChanged, map, take, tap } from 'rxjs/operators';
 import { Maybe, Url } from 'app/core';
 import { SessionQuery, SessionQueryResult } from './session.query';
 import { SESSION_INITIALIZER } from './initializer';
@@ -20,10 +19,10 @@ export const SESSION_OPTIONS = new InjectionToken<SessionOptions>(
 );
 
 @Injectable({ providedIn: 'root' })
-export class Session implements OnDestroy {
-  private readonly destroy$ = new Subject<void>();
+export class Session {
   private readonly sessionRef: WatchQueryResult<SessionQueryResult>;
   public readonly user$: Observable<Maybe<User>>;
+  public readonly isAuthenticated$: Observable<boolean>;
   public readonly isLoading$: Observable<boolean>;
 
   constructor(
@@ -35,8 +34,13 @@ export class Session implements OnDestroy {
     this.isLoading$ = this.sessionRef.isLoading$;
     this.user$ = this.sessionRef.data$.pipe(
       distinctUntilChanged(),
-      takeUntil(this.destroy$),
       map(data => data.me),
+    );
+    this.isAuthenticated$ = this.user$.pipe(
+      map(user => {
+        console.log('User', user);
+        return !!user;
+      }),
     );
   }
 
@@ -47,9 +51,10 @@ export class Session implements OnDestroy {
     return Url.join(this.options.apiBaseUri, '/logout');
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  isAuthenticated(): Promise<boolean> {
+    return new Promise(resolve =>
+      this.isAuthenticated$.pipe(take(1)).subscribe(resolve),
+    );
   }
 }
 

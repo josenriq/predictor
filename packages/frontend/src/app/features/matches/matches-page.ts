@@ -33,8 +33,9 @@ import {
 import { localDateFrom } from 'app/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SavePredictionMutation } from './save-prediction.mutation';
-import { TutorialsQuery } from './tutorials.query';
+import { OnboardingQuery } from './onboarding.query';
 import { MarkHasSeenTutorialMutation } from './mark-has-seen-tutorial.mutation';
+import { Session } from 'app/session';
 
 type MatchBlock = {
   title: string;
@@ -180,11 +181,12 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   constructor(
+    private readonly session: Session,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly matchesQuery: MatchesQuery,
     private readonly savePredictionMutation: SavePredictionMutation,
-    private readonly tutorialsQuery: TutorialsQuery,
+    private readonly onbardingQuery: OnboardingQuery,
     private readonly markTutorialMutation: MarkHasSeenTutorialMutation,
   ) {}
 
@@ -273,9 +275,9 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   }
 
   private loadTutorials(): void {
-    const tutorialsQuery = this.tutorialsQuery.watch();
+    const onbardingQuery = this.onbardingQuery.watch();
 
-    this.hasSeenTutorial$ = tutorialsQuery.data$.pipe(
+    this.hasSeenTutorial$ = onbardingQuery.data$.pipe(
       map(data => data.me?.hasSeenTutorial ?? false),
     );
   }
@@ -372,6 +374,10 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   }
 
   async savePrediction(matchId: string, score: Score): Promise<void> {
+    if (!(await this.session.isAuthenticated())) {
+      alert('TODO: You gotta login to play my friend');
+      return;
+    }
     try {
       await this.savePredictionMutation.mutate({ input: { matchId, score } });
     } catch (error) {
@@ -381,6 +387,10 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   }
 
   async markHasSeenTutorial(): Promise<void> {
+    if (!(await this.session.isAuthenticated())) {
+      // Ignore, no need to save
+      return;
+    }
     try {
       await this.markTutorialMutation.mutate();
     } catch (error) {

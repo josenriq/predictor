@@ -24,5 +24,5 @@ export class MarkHasSeenTutorialMutation extends MutationOperation<MarkHasSeenTu
     } as SuccessOutput,
   });
 
-  override refetchQueries = ['tutorials'];
+  override refetchQueries = ['onboarding'];
 }

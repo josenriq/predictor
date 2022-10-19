@@ -288,7 +288,7 @@ type TutorialStep = 'press' | 'hold' | 'finished';
       }
       .explode {
         animation: explode 1s 1s ease;
-        aniamtion-fill-mode: both;
+        animation-fill-mode: both;
       }
     `,
   ],

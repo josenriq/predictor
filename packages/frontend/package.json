@@ -2,12 +2,15 @@
   "name": "@predictor/frontend",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "yarn ng-env:dev && ng serve",
+    "build": "yarn ng-env:prod && ng build --configuration production",
+    "ng-env": "sb-cli-utils config angular dotenv",
+    "ng-env:dev": "yarn ng-env --env=dev --schema",
+    "ng-env:prod": "yarn ng-env --env=prod --safe --schema",
     "build:graphql": "graphql-codegen --config graphql-codegen.yml && node ./scripts/graphql/possible-types.js && prettier --write src/app/graphql/codegen/*",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "clean": "rm -rf dist"
   },
   "private": true,
   "dependencies": {
@@ -37,6 +40,7 @@
     "@angular/compiler-cli": "^14.0.0",
     "@graphql-codegen/cli": "^2.12.0",
     "@graphql-codegen/typescript": "^2.7.3",
+    "@slidebean/cli-utils": "^1.10.0",
     "@types/jasmine": "~4.0.0",
     "autoprefixer": "^10.4.12",
     "jasmine-core": "~4.1.0",

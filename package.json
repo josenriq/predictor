@@ -28,6 +28,7 @@
   },
   "scripts": {
     "start": "lerna run --stream start",
+    "build:frontend": "lerna run --scope @predictor/frontend --stream build",
     "release": "cross-env HUSKY_BYPASS=true lerna publish"
   }
 }

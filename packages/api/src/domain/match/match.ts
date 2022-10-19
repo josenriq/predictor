@@ -1,5 +1,5 @@
 import { Id, Entity } from '@predictor/domain';
-import { Maybe } from '@predictor/core';
+import { Guard, Maybe } from '@predictor/core';
 import { Score } from '@predictor/domain/score';
 import { isBefore, subMinutes } from 'date-fns';
 
@@ -35,8 +35,15 @@ export class Match extends Entity<Match> {
     public readonly group: Maybe<TournamentGroup>,
     public readonly status: MatchStatus,
     public readonly score: Maybe<Score>,
+    public readonly time: Maybe<string>,
   ) {
     super(id);
+    Guard.require(tournamentId, 'tournamentId');
+    Guard.require(homeTeamId, 'homeTeamId');
+    Guard.require(awayTeamId, 'awayTeamId');
+    Guard.require(startsAt, 'startsAt');
+    Guard.require(stage, 'stage');
+    Guard.require(status, 'status');
   }
 
   get isOpenForPredictions(): boolean {

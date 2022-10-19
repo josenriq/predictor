@@ -53,6 +53,9 @@ export class MatchDbModel extends DbModel {
 
   @prop()
   public score?: { home: number; away: number };
+
+  @prop()
+  public time?: string;
 }
 
 type MatchDb = ReturnModelType<typeof MatchDbModel, {}>;
@@ -82,6 +85,7 @@ function createMatchMapper(
         model.group,
         model.status,
         model.score ? Score.decode(model.score) : void 0,
+        model.time,
       );
     },
 
@@ -98,6 +102,7 @@ function createMatchMapper(
         group: match.group,
         status: match.status,
         score: match.score ? Score.encode(match.score) : void 0,
+        time: match.time,
       });
     },
   };

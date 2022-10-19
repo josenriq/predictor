@@ -143,10 +143,10 @@ export class MatchesEmptyStateComponent {
                 [match]="match"
                 (predictionChanged)="savePrediction(match.id, $event)"
                 [tutorial]="
-                  (hasSeenTutorial$ | async) === false &&
-                  match.isOpenForPredictions &&
                   blockIndex === 0 &&
-                  matchIndex === 0
+                  matchIndex === 0 &&
+                  match.isOpenForPredictions &&
+                  (hasSeenTutorial$ | async) === false
                 "
                 (finishedTutorial)="markHasSeenTutorial()"
               ></app-match>
@@ -155,7 +155,7 @@ export class MatchesEmptyStateComponent {
 
           <div
             *ngIf="hasMore$ | async"
-            class="tw-flex tw-items-center tw-justify-center tw-py-8"
+            class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-py-8"
           >
             <button type="button" app-button (click)="loadMoreMatches()"
               >View More</button

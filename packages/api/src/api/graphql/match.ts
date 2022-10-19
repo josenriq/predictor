@@ -65,10 +65,6 @@ export const MatchResolver = {
       return query.execute(match.awayTeamId);
     },
 
-    time(match: Match): Maybe<string> {
-      return void 0;
-    },
-
     async prediction(
       match: Match,
       _: None,

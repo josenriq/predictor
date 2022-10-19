@@ -12,7 +12,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import { Match, Team } from 'app/graphql';
+import { Match, MatchStatus, PredictionOutcome, Team } from 'app/graphql';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
 import { delay } from 'app/core';
@@ -307,6 +307,61 @@ export class TutorialComponent implements OnChanges {
 }
 
 @Component({
+  selector: 'app-match-status',
+  template: `
+    <div
+      class="tw-text-center"
+      [class.tw-animate-pulse]="match.status === MatchStatus.Ongoing"
+    >
+      <div
+        *ngIf="match.status === MatchStatus.Ongoing"
+        class="tw-text-green-500 tw-font-semibold"
+        >{{ match.time ?? 'Ongoing' }}</div
+      >
+      <div *ngIf="match.status === MatchStatus.Cancelled" class="tw-text-muted"
+        >Cancelled</div
+      >
+      <div *ngIf="match.status === MatchStatus.Postponed" class="tw-text-muted"
+        >Postponed</div
+      >
+      <div
+        *ngIf="
+          match.status === MatchStatus.Finished && !match.prediction?.outcome
+        "
+        class="tw-text-muted"
+        >Finished</div
+      >
+      <div
+        *ngIf="
+          match.status === MatchStatus.Finished && !!match.prediction?.outcome
+        "
+        class="tw-font-semibold"
+        [class.tw-text-muted]="
+          match.prediction?.outcome === PredictionOutcome.Incorrect
+        "
+        [class.tw-text-blue-500]="
+          match.prediction?.outcome === PredictionOutcome.Correct
+        "
+        [class.tw-text-green-500]="
+          match.prediction?.outcome === PredictionOutcome.Exact
+        "
+        >Scored {{ match.prediction?.points ?? 0 }}
+        {{ match.prediction?.points === 1 ? 'point' : 'points' }}</div
+      >
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MatchStatusComponent {
+  @HostBinding('class') class = 'tw-block';
+
+  @Input() match!: Match;
+
+  MatchStatus = MatchStatus;
+  PredictionOutcome = PredictionOutcome;
+}
+
+@Component({
   selector: 'app-match',
   template: `
     <app-card>
@@ -316,13 +371,9 @@ export class TutorialComponent implements OnChanges {
             {{ match.startsAt | date: 'MMM d, h:mm a' }}
           </div>
 
-          <!-- <div class="tw-text-center -tw-mb-4 tw-animate-pulse tw-text-brand">
-          HT
-        </div> -->
-
           <app-tutorial
-            [step]="tutorialStep"
             *ngIf="tutorial"
+            [step]="tutorialStep"
             (finished)="finishTutorial()"
           ></app-tutorial>
 
@@ -346,10 +397,18 @@ export class TutorialComponent implements OnChanges {
               [teamId]="match.homeTeam.id"
             ></app-team-banner>
 
-            <app-score
-              [home]="(prediction$ | async)?.home"
-              [away]="(prediction$ | async)?.away"
-            ></app-score>
+            <div class="tw-flex tw-flex-col tw-flex-nowrap">
+              <app-score
+                *ngIf="match.status !== MatchStatus.Unstarted"
+                [home]="match.score?.home"
+                [away]="match.score?.away"
+              ></app-score>
+              <app-score
+                class="tw-text-brand"
+                [home]="(prediction$ | async)?.home"
+                [away]="(prediction$ | async)?.away"
+              ></app-score>
+            </div>
 
             <app-team-banner-button
               *ngIf="match.isOpenForPredictions"
@@ -369,6 +428,12 @@ export class TutorialComponent implements OnChanges {
             ></app-team-name>
           </div>
 
+          <app-match-status
+            *ngIf="match.status !== MatchStatus.Unstarted"
+            class="tw-mt-2"
+            [match]="match"
+          ></app-match-status>
+
           <div class="tw-text-center tw-text-xs tw-text-muted tw-mt-4"
             ><span *ngIf="match.group">Group {{ match.group }} • </span
             >{{ match.stadium }}</div
@@ -383,6 +448,7 @@ export class MatchComponent implements OnInit, OnDestroy {
   @HostBinding('class') class = 'tw-block';
 
   @Input() match!: Match;
+  MatchStatus = MatchStatus;
 
   prediction$ = new BehaviorSubject<Partial<Score>>({});
   @Output() predictionChanged = new EventEmitter<Score>();
@@ -456,6 +522,7 @@ const DIRECTIVES = [MatchComponent];
     ScoreComponent,
     ScoreNumberComponent,
     TutorialComponent,
+    MatchStatusComponent,
   ],
   exports: DIRECTIVES,
 })

@@ -24,7 +24,7 @@ function targetFileNameFor(isProduction) {
   );
 }
 
-function writeEnv(keys, targetFileName) {
+function writeEnv(keys, isProduction) {
   const envVars = {};
   for (const key of keys) {
     const value = process.env[key];
@@ -34,12 +34,16 @@ function writeEnv(keys, targetFileName) {
     envVars[key] = value;
   }
 
-  return `export const environment = {
-    production: ${isProduction},
-    ${Object.entries(envVars)
-      .map(([key, value]) => `  ${key}: '${value || ''}'`)
-      .join(',\n')},
+  const contents = `
+    export const environment = {
+      production: ${isProduction},
+      ${Object.entries(envVars)
+        .map(([key, value]) => `${key}: '${value || ''}'`)
+        .join(',\n')},
+    };
   `;
+
+  fs.writeFileSync(targetFileNameFor(isProduction), contents);
 }
 
-writeEnv(readKeys(), targetFileNameFor(isProduction()));
+writeEnv(readKeys(), isProduction());

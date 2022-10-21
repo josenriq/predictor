@@ -19,6 +19,7 @@
     "paths": {
       "@predictor/*": ["./src/*"]
     },
-    "plugins": [{ "transform": "typescript-transform-paths" }]
+    "plugins": [{ "transform": "typescript-transform-paths" }],
+    "outDir": "dist"
   }
 }

@@ -1,5 +1,4 @@
 import convict from 'convict';
-// @ts-ignore
 import formats from 'convict-format-with-validator';
 import { ApiConfiguration } from '@predictor/api';
 

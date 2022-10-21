@@ -29,6 +29,7 @@
   "scripts": {
     "start": "lerna run --stream start",
     "start:api": "lerna run --scope @predictor/api --stream start",
+    "build:api": "lerna run --scope @predictor/api --stream build",
     "build:frontend": "lerna run --scope @predictor/frontend --stream build",
     "release": "cross-env HUSKY_BYPASS=true lerna publish"
   }

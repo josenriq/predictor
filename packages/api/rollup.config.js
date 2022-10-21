@@ -1,4 +1,3 @@
-const resolve = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const json = require('@rollup/plugin-json');
 
@@ -8,5 +7,5 @@ module.exports = {
     file: 'dist/index.js',
     format: 'cjs',
   },
-  plugins: [resolve(), commonjs(), json()],
+  plugins: [commonjs(), json()],
 };

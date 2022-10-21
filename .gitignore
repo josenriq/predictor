@@ -3,6 +3,7 @@ dist
 dist.zip
 tmp
 lib
+out-tsc
 
 # dependencies
 node_modules

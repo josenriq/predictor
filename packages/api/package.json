@@ -49,6 +49,8 @@
     "dev": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/local.ts",
     "start": "node -r dotenv-safe/config dist/index.js",
     "build": "yarn clean && ttsc --project tsconfig.build.json && rollup -c",
+    "deploy:dev": "serverless deploy",
+    "deploy:prod": "serverless deploy --stage production",
     "clean": "rimraf dist && rimraf out-tsc",
     "init-db": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- scripts/database/init.ts"
   }

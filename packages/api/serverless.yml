@@ -1,0 +1,21 @@
+service: predictor-api
+
+package:
+  patterns:
+    - '!src/**'
+    - '!out-tsc/**'
+    - '!scripts/**'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+
+functions:
+  api:
+    handler: dist/index.handler
+    events:
+      - http:
+          path: /{any+}
+          method: any
+          cors: true

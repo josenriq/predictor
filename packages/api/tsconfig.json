@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
@@ -19,7 +19,6 @@
     "paths": {
       "@predictor/*": ["./src/*"]
     },
-    "plugins": [{ "transform": "typescript-transform-paths" }],
-    "outDir": "out-tsc"
+    "plugins": [{ "transform": "typescript-transform-paths" }]
   }
 }

@@ -24,6 +24,7 @@ bower_components
 connect.lock
 coverage/*
 *.log
+.serverless
 
 #System Files
 .DS_Store

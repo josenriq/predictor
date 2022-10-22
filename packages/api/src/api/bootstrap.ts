@@ -1,9 +1,5 @@
 import { ApolloServer } from 'apollo-server-express';
-import {
-  ApolloServerPluginDrainHttpServer,
-  ApolloServerPluginLandingPageLocalDefault,
-} from 'apollo-server-core';
-import http from 'http';
+import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import express from 'express';
 import { Request, Response, NextFunction, json } from 'express';
 import { formatError, resolvers, typeDefs } from './graphql';
@@ -29,15 +25,16 @@ function useDatabase(config: DatabaseConfig) {
   };
 }
 
-export async function bootstrap(config: ApiConfiguration): Promise<void> {
+export async function bootstrap(
+  config: ApiConfiguration,
+): Promise<express.Express> {
   const app = express();
-  const httpServer = http.createServer(app);
 
   const dbConnection = await connectToDatabase(config.storage.mongoUri);
 
   const cors = {
     credentials: true,
-    origin: [config.frontendUrl],
+    origin: config.frontendUrl,
   };
   secure(app, { cors });
 
@@ -53,7 +50,6 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
     csrfPrevention: true,
     cache: 'bounded',
     plugins: [
-      ApolloServerPluginDrainHttpServer({ httpServer }),
       // TODO: Only in dev
       ApolloServerPluginLandingPageLocalDefault({ embed: true }),
     ],
@@ -67,8 +63,5 @@ export async function bootstrap(config: ApiConfiguration): Promise<void> {
 
   // app.use(errorHandler);
 
-  await new Promise(resolve =>
-    httpServer.listen({ port: config.port }, resolve as any),
-  );
-  console.log(`🚀 Predictor Api is running on http://localhost:${config.port}`);
+  return app;
 }

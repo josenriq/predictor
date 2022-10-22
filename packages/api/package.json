@@ -27,6 +27,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.9.1",
     "mongoose": "^6.6.1",
+    "serverless-http": "^3.1.0",
     "uid": "^2.0.0"
   },
   "devDependencies": {
@@ -39,14 +40,15 @@
     "dotenv-safe": "^8.2.0",
     "rimraf": "^3.0.2",
     "rollup": "^3.2.3",
+    "serverless": "^3.23.0",
     "ts-node-dev": "^2.0.0",
     "ttypescript": "^1.5.13",
     "typescript-transform-paths": "^3.3.1"
   },
   "scripts": {
-    "dev": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/index.ts",
+    "dev": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/local.ts",
     "start": "node -r dotenv-safe/config dist/index.js",
-    "build": "yarn clean && ttsc src/index.ts && rollup -c",
+    "build": "yarn clean && ttsc --project tsconfig.build.json && rollup -c",
     "clean": "rimraf dist && rimraf out-tsc",
     "init-db": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- scripts/database/init.ts"
   }

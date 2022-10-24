@@ -46,8 +46,7 @@
     "typescript-transform-paths": "^3.3.1"
   },
   "scripts": {
-    "dev": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/local.ts",
-    "start": "node -r dotenv-safe/config dist/index.js",
+    "start": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/local.ts",
     "build": "yarn clean && ttsc --project tsconfig.build.json && rollup -c",
     "deploy:dev": "serverless deploy",
     "deploy:prod": "serverless deploy --stage production",

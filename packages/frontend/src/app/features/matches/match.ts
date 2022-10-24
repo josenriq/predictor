@@ -156,6 +156,9 @@ export class ScoreComponent {
   // Adapted from: https://www.joshwcomeau.com/animation/3d-button/
   styles: [
     `
+      :host {
+        user-select: none;
+      }
       button * {
         pointer-events: none;
       }

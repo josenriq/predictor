@@ -73,7 +73,7 @@ type MatchSortOption = 'upcoming' | 'past' | 'stage';
         (click)="select('stage')"
         >By Stage</button
       >
-      <div class="tw-pl-20 sm:tw-pl-2"></div>
+      <div class="tw-pr-20 sm:tw-pr-2"></div>
     </app-side-scroller>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -120,18 +120,10 @@ export class ScoreComponent {
       (mousedown)="mouseDown($event)"
       (mouseup)="mouseUp()"
       (mouseleave)="mouseLeave()"
-      (touchstart)="absorb($event)"
-      (touchend)="absorb($event)"
-      (touchmove)="absorb($event)"
-      (touchcancel)="absorb($event)"
     >
       <!-- Background images for the bottom edge -->
       <div class="edge-container">
         <app-team-banner class="edge" [teamId]="teamId"></app-team-banner>
-        <app-team-banner
-          class="edge tw-translate-y-[-1px]"
-          [teamId]="teamId"
-        ></app-team-banner>
         <app-team-banner
           class="edge tw-translate-y-[-2px]"
           [teamId]="teamId"
@@ -164,6 +156,9 @@ export class ScoreComponent {
   // Adapted from: https://www.joshwcomeau.com/animation/3d-button/
   styles: [
     `
+      button * {
+        pointer-events: none;
+      }
       .pushable {
         position: relative;
         top: 4px;
@@ -253,11 +248,6 @@ export class TeamBannerButtonComponent {
       clearTimeout(this.holdTimeout);
       this.holdTimeout = null;
     }
-  }
-
-  absorb(event: Event): void {
-    event.preventDefault();
-    event.returnValue = false;
   }
 }
 

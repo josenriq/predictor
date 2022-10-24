@@ -120,6 +120,10 @@ export class ScoreComponent {
       (mousedown)="mouseDown($event)"
       (mouseup)="mouseUp()"
       (mouseleave)="mouseLeave()"
+      (touchstart)="absorb($event)"
+      (touchend)="absorb($event)"
+      (touchmove)="absorb($event)"
+      (touchcancel)="absorb($event)"
     >
       <!-- Background images for the bottom edge -->
       <div class="edge-container">
@@ -249,6 +253,11 @@ export class TeamBannerButtonComponent {
       clearTimeout(this.holdTimeout);
       this.holdTimeout = null;
     }
+  }
+
+  absorb(event: Event): void {
+    event.preventDefault();
+    event.returnValue = false;
   }
 }
 

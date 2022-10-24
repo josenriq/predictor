@@ -229,6 +229,8 @@ export class TeamBannerButtonComponent {
 
   mouseDown(event: MouseEvent): void {
     if (event.button !== 0) return; // only main click
+
+    event.preventDefault();
     this.holdTimeout = setTimeout(() => {
       this.reset.emit();
       this.holdTimeout = null;

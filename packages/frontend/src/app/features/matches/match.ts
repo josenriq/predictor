@@ -117,9 +117,12 @@ export class ScoreComponent {
     <button
       type="button"
       class="pushable"
-      (mousedown)="mouseDown($event)"
-      (mouseup)="mouseUp()"
-      (mouseleave)="mouseLeave()"
+      (touchstart)="pressDown($event)"
+      (touchend)="pressUp()"
+      (touchcancel)="pressCancel()"
+      (mousedown)="pressDown($event)"
+      (mouseup)="pressUp()"
+      (mouseleave)="pressCancel()"
     >
       <!-- Background images for the bottom edge -->
       <div class="edge-container">
@@ -230,8 +233,8 @@ export class TeamBannerButtonComponent {
 
   private holdTimeout: any;
 
-  mouseDown(event: MouseEvent): void {
-    if (event.button !== 0) return; // only main click
+  pressDown(event: MouseEvent | TouchEvent): void {
+    if ('button' in event && event.button !== 0) return; // only main click
 
     event.preventDefault();
     this.holdTimeout = setTimeout(() => {
@@ -240,7 +243,7 @@ export class TeamBannerButtonComponent {
     }, 600);
   }
 
-  mouseUp(): void {
+  pressUp(): void {
     if (this.holdTimeout) {
       clearTimeout(this.holdTimeout);
       this.holdTimeout = null;
@@ -248,7 +251,7 @@ export class TeamBannerButtonComponent {
     }
   }
 
-  mouseLeave(): void {
+  pressCancel(): void {
     if (this.holdTimeout) {
       clearTimeout(this.holdTimeout);
       this.holdTimeout = null;

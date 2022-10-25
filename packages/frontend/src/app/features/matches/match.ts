@@ -408,11 +408,15 @@ export class MatchStatusComponent {
             ></app-team-banner>
 
             <div class="tw-flex tw-flex-col tw-flex-nowrap">
-              <app-score
-                *ngIf="match.status !== MatchStatus.Unstarted"
-                [home]="match.score?.home"
-                [away]="match.score?.away"
-              ></app-score>
+              <ng-container
+                *ngIf="!!match.score && match.status !== MatchStatus.Unstarted"
+              >
+                <app-score
+                  [home]="match.score?.home"
+                  [away]="match.score?.away"
+                ></app-score>
+                <div class="tw-w-full tw-h-px tw-bg-gray-300"></div>
+              </ng-container>
               <app-score
                 class="tw-text-brand"
                 [home]="(prediction$ | async)?.home"

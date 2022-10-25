@@ -22,5 +22,51 @@
   </head>
   <body>
     <app-root></app-root>
+
+    <div id="splash-screen">
+      <style>
+        .splash-screen {
+          background-color: #f3f4f6; /* TODO: Use var */
+          width: 100vw;
+          height: 100vh;
+          position: fixed;
+          top: 0;
+          left: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          z-index: 9999;
+          transition: opacity 300ms;
+        }
+        .splash-screen--fade-out {
+          opacity: 0;
+        }
+      </style>
+      <div class="splash-screen"
+        ><img src="/assets/logo.svg" class="tw-h-10 tw-animate-pulse"
+      /></div>
+      <script>
+        window['__predictor_splash_screen__'] = function () {
+          var container = document.getElementById('splash-screen');
+          if (!container) return;
+          var screen = container.querySelector('.splash-screen');
+          if (!screen) {
+            if (!!container.parentElement) {
+              container.parentElement.removeChild(container);
+            }
+            return;
+          }
+
+          screen.classList.add('splash-screen--fade-out');
+          setTimeout(function () {
+            if (!container.parentElement) return;
+            container.parentElement.removeChild(container);
+          }, 300);
+
+          delete window['__predictor_splash_screen__'];
+        };
+      </script>
+    </div>
   </body>
 </html>

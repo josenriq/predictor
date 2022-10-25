@@ -7,7 +7,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SessionModule } from './session';
 import { environment } from 'environments';
-import { HttpClientModule } from '@angular/common/http';
+import { SplashScreenModule } from './splash-screen';
+import { DaemonsModule } from './daemons';
+import { HideSplashScreenDaemon } from './daemons/hide-splash-screen-daemon';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +23,8 @@ import { HttpClientModule } from '@angular/common/http';
     SessionModule.forRoot({
       apiBaseUri: environment.API_BASE_URI,
     }),
+    SplashScreenModule.forRoot(),
+    DaemonsModule.forRoot({ daemons: [HideSplashScreenDaemon] }),
   ],
   bootstrap: [AppComponent],
 })

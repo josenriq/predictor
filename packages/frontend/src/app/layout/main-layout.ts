@@ -12,9 +12,6 @@ import { SessionUser } from 'app/graphql';
 import { Session } from 'app/session';
 import { UIModule } from 'app/ui';
 
-@Directive({ selector: '[app-side-bar-slot]' })
-export class SideBarSlot {}
-
 @Component({
   selector: 'app-brand',
   template: `<img src="/assets/logo.svg" class="tw-h-10 tw-mx-auto" />`,
@@ -51,6 +48,28 @@ export class TopBarComponent {}
 })
 export class LoginCardComponent {
   @Input() loginUrl!: string;
+}
+
+@Component({
+  selector: 'app-arrow-indicator',
+  template: `
+    <div class=" tw-flex tw-items-center tw-justify-center tw-py-4">
+      <div
+        class="tw-h-1 tw-w-6 tw-rounded-sm tw-bg-gray-200 tw-transition-transform tw-duration-500 tw-translate-x-px"
+        [class.tw-rotate-12]="direction === 'down'"
+        [class.-tw-rotate-12]="direction === 'up'"
+      ></div>
+      <div
+        class="tw-h-1 tw-w-6 tw-rounded-sm tw-bg-gray-200 tw-transition-transform tw-duration-500 -tw-translate-x-px"
+        [class.-tw-rotate-12]="direction === 'down'"
+        [class.tw-rotate-12]="direction === 'up'"
+      ></div>
+    </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ArrowIndicatorComponent {
+  @Input() direction: 'up' | 'down' = 'up';
 }
 
 @Component({
@@ -92,16 +111,10 @@ export class LoginCardComponent {
       </app-card-section>
 
       <!-- Arrow indicator (Mobile) -->
-      <div
-        class="sm:tw-hidden tw-flex tw-items-center tw-justify-center tw-py-4"
-      >
-        <div
-          class="tw-h-1 tw-w-6 tw-bg-gray-200 tw-rotate-12 tw-translate-x-px"
-        ></div>
-        <div
-          class="tw-h-1 tw-w-6 tw-bg-gray-200 -tw-rotate-12 -tw-translate-x-px"
-        ></div>
-      </div>
+      <app-arrow-indicator
+        class="sm:tw-hidden"
+        [direction]="isMenuOpen ? 'down' : 'up'"
+      ></app-arrow-indicator>
 
       <!-- Menu -->
       <div class="sm:tw-rounded-b-lg sm:tw-overflow-hidden">
@@ -168,7 +181,7 @@ export class MainLayoutComponent {
   constructor(public readonly session: Session) {}
 }
 
-const DIRECTIVES = [SideBarSlot, MainLayoutComponent];
+const DIRECTIVES = [MainLayoutComponent];
 
 @NgModule({
   imports: [CommonModule, UIModule],
@@ -178,6 +191,7 @@ const DIRECTIVES = [SideBarSlot, MainLayoutComponent];
     TopBarComponent,
     LoginCardComponent,
     UserCardComponent,
+    ArrowIndicatorComponent,
   ],
   exports: DIRECTIVES,
 })

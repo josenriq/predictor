@@ -36,12 +36,7 @@ export class Session {
       distinctUntilChanged(),
       map(data => data.me),
     );
-    this.isAuthenticated$ = this.user$.pipe(
-      map(user => {
-        console.log('User', user);
-        return !!user;
-      }),
-    );
+    this.isAuthenticated$ = this.user$.pipe(map(user => !!user));
   }
 
   get loginUrl(): string {

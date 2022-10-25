@@ -85,7 +85,9 @@ export class LoginCardComponent {
           <!-- spacer -->
           <div class="tw-px-2"></div>
           <span class="tw-font-bold tw-text-5xl">{{ user?.points ?? 0 }}</span>
-          <span class="tw-font-bold tw-text-sm tw-pl-0.5">pts</span>
+          <span class="tw-font-bold tw-text-sm tw-pl-0.5">{{
+            (user?.points ?? 0) === 1 ? 'pt' : 'pts'
+          }}</span>
         </div>
       </app-card-section>
 

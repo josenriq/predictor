@@ -10,7 +10,7 @@ import { distinctUntilChanged, map, take, tap } from 'rxjs/operators';
 import { Maybe, Url } from 'app/core';
 import { SessionQuery, SessionQueryResult } from './session.query';
 import { SESSION_INITIALIZER } from './initializer';
-import { User, WatchQueryResult } from 'app/graphql';
+import { SessionUser, WatchQueryResult } from 'app/graphql';
 
 export type SessionOptions = { apiBaseUri: string };
 
@@ -21,7 +21,7 @@ export const SESSION_OPTIONS = new InjectionToken<SessionOptions>(
 @Injectable({ providedIn: 'root' })
 export class Session {
   private readonly sessionRef: WatchQueryResult<SessionQueryResult>;
-  public readonly user$: Observable<Maybe<User>>;
+  public readonly user$: Observable<Maybe<SessionUser>>;
   public readonly isAuthenticated$: Observable<boolean>;
   public readonly isLoading$: Observable<boolean>;
 

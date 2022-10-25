@@ -8,7 +8,7 @@ import {
   HostBinding,
 } from '@angular/core';
 import { Maybe } from 'app/core';
-import { User } from 'app/graphql';
+import { SessionUser } from 'app/graphql';
 import { Session } from 'app/session';
 import { UIModule } from 'app/ui';
 
@@ -84,7 +84,7 @@ export class LoginCardComponent {
         >
           <!-- spacer -->
           <div class="tw-px-2"></div>
-          <span class="tw-font-bold tw-text-5xl">88</span>
+          <span class="tw-font-bold tw-text-5xl">{{ user?.points ?? 0 }}</span>
           <span class="tw-font-bold tw-text-sm tw-pl-0.5">pts</span>
         </div>
       </app-card-section>
@@ -110,7 +110,7 @@ export class LoginCardComponent {
 export class UserCardComponent {
   @HostBinding('class') class = 'tw-block tw-pointer-events-none';
 
-  @Input() user!: Maybe<User>;
+  @Input() user!: Maybe<SessionUser>;
   @Input() logoutUrl!: string;
 
   isMenuOpen = false;

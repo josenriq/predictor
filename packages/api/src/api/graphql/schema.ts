@@ -5,6 +5,10 @@ import { UserTypeDef, UserResolver } from './user';
 import { TeamTypeDef, TeamResolver } from './team';
 import { MatchTypeDef, MatchResolver } from './match';
 import { PredictionTypeDef, PredictionResolver } from './prediction';
+import {
+  TournamentEntryTypeDef,
+  TournamentEntryResolver,
+} from './tournament-entry';
 
 // import { RelayPaginationTypeDef } from './pagination';
 
@@ -14,6 +18,7 @@ export const typeDefs = mergeTypeDefs([
   TeamTypeDef,
   MatchTypeDef,
   PredictionTypeDef,
+  TournamentEntryTypeDef,
   // RelayPaginationTypeDef,
 ]);
 
@@ -23,4 +28,5 @@ export const resolvers = mergeResolvers([
   TeamResolver,
   MatchResolver,
   PredictionResolver,
+  TournamentEntryResolver,
 ]);

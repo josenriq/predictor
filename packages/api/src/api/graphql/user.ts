@@ -3,6 +3,8 @@ import { Context } from '../context';
 import { Maybe } from '@predictor/core';
 import { SaveUserFlag, User } from '@predictor/domain/user';
 import { AuthenticationRequired, Id } from '@predictor/domain';
+import { FindTournamentEntry } from '@predictor/domain/tournament-entry';
+import { QATAR_2022 } from '@predictor/domain/tournament';
 
 export const UserTypeDef = gql`
   type User {
@@ -16,6 +18,7 @@ export const UserTypeDef = gql`
     name: String!
     picture: Url
     hasSeenTutorial: Boolean!
+    points: Int!
   }
 
   type SuccessOutput {
@@ -37,6 +40,16 @@ export const UserResolver = {
   SessionUser: {
     hasSeenTutorial(user: User): boolean {
       return !!user.flags['hasSeenTutorial'];
+    },
+
+    // TODO: Reconsider moving this under Tournament
+    async points(user: User, args: unknown, ctx: Context): Promise<number> {
+      const query = new FindTournamentEntry(ctx.tournamentEntryStorage);
+      const entry = await query.execute({
+        userId: user.id,
+        tournamentId: QATAR_2022,
+      });
+      return entry?.points ?? 0;
     },
   },
 

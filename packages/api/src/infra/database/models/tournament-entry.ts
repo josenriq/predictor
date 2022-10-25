@@ -1,8 +1,6 @@
 import { Guard, Maybe } from '@predictor/core';
 import { Id, Mapper } from '@predictor/domain';
 import {
-  FindTournamentEntryInput,
-  CreateTournamentEntryInput,
   TournamentEntry,
   TournamentEntryStorage,
 } from '@predictor/domain/tournament-entry';

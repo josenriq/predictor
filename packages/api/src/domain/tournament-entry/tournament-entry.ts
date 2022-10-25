@@ -15,16 +15,6 @@ export class TournamentEntry extends Entity<TournamentEntry> {
   }
 }
 
-export type FindTournamentEntryInput = {
-  tournamentId: Id;
-  userId: Id;
-};
-
-export type CreateTournamentEntryInput = {
-  tournamentId: Id;
-  userId: Id;
-};
-
 export type TournamentEntryStorage = Storage<TournamentEntry> & {
   findByUserAndTournament(
     userId: Id,

@@ -8,8 +8,8 @@ import {
   MatchStage,
 } from '@predictor/domain/match';
 import { GetTeam, Team } from '@predictor/domain/team';
-import { Id } from '@predictor/domain';
 import { FindPrediction, Prediction } from '@predictor/domain/prediction';
+import { QATAR_2022 } from '@predictor/domain/tournament';
 
 export const MatchTypeDef = gql`
   enum MatchStage {
@@ -83,7 +83,7 @@ export const MatchResolver = {
       ctx: Context,
     ): Promise<Array<Match>> {
       const query = new ListMatches(ctx.matchStorage);
-      return query.execute(Id.decode('qatar2022')); // TODO: Hardcoded Qatar 2022 :)
+      return query.execute(QATAR_2022);
     },
   },
 };

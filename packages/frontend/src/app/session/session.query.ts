@@ -12,6 +12,7 @@ export class SessionQuery extends QueryOperation<SessionQueryResult> {
         id
         name
         picture
+        points
       }
     }
   `;

@@ -96,6 +96,7 @@ export type SessionUser = {
   id: Scalars['ID'];
   name: Scalars['String'];
   picture?: Maybe<Scalars['Url']>;
+  points: Scalars['Int'];
 };
 
 export type SuccessOutput = {
@@ -105,6 +106,12 @@ export type SuccessOutput = {
 export type Team = {
   id: Scalars['ID'];
   name: Scalars['String'];
+};
+
+export type TournamentEntry = {
+  id: Scalars['ID'];
+  points: Scalars['Int'];
+  user: User;
 };
 
 export type User = {

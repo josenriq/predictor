@@ -14,7 +14,7 @@ client.connect(async err => {
     throw err;
   }
 
-  const db = client.db('predictor');
+  const db = client.db();
   const collections = await db.listCollections().toArray();
   const collectionExists = (name: string) =>
     !!collections.find(x => x.name === name);

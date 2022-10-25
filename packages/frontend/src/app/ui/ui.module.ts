@@ -3,6 +3,7 @@ import { AvatarModule } from './avatar';
 import { BadgeModule } from './badge';
 import { ButtonModule } from './button';
 import { CardModule } from './card';
+import { CountdownModule } from './countdown';
 import { LinkModule } from './link';
 import { MenuModule } from './menu';
 import { SideScrollerModule } from './side-scroller';
@@ -18,6 +19,7 @@ import { TeamBannerModule } from './team-banner';
     BadgeModule,
     TeamBannerModule,
     SideScrollerModule,
+    CountdownModule,
   ],
 })
 export class UIModule {}

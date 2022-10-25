@@ -166,6 +166,14 @@ export class UserCardComponent {
             [logoutUrl]="session.logoutUrl"
             class="tw-fixed tw-z-20 tw-left-0 tw-right-0 tw-bottom-0 sm:tw-static"
           ></app-user-card>
+
+          <!-- TODO: Remove when the WC starts! -->
+          <div class="tw-hidden sm:tw-flex tw-mt-6 tw-flex-col tw-gap-y-1">
+            <div class="tw-text-center tw-italic"
+              >World Cup is almost here!</div
+            >
+            <app-countdown></app-countdown>
+          </div>
         </aside>
 
         <section class="sm:tw-col-span-2 tw-px-4 sm:tw-px-0 tw-pb-[50vh]">

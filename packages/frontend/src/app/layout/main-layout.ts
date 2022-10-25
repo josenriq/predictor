@@ -89,6 +89,18 @@ export class LoginCardComponent {
         </div>
       </app-card-section>
 
+      <!-- Arrow indicator (Mobile) -->
+      <div
+        class="sm:tw-hidden tw-flex tw-items-center tw-justify-center tw-py-4"
+      >
+        <div
+          class="tw-h-1 tw-w-6 tw-bg-gray-200 tw-rotate-12 tw-translate-x-px"
+        ></div>
+        <div
+          class="tw-h-1 tw-w-6 tw-bg-gray-200 -tw-rotate-12 -tw-translate-x-px"
+        ></div>
+      </div>
+
       <!-- Menu -->
       <div class="sm:tw-rounded-b-lg sm:tw-overflow-hidden">
         <app-menu>

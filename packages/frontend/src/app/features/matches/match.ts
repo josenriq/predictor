@@ -8,9 +8,10 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
-  ChangeDetectorRef,
   OnInit,
   OnDestroy,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { Match, MatchStatus, PredictionOutcome, Team } from 'app/graphql';
 import { CommonModule } from '@angular/common';
@@ -49,8 +50,8 @@ export class TeamNameComponent {
   selector: 'app-score-number',
   template: `
     <div
+      #number
       class="tw-block tw-text-3xl tw-whitespace-nowrap tw-text-center tw-w-8 number"
-      [class.animated]="animated"
     >
       {{ !value && value !== 0 ? '?' : value }}
     </div>
@@ -78,18 +79,20 @@ export class TeamNameComponent {
 export class ScoreNumberComponent implements OnChanges {
   @Input() value?: number;
 
-  animated = false;
-
-  constructor(private readonly detector: ChangeDetectorRef) {}
+  @ViewChild('number') numberEl!: ElementRef<HTMLElement>;
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes['value'].isFirstChange()) return;
+    this.animate();
+  }
 
-    this.animated = false;
-    this.detector.detectChanges();
-    await delay(0);
-    this.animated = true;
-    this.detector.detectChanges();
+  private animate(): void {
+    if (!this.numberEl) return;
+
+    this.numberEl.nativeElement.classList.remove('animated');
+    requestAnimationFrame(() =>
+      this.numberEl.nativeElement.classList.add('animated'),
+    );
   }
 }
 

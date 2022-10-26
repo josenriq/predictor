@@ -12,6 +12,13 @@ import { NgModule, Component, ChangeDetectionStrategy } from '@angular/core';
       </div>
     </div>
   `,
+  styles: [
+    `
+      .tw-overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideScrollerComponent {}

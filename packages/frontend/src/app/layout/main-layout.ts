@@ -7,6 +7,7 @@ import {
   Input,
   HostBinding,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { Maybe } from 'app/core';
 import { SessionUser } from 'app/graphql';
 import { Session } from 'app/session';
@@ -14,7 +15,17 @@ import { UIModule } from 'app/ui';
 
 @Component({
   selector: 'app-brand',
-  template: `<img src="/assets/logo.svg" class="tw-h-10 tw-mx-auto" />`,
+  template: `<div
+    class="tw-h-10 tw-text-3xl tw-font-bold tw-text-brand tw-text-center tw-mx-auto"
+    >Qatar 2022 Predictor</div
+  >`,
+  styles: [
+    `
+      :host {
+        font-family: 'Reem Kufi Ink', sans-serif;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BrandComponent {}
@@ -37,11 +48,21 @@ export class TopBarComponent {}
   template: `
     <app-card [translucent]="true">
       <app-card-section>
-        <div class="tw-text-center tw-text-xl tw-py-4">Hey there 👋🏻</div>
+        <div class="tw-text-center tw-text-l tw-pt-4 tw-pb-1 tw-font-semibold"
+          >Welcome! 👋🏻</div
+        >
         <a [href]="loginUrl" app-button variant="primary" size="lg"
           >Sign in to play</a
         >
       </app-card-section>
+      <!-- Menu -->
+      <div class="sm:tw-rounded-b-lg sm:tw-overflow-hidden">
+        <app-menu>
+          <a routerLink="/" app-menu-item>Matches</a>
+          <a routerLink="/rankings" app-menu-item>Leaderboards</a>
+          <a routerLink="/about" app-menu-item>About</a>
+        </app-menu>
+      </div>
     </app-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -119,12 +140,13 @@ export class ArrowIndicatorComponent {
       <!-- Menu -->
       <div class="sm:tw-rounded-b-lg sm:tw-overflow-hidden">
         <app-menu>
-          <a href="/" app-menu-item>Matches</a>
-          <a href="/activity" app-menu-item>
+          <a routerLink="/" app-menu-item>Matches</a>
+          <!-- <a routerLink="/activity" app-menu-item>
             Activity
             <app-badge>170</app-badge>
-          </a>
-          <a href="/rankings" app-menu-item>Leaderboards</a>
+          </a> -->
+          <a routerLink="/rankings" app-menu-item>Leaderboards</a>
+          <a routerLink="/about" app-menu-item>About</a>
           <a [href]="logoutUrl" app-menu-item
             ><span class="tw-text-brand">Sign out</span></a
           >
@@ -154,7 +176,7 @@ export class UserCardComponent {
       <div
         class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-x-8 tw-items-start"
       >
-        <aside class="sm:tw-sticky sm:tw-top-20">
+        <aside class="sm:tw-sticky sm:tw-top-20 sm:tw-mt-20">
           <app-login-card
             *ngIf="!(session.user$ | async)"
             [loginUrl]="session.loginUrl"
@@ -170,7 +192,7 @@ export class UserCardComponent {
           <!-- TODO: Remove when the WC starts! -->
           <div class="tw-hidden sm:tw-flex tw-mt-6 tw-flex-col tw-gap-y-1">
             <div class="tw-text-center tw-italic"
-              >World Cup is almost here!</div
+              >The World Cup is almost here!</div
             >
             <app-countdown></app-countdown>
           </div>
@@ -178,7 +200,9 @@ export class UserCardComponent {
 
         <section class="sm:tw-col-span-2 tw-px-4 sm:tw-px-0 tw-pb-[50vh]">
           <app-top-bar></app-top-bar>
-          <ng-content></ng-content>
+          <div class="tw-pt-4 animate-fadeInUp">
+            <ng-content></ng-content>
+          </div>
         </section>
       </div>
     </div>
@@ -192,7 +216,7 @@ export class MainLayoutComponent {
 const DIRECTIVES = [MainLayoutComponent];
 
 @NgModule({
-  imports: [CommonModule, UIModule],
+  imports: [CommonModule, RouterModule, UIModule],
   declarations: [
     ...DIRECTIVES,
     BrandComponent,

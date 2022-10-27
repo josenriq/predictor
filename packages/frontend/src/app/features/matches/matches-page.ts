@@ -115,7 +115,7 @@ export class MatchesEmptyStateComponent {
         <app-match-sort-options
           [sortBy]="(sortBy$ | async) ?? 'upcoming'"
           (changed)="changeSort($event)"
-          class="tw-py-4"
+          class="tw-pb-4"
         ></app-match-sort-options>
 
         <ng-container *ngIf="!(isLoading$ | async)">

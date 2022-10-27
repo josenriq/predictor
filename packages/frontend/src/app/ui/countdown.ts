@@ -4,9 +4,9 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  AfterViewInit,
   OnDestroy,
   ChangeDetectorRef,
+  OnInit,
 } from '@angular/core';
 import { CoreModule } from 'app/core';
 import intervalToDuration from 'date-fns/intervalToDuration';
@@ -16,7 +16,7 @@ import intervalToDuration from 'date-fns/intervalToDuration';
   template: `
     <div class="tw-text-center tw-flex tw-flex-col tw-gap-y-1">
       <div
-        class="tw-p-2 tw-bg-brand tw-text-white tw-font-semibold tw-text-xl"
+        class="tw-p-2 tw-bg-gray-300 tw-text-brand tw-font-semibold tw-text-xl"
         [class.tw-rounded-l-md]="first"
         [class.tw-rounded-r-md]="last"
         >{{ value | pad }}</div
@@ -64,7 +64,7 @@ export class CountdownSlotComponent {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CountdownComponent implements AfterViewInit, OnDestroy {
+export class CountdownComponent implements OnInit, OnDestroy {
   @Input() date = new Date(Date.UTC(2022, 10, 20, 16)); // opening game!
 
   private countdownInterval?: NodeJS.Timer;
@@ -76,18 +76,22 @@ export class CountdownComponent implements AfterViewInit, OnDestroy {
 
   constructor(private readonly detector: ChangeDetectorRef) {}
 
-  ngAfterViewInit(): void {
+  private calculate(): void {
+    const duration = intervalToDuration({
+      start: new Date(),
+      end: this.date,
+    });
+
+    this.days = duration.days ?? 0;
+    this.hours = duration.hours ?? 0;
+    this.minutes = duration.minutes ?? 0;
+    this.seconds = duration.seconds ?? 0;
+  }
+
+  ngOnInit(): void {
+    this.calculate();
     this.countdownInterval = setInterval(() => {
-      const duration = intervalToDuration({
-        start: new Date(),
-        end: this.date,
-      });
-
-      this.days = duration.days ?? 0;
-      this.hours = duration.hours ?? 0;
-      this.minutes = duration.minutes ?? 0;
-      this.seconds = duration.seconds ?? 0;
-
+      this.calculate();
       this.detector.detectChanges();
     }, 1000);
   }

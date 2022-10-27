@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
   NgModule,
-  Directive,
   Component,
   ChangeDetectionStrategy,
   Input,
@@ -16,7 +15,7 @@ import { UIModule } from 'app/ui';
 @Component({
   selector: 'app-brand',
   template: `<div
-    class="tw-h-10 tw-text-3xl tw-font-bold tw-text-brand tw-text-center tw-mx-auto"
+    class="tw-h-10 tw-text-2xl tw-font-bold tw-text-brand tw-text-center tw-mx-auto"
     >Qatar 2022 Predictor</div
   >`,
   styles: [
@@ -56,7 +55,7 @@ export class TopBarComponent {}
         >
       </app-card-section>
       <!-- Menu -->
-      <div class="sm:tw-rounded-b-lg sm:tw-overflow-hidden">
+      <div class="md:tw-rounded-b-lg md:tw-overflow-hidden">
         <app-menu>
           <a routerLink="/" app-menu-item>Matches</a>
           <a routerLink="/rankings" app-menu-item>Leaderboards</a>
@@ -104,7 +103,7 @@ export class ArrowIndicatorComponent {
   ],
   template: `
     <app-card
-      class="tw-pointer-events-auto tw-mt-12 tw-translate-y-[195px] tw-transition-transform tw-duration-300 sm:tw-translate-y-0"
+      class="tw-pointer-events-auto tw-mt-12 tw-translate-y-[195px] tw-transition-transform tw-duration-300 md:tw-translate-y-0"
       [translucent]="true"
       [class.menu-open]="isMenuOpen"
       (click)="toggleMenu()"
@@ -133,12 +132,12 @@ export class ArrowIndicatorComponent {
 
       <!-- Arrow indicator (Mobile) -->
       <app-arrow-indicator
-        class="sm:tw-hidden"
+        class="md:tw-hidden"
         [direction]="isMenuOpen ? 'down' : 'up'"
       ></app-arrow-indicator>
 
       <!-- Menu -->
-      <div class="sm:tw-rounded-b-lg sm:tw-overflow-hidden">
+      <div class="md:tw-rounded-b-lg md:tw-overflow-hidden">
         <app-menu>
           <a routerLink="/" app-menu-item>Matches</a>
           <!-- <a routerLink="/activity" app-menu-item>
@@ -174,23 +173,23 @@ export class UserCardComponent {
   template: `
     <div class="tw-container tw-mx-auto">
       <div
-        class="tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-x-8 tw-items-start"
+        class="tw-grid tw-grid-cols-1 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-x-8 tw-items-start"
       >
-        <aside class="sm:tw-sticky sm:tw-top-20 sm:tw-mt-20">
+        <aside class="md:tw-sticky md:tw-top-20 md:tw-mt-20">
           <app-login-card
             *ngIf="!(session.user$ | async)"
             [loginUrl]="session.loginUrl"
-            class="tw-fixed tw-z-20 tw-left-0 tw-right-0 tw-bottom-0 sm:tw-static"
+            class="tw-fixed tw-z-20 tw-left-0 tw-right-0 tw-bottom-0 md:tw-static"
           ></app-login-card>
           <app-user-card
             *ngIf="!!(session.user$ | async)"
             [user]="session.user$ | async"
             [logoutUrl]="session.logoutUrl"
-            class="tw-fixed tw-z-20 tw-left-0 tw-right-0 tw-bottom-0 sm:tw-static"
+            class="tw-fixed tw-z-20 tw-left-0 tw-right-0 tw-bottom-0 md:tw-static"
           ></app-user-card>
 
           <!-- TODO: Remove when the WC starts! -->
-          <div class="tw-hidden sm:tw-flex tw-mt-6 tw-flex-col tw-gap-y-1">
+          <div class="tw-hidden md:tw-flex tw-mt-6 tw-flex-col tw-gap-y-1">
             <div class="tw-text-center tw-italic"
               >The World Cup is almost here!</div
             >
@@ -198,7 +197,7 @@ export class UserCardComponent {
           </div>
         </aside>
 
-        <section class="sm:tw-col-span-2 tw-px-4 sm:tw-px-0 tw-pb-[50vh]">
+        <section class="md:tw-col-span-2 tw-px-4 md:tw-px-0 tw-pb-[50vh]">
           <app-top-bar></app-top-bar>
           <div class="tw-pt-4 animate-fadeInUp">
             <ng-content></ng-content>

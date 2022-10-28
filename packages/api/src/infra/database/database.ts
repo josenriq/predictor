@@ -3,6 +3,8 @@ import { MatchStorage } from '@predictor/domain/match';
 import { TeamStorage } from '@predictor/domain/team';
 import { PredictionStorage } from '@predictor/domain/prediction';
 import { TournamentEntryStorage } from '@predictor/domain/tournament-entry';
+import { UserStorage } from '@predictor/domain/user';
+import { PartyStorage } from '@predictor/domain/party';
 import {
   getMatchDb,
   MatchMongooseStorage,
@@ -14,8 +16,9 @@ import {
   TournamentEntryMongooseStorage,
   UserMongooseStorage,
   getUserDb,
+  PartyMongooseStorage,
+  getPartyDb,
 } from './models';
-import { UserStorage } from '@predictor/domain/user';
 
 export type Database = {
   user: UserStorage;
@@ -23,6 +26,7 @@ export type Database = {
   match: MatchStorage;
   prediction: PredictionStorage;
   tournamentEntry: TournamentEntryStorage;
+  party: PartyStorage;
 };
 
 export function createDatabase(config: DatabaseConfig): Database {
@@ -34,5 +38,6 @@ export function createDatabase(config: DatabaseConfig): Database {
       getTournamentEntryDb(config),
     ),
     prediction: new PredictionMongooseStorage(getPredictionDb(config)),
+    party: new PartyMongooseStorage(getPartyDb(config)),
   };
 }

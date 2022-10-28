@@ -34,7 +34,7 @@ export async function bootstrap(
 
   const cors = {
     credentials: true,
-    origin: config.frontendUrl,
+    origin: [config.frontendUrl, 'https://studio.apollographql.com'],
   };
   secure(app, { cors });
 

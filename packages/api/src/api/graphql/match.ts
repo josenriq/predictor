@@ -78,8 +78,8 @@ export const MatchResolver = {
 
   Query: {
     async matches(
-      parent: unknown,
-      args: unknown,
+      parent: None,
+      args: None,
       ctx: Context,
     ): Promise<Array<Match>> {
       const query = new ListMatches(ctx.matchStorage);

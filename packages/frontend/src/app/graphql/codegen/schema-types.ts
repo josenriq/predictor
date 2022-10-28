@@ -22,6 +22,22 @@ export type Scalars = {
   Url: string;
 };
 
+export type AbandonPartyInput = {
+  partyId: Scalars['ID'];
+};
+
+export type CreatePartyInput = {
+  name: Scalars['String'];
+};
+
+export type CreatePartyOutput = {
+  party: Party;
+};
+
+export type JoinPartyInput = {
+  partyId: Scalars['ID'];
+};
+
 export type Match = {
   awayTeam: Team;
   group?: Maybe<Scalars['String']>;
@@ -56,12 +72,32 @@ export enum MatchStatus {
 }
 
 export type Mutation = {
+  abandonParty?: Maybe<SuccessOutput>;
+  createParty?: Maybe<CreatePartyOutput>;
+  joinParty?: Maybe<SuccessOutput>;
   markHasSeenTutorial?: Maybe<SuccessOutput>;
   savePrediction?: Maybe<SavePredictionOutput>;
 };
 
+export type MutationAbandonPartyArgs = {
+  input: AbandonPartyInput;
+};
+
+export type MutationCreatePartyArgs = {
+  input: CreatePartyInput;
+};
+
+export type MutationJoinPartyArgs = {
+  input: JoinPartyInput;
+};
+
 export type MutationSavePredictionArgs = {
   input: SavePredictionInput;
+};
+
+export type Party = {
+  id: Scalars['ID'];
+  name: Scalars['String'];
 };
 
 export type Prediction = {
@@ -95,6 +131,7 @@ export type SessionUser = {
   hasSeenTutorial: Scalars['Boolean'];
   id: Scalars['ID'];
   name: Scalars['String'];
+  parties: Array<Party>;
   picture?: Maybe<Scalars['Url']>;
   points: Scalars['Int'];
 };

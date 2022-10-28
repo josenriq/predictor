@@ -1,6 +1,7 @@
 import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge';
 
 import { ScalarTypeDef, ScalarResolver } from './scalars';
+import { SuccessOutputTypeDef } from './misc';
 import { UserTypeDef, UserResolver } from './user';
 import { TeamTypeDef, TeamResolver } from './team';
 import { MatchTypeDef, MatchResolver } from './match';
@@ -9,6 +10,7 @@ import {
   TournamentEntryTypeDef,
   TournamentEntryResolver,
 } from './tournament-entry';
+import { PartyTypeDef, PartyResolver } from './party';
 
 // import { RelayPaginationTypeDef } from './pagination';
 
@@ -19,7 +21,9 @@ export const typeDefs = mergeTypeDefs([
   MatchTypeDef,
   PredictionTypeDef,
   TournamentEntryTypeDef,
+  PartyTypeDef,
   // RelayPaginationTypeDef,
+  SuccessOutputTypeDef,
 ]);
 
 export const resolvers = mergeResolvers([
@@ -29,4 +33,5 @@ export const resolvers = mergeResolvers([
   MatchResolver,
   PredictionResolver,
   TournamentEntryResolver,
+  PartyResolver,
 ]);

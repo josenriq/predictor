@@ -1,3 +1,4 @@
+import { None } from '@predictor/core';
 import { TournamentEntry } from '@predictor/domain/tournament-entry';
 import { User } from '@predictor/domain/user';
 import { GetUser } from '@predictor/domain/user/queries';
@@ -14,7 +15,7 @@ export const TournamentEntryTypeDef = gql`
 
 export const TournamentEntryResolver = {
   TournamentEntry: {
-    user(entry: TournamentEntry, args: unknown, ctx: Context): Promise<User> {
+    user(entry: TournamentEntry, args: None, ctx: Context): Promise<User> {
       const query = new GetUser(ctx.userStorage);
       return query.execute(entry.userId);
     },

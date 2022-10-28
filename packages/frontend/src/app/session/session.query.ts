@@ -13,6 +13,10 @@ export class SessionQuery extends QueryOperation<SessionQueryResult> {
         name
         picture
         points
+        parties {
+          id
+          name
+        }
       }
     }
   `;

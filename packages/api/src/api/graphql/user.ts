@@ -1,10 +1,11 @@
 import gql from 'graphql-tag';
 import { Context } from '../context';
-import { Maybe } from '@predictor/core';
+import { Maybe, None } from '@predictor/core';
 import { SaveUserFlag, User } from '@predictor/domain/user';
 import { AuthenticationRequired, Id } from '@predictor/domain';
 import { FindTournamentEntry } from '@predictor/domain/tournament-entry';
 import { QATAR_2022 } from '@predictor/domain/tournament';
+import { ListJoinParties, Party } from '@predictor/domain/party';
 
 export const UserTypeDef = gql`
   type User {
@@ -19,10 +20,7 @@ export const UserTypeDef = gql`
     picture: Url
     hasSeenTutorial: Boolean!
     points: Int!
-  }
-
-  type SuccessOutput {
-    success: Boolean!
+    parties: [Party!]!
   }
 
   type Query {
@@ -42,8 +40,8 @@ export const UserResolver = {
       return !!user.flags['hasSeenTutorial'];
     },
 
-    // TODO: Reconsider moving this under Tournament
-    async points(user: User, args: unknown, ctx: Context): Promise<number> {
+    // TODO: Reconsider moving this under Tournament someday
+    async points(user: User, args: None, ctx: Context): Promise<number> {
       const query = new FindTournamentEntry(ctx.tournamentEntryStorage);
       const entry = await query.execute({
         userId: user.id,
@@ -51,18 +49,23 @@ export const UserResolver = {
       });
       return entry?.points ?? 0;
     },
+
+    parties(user: User, args: None, ctx: Context): Promise<Array<Party>> {
+      const query = new ListJoinParties(ctx.partyStorage);
+      return query.execute(user.id);
+    },
   },
 
   Query: {
-    me(parent: unknown, args: unknown, ctx: Context): Maybe<User> {
+    me(parent: None, args: None, ctx: Context): Maybe<User> {
       return ctx.viewer;
     },
   },
 
   Mutation: {
     async markHasSeenTutorial(
-      parent: unknown,
-      args: unknown,
+      parent: None,
+      args: None,
       ctx: Context,
     ): Promise<{ success: boolean }> {
       if (!ctx.viewer) {

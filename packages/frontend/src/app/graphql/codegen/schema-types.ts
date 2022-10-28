@@ -38,6 +38,12 @@ export type JoinPartyInput = {
   partyId: Scalars['ID'];
 };
 
+export type ListRankingsInput = {
+  pageNumber?: InputMaybe<Scalars['Int']>;
+  pageSize?: InputMaybe<Scalars['Int']>;
+  partyId?: InputMaybe<Scalars['ID']>;
+};
+
 export type Match = {
   awayTeam: Team;
   group?: Maybe<Scalars['String']>;
@@ -72,11 +78,11 @@ export enum MatchStatus {
 }
 
 export type Mutation = {
-  abandonParty?: Maybe<SuccessOutput>;
-  createParty?: Maybe<CreatePartyOutput>;
-  joinParty?: Maybe<SuccessOutput>;
-  markHasSeenTutorial?: Maybe<SuccessOutput>;
-  savePrediction?: Maybe<SavePredictionOutput>;
+  abandonParty: SuccessOutput;
+  createParty: CreatePartyOutput;
+  joinParty: SuccessOutput;
+  markHasSeenTutorial: SuccessOutput;
+  savePrediction: SavePredictionOutput;
 };
 
 export type MutationAbandonPartyArgs = {
@@ -116,6 +122,18 @@ export enum PredictionOutcome {
 export type Query = {
   matches: Array<Match>;
   me?: Maybe<SessionUser>;
+  rankings: RankingsPage;
+};
+
+export type QueryRankingsArgs = {
+  input: ListRankingsInput;
+};
+
+export type RankingsPage = {
+  hasMore: Scalars['Boolean'];
+  pageNumber: Scalars['Int'];
+  pageSize: Scalars['Int'];
+  results: Array<TournamentEntry>;
 };
 
 export type SavePredictionInput = {

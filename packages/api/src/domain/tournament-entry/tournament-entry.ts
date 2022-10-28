@@ -20,4 +20,11 @@ export type TournamentEntryStorage = Storage<TournamentEntry> & {
     userId: Id,
     tournamentId: Id,
   ): Promise<Maybe<TournamentEntry>>;
+
+  listOrderedByPoints(
+    tournamentId: Id,
+    limitToUserIds: Maybe<Array<Id>>,
+    pageSize: number,
+    pageNumber: number,
+  ): Promise<Array<TournamentEntry>>;
 };

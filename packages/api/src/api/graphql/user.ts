@@ -28,7 +28,7 @@ export const UserTypeDef = gql`
   }
 
   type Mutation {
-    markHasSeenTutorial: SuccessOutput
+    markHasSeenTutorial: SuccessOutput!
   }
 `;
 

@@ -23,6 +23,7 @@ import { DatabaseConfig } from '../config';
 const TABLE_NAME = 'TournamentEntry';
 
 @index({ userId: 1, tournamentId: 1 }, { unique: true })
+@index({ userId: 1, tournamentId: 1, points: -1 })
 export class TournamentEntryDbModel extends TimestampedDbModel {
   @prop({ required: true, index: true })
   public userId: string;
@@ -98,5 +99,25 @@ export class TournamentEntryMongooseStorage
       [Id.encode(userId), Id.encode(tournamentId)].join(','),
     );
     return record ? this.mapper.from(record) : void 0;
+  }
+
+  async listOrderedByPoints(
+    tournamentId: Id,
+    limitToUserIds: Maybe<Array<Id>>,
+    pageSize: number,
+    pageNumber: number,
+  ): Promise<Array<TournamentEntry>> {
+    const records = await this.db
+      .find({
+        tournamentId: Id.encode(tournamentId),
+        userId: limitToUserIds
+          ? { $in: limitToUserIds.map(Id.encode) }
+          : void 0,
+      })
+      .sort('-points')
+      .skip(pageNumber * pageSize)
+      .limit(pageSize);
+
+    return records.map(this.mapper.from);
   }
 }

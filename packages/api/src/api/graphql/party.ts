@@ -32,9 +32,9 @@ export const PartyTypeDef = gql`
   }
 
   type Mutation {
-    createParty(input: CreatePartyInput!): CreatePartyOutput
-    joinParty(input: JoinPartyInput!): SuccessOutput
-    abandonParty(input: AbandonPartyInput!): SuccessOutput
+    createParty(input: CreatePartyInput!): CreatePartyOutput!
+    joinParty(input: JoinPartyInput!): SuccessOutput!
+    abandonParty(input: AbandonPartyInput!): SuccessOutput!
   }
 `;
 

@@ -12,8 +12,6 @@ import {
 } from './tournament-entry';
 import { PartyTypeDef, PartyResolver } from './party';
 
-// import { RelayPaginationTypeDef } from './pagination';
-
 export const typeDefs = mergeTypeDefs([
   ScalarTypeDef,
   UserTypeDef,
@@ -22,7 +20,6 @@ export const typeDefs = mergeTypeDefs([
   PredictionTypeDef,
   TournamentEntryTypeDef,
   PartyTypeDef,
-  // RelayPaginationTypeDef,
   SuccessOutputTypeDef,
 ]);
 

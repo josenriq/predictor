@@ -33,7 +33,7 @@ export const PredictionTypeDef = gql`
   }
 
   type Mutation {
-    savePrediction(input: SavePredictionInput!): SavePredictionOutput
+    savePrediction(input: SavePredictionInput!): SavePredictionOutput!
   }
 `;
 

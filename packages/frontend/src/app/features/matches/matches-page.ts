@@ -62,17 +62,17 @@ type MatchSortOption = 'upcoming' | 'past' | 'stage';
         type="button"
         app-button
         [pill]="true"
-        [selected]="sortBy === 'past'"
-        (click)="select('past')"
-        >Past Matches</button
+        [selected]="sortBy === 'stage'"
+        (click)="select('stage')"
+        >By Stage</button
       >
       <button
         type="button"
         app-button
         [pill]="true"
-        [selected]="sortBy === 'stage'"
-        (click)="select('stage')"
-        >By Stage</button
+        [selected]="sortBy === 'past'"
+        (click)="select('past')"
+        >Past Matches</button
       >
       <div class="tw-pr-20 md:tw-pr-2"></div>
     </app-side-scroller>

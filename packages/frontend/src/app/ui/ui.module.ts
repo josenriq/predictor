@@ -5,7 +5,9 @@ import { ButtonModule } from './button';
 import { CardModule } from './card';
 import { CountdownModule } from './countdown';
 import { LinkModule } from './link';
+import { ListModule } from './list';
 import { MenuModule } from './menu';
+import { PointsModule } from './points';
 import { SideScrollerModule } from './side-scroller';
 import { TeamBannerModule } from './team-banner';
 
@@ -20,6 +22,8 @@ import { TeamBannerModule } from './team-banner';
     TeamBannerModule,
     SideScrollerModule,
     CountdownModule,
+    ListModule,
+    PointsModule,
   ],
 })
 export class UIModule {}

@@ -35,17 +35,11 @@ export class ListRankings
       userIds = party.memberIds;
     }
 
-    const results = await this.entryStorage.listOrderedByPoints(
+    return this.entryStorage.listOrderedByPoints(
       tournamentId,
       userIds,
       pageSize,
       pageNumber,
     );
-
-    return {
-      results,
-      pageSize,
-      pageNumber,
-    };
   }
 }

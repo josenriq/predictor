@@ -8,6 +8,7 @@ import { ApolloLink } from '@apollo/client/core';
 import { InMemoryCache } from '@apollo/client/cache';
 import { GraphqlErrorNotifier } from './error-notifier';
 import { Url } from 'app/core';
+import { typePolicies } from './type-policies';
 
 export type GraphQLModuleOptions = {
   apiBaseUri: string;
@@ -39,6 +40,7 @@ export class GraphQLModule {
               ]),
               cache: new InMemoryCache({
                 dataIdFromObject: object => (object as any).id,
+                typePolicies,
               }),
             };
           },

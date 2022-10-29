@@ -1,4 +1,4 @@
-import { Id, Entity, Storage } from '@predictor/domain';
+import { Id, Entity, Storage, Page } from '@predictor/domain';
 import { Guard, Maybe } from '@predictor/core';
 
 export class TournamentEntry extends Entity<TournamentEntry> {
@@ -26,5 +26,5 @@ export type TournamentEntryStorage = Storage<TournamentEntry> & {
     limitToUserIds: Maybe<Array<Id>>,
     pageSize: number,
     pageNumber: number,
-  ): Promise<Array<TournamentEntry>>;
+  ): Promise<Page<TournamentEntry>>;
 };

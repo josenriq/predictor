@@ -24,7 +24,12 @@ import { Size } from './size';
       [class.tw-bg-brand]="!picture"
       [class.tw-bg-white]="!!picture"
     >
-      <img *ngIf="picture" [src]="picture" class="tw-w-full tw-h-full" />
+      <img
+        *ngIf="picture"
+        [src]="picture"
+        class="tw-w-full tw-h-full"
+        referrerpolicy="no-referrer"
+      />
       <div
         *ngIf="!picture && name"
         class="tw-absolute tw-top-1/2 tw-left-1/2 -tw-translate-x-1/2 -tw-translate-y-1/2"

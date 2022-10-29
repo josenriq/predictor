@@ -1,5 +1,5 @@
 import { Guard, Maybe } from '@predictor/core';
-import { Id, Mapper } from '@predictor/domain';
+import { Id, Mapper, Page } from '@predictor/domain';
 import {
   TournamentEntry,
   TournamentEntryStorage,
@@ -106,18 +106,27 @@ export class TournamentEntryMongooseStorage
     limitToUserIds: Maybe<Array<Id>>,
     pageSize: number,
     pageNumber: number,
-  ): Promise<Array<TournamentEntry>> {
+  ): Promise<Page<TournamentEntry>> {
+    const filter: Record<string, any> = {
+      tournamentId: Id.encode(tournamentId),
+    };
+    if (limitToUserIds) {
+      filter['userId'] = { $in: limitToUserIds.map(Id.encode) };
+    }
+
+    const total = await this.db.find(filter).countDocuments();
+
     const records = await this.db
-      .find({
-        tournamentId: Id.encode(tournamentId),
-        userId: limitToUserIds
-          ? { $in: limitToUserIds.map(Id.encode) }
-          : void 0,
-      })
+      .find(filter)
       .sort('-points')
       .skip(pageNumber * pageSize)
       .limit(pageSize);
 
-    return records.map(this.mapper.from);
+    return {
+      results: records.map(this.mapper.from),
+      pageSize,
+      pageNumber,
+      hasMore: pageNumber * pageSize + records.length < total,
+    };
   }
 }

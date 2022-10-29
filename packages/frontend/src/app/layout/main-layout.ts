@@ -58,7 +58,7 @@ export class TopBarComponent {}
       <div class="md:tw-rounded-b-lg md:tw-overflow-hidden">
         <app-menu>
           <a routerLink="/" app-menu-item>Matches</a>
-          <a routerLink="/rankings" app-menu-item>Leaderboards</a>
+          <a routerLink="/leaderboards" app-menu-item>Leaderboards</a>
           <a routerLink="/about" app-menu-item>About</a>
         </app-menu>
       </div>
@@ -118,16 +118,11 @@ export class ArrowIndicatorComponent {
       <!-- Name and points -->
       <app-card-section class="tw-pb-4">
         <div class="tw-text-center tw-text-xl">{{ user?.name }}</div>
-        <div
-          class="tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-justify-center tw-text-brand"
-        >
-          <!-- spacer -->
-          <div class="tw-px-2"></div>
-          <span class="tw-font-bold tw-text-5xl">{{ user?.points ?? 0 }}</span>
-          <span class="tw-font-bold tw-text-sm tw-pl-0.5">{{
-            (user?.points ?? 0) === 1 ? 'pt' : 'pts'
-          }}</span>
-        </div>
+        <app-points
+          class="tw-text-brand tw-font-bold"
+          [points]="user?.points ?? 0"
+          size="lg"
+        ></app-points>
       </app-card-section>
 
       <!-- Arrow indicator (Mobile) -->
@@ -144,7 +139,7 @@ export class ArrowIndicatorComponent {
             Activity
             <app-badge>170</app-badge>
           </a> -->
-          <a routerLink="/rankings" app-menu-item>Leaderboards</a>
+          <a routerLink="/leaderboards" app-menu-item>Leaderboards</a>
           <a routerLink="/about" app-menu-item>About</a>
           <a [href]="logoutUrl" app-menu-item
             ><span class="tw-text-brand">Sign out</span></a

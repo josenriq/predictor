@@ -10,6 +10,7 @@ import { environment } from 'environments';
 import { SplashScreenModule } from './splash-screen';
 import { DaemonsModule } from './daemons';
 import { HideSplashScreenDaemon } from './daemons/hide-splash-screen-daemon';
+import { LayoutModule } from './layout';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,6 +26,7 @@ import { HideSplashScreenDaemon } from './daemons/hide-splash-screen-daemon';
     }),
     SplashScreenModule.forRoot(),
     DaemonsModule.forRoot({ daemons: [HideSplashScreenDaemon] }),
+    LayoutModule,
   ],
   bootstrap: [AppComponent],
 })

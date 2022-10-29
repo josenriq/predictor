@@ -20,7 +20,6 @@ import { MatchesQuery } from './matches.query';
 import { Match, MatchStage } from 'app/graphql';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { UIModule } from 'app/ui';
-import { LayoutModule } from 'app/layout';
 import { TrackByIdModule, TrackByModule } from 'ng-track-by';
 import { MatchModule, Score } from './match';
 import {
@@ -110,61 +109,59 @@ export class MatchesEmptyStateComponent {
 @Component({
   selector: 'app-matches-page',
   template: `
-    <app-main-layout>
-      <section class="tw-flex tw-flex-col tw-flex-nowrap">
-        <app-match-sort-options
+    <section class="tw-flex tw-flex-col tw-flex-nowrap">
+      <app-match-sort-options
+        [sortBy]="(sortBy$ | async) ?? 'upcoming'"
+        (changed)="changeSort($event)"
+        class="tw-pb-4"
+      ></app-match-sort-options>
+
+      <ng-container *ngIf="!(isLoading$ | async)">
+        <app-matches-empty-state
+          *ngIf="(matchBlocks$ | async)?.length === 0"
           [sortBy]="(sortBy$ | async) ?? 'upcoming'"
-          (changed)="changeSort($event)"
-          class="tw-pb-4"
-        ></app-match-sort-options>
+          class="animate-fadeIn"
+        ></app-matches-empty-state>
 
-        <ng-container *ngIf="!(isLoading$ | async)">
-          <app-matches-empty-state
-            *ngIf="(matchBlocks$ | async)?.length === 0"
-            [sortBy]="(sortBy$ | async) ?? 'upcoming'"
-            class="animate-fadeIn"
-          ></app-matches-empty-state>
+        <div
+          *ngFor="let block of matchBlocks$ | async; let blockIndex = index"
+          trackBy="title"
+        >
+          <h2
+            class="tw-text-center tw-p-4 tw-font-semibold tw-text-muted sticky-block animate-fadeInUp"
+            >{{ block.title }}</h2
+          >
 
           <div
-            *ngFor="let block of matchBlocks$ | async; let blockIndex = index"
-            trackBy="title"
+            class="tw-flex tw-flex-col tw-flex-nowrap tw-gap-y-8 tw-mt-2 tw-mb-8"
           >
-            <h2
-              class="tw-text-center tw-p-4 tw-font-semibold tw-text-muted sticky-block animate-fadeInUp"
-              >{{ block.title }}</h2
-            >
-
-            <div
-              class="tw-flex tw-flex-col tw-flex-nowrap tw-gap-y-8 tw-mt-2 tw-mb-8"
-            >
-              <app-match
-                *ngFor="let match of block.matches; let matchIndex = index"
-                trackById
-                class="animate-fadeInUp"
-                [match]="match"
-                (predictionChanged)="savePrediction(match.id, $event)"
-                [tutorial]="
-                  blockIndex === 0 &&
-                  matchIndex === 0 &&
-                  match.isOpenForPredictions &&
-                  (hasSeenTutorial$ | async) === false
-                "
-                (finishedTutorial)="markHasSeenTutorial()"
-              ></app-match>
-            </div>
+            <app-match
+              *ngFor="let match of block.matches; let matchIndex = index"
+              trackById
+              class="animate-fadeInUp"
+              [match]="match"
+              (predictionChanged)="savePrediction(match.id, $event)"
+              [tutorial]="
+                blockIndex === 0 &&
+                matchIndex === 0 &&
+                match.isOpenForPredictions &&
+                (hasSeenTutorial$ | async) === false
+              "
+              (finishedTutorial)="markHasSeenTutorial()"
+            ></app-match>
           </div>
+        </div>
 
-          <div
-            *ngIf="hasMore$ | async"
-            class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-py-8"
+        <div
+          *ngIf="hasMore$ | async"
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-py-8"
+        >
+          <button type="button" app-button (click)="loadMoreMatches()"
+            >View More</button
           >
-            <button type="button" app-button (click)="loadMoreMatches()"
-              >View More</button
-            >
-          </div>
-        </ng-container>
-      </section>
-    </app-main-layout>
+        </div>
+      </ng-container>
+    </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -408,7 +405,6 @@ const DIRECTIVES = [MatchesPageComponent];
   imports: [
     CommonModule,
     UIModule,
-    LayoutModule,
     TrackByModule,
     TrackByIdModule,
     MatchModule,

@@ -1,11 +1,10 @@
 import { NgModule, Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutModule } from 'app/layout';
 
 @Component({
   selector: 'app-terms-page',
-  template: ` <app-main-layout> Terms of Use goes here </app-main-layout> `,
+  template: `Terms of Use goes here`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TermsPageComponent {}
@@ -22,7 +21,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [TermsPageComponent],
-  imports: [CommonModule, LayoutModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
 export class TermsModule {}

@@ -11,7 +11,6 @@ import { map } from 'rxjs/operators';
 import { RankingsQuery } from './rankings.query';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
-import { LayoutModule } from 'app/layout';
 import { TrackByModule } from 'ng-track-by';
 import { Session } from 'app/session';
 import { TournamentEntry, WatchQueryResult } from 'app/graphql';
@@ -67,25 +66,23 @@ export class RankingComponent {
 @Component({
   selector: 'app-leaderboards-page',
   template: `
-    <app-main-layout>
-      <app-list *ngIf="(rankings$ | async)?.length ?? 0 > 0">
-        <app-list-item
-          *ngFor="let ranking of rankings$ | async"
-          trackBy="user.id"
-          class="animate-fadeInUp"
-          [highlighted]="ranking.user.id === (session.user$ | async)?.id"
-        >
-          <app-ranking [ranking]="ranking"></app-ranking>
-        </app-list-item>
-      </app-list>
-
-      <div
-        *ngIf="hasMore$ | async"
-        class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-py-8"
+    <app-list *ngIf="(rankings$ | async)?.length ?? 0 > 0">
+      <app-list-item
+        *ngFor="let ranking of rankings$ | async"
+        trackBy="user.id"
+        class="animate-fadeInUp"
+        [highlighted]="ranking.user.id === (session.user$ | async)?.id"
       >
-        <button type="button" app-button (click)="loadMore()">View More</button>
-      </div>
-    </app-main-layout>
+        <app-ranking [ranking]="ranking"></app-ranking>
+      </app-list-item>
+    </app-list>
+
+    <div
+      *ngIf="hasMore$ | async"
+      class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-py-8"
+    >
+      <button type="button" app-button (click)="loadMore()">View More</button>
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -163,7 +160,7 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
 const DIRECTIVES = [LeaderboardsPageComponent];
 
 @NgModule({
-  imports: [CommonModule, UIModule, LayoutModule, RouterModule, TrackByModule],
+  imports: [CommonModule, UIModule, RouterModule, TrackByModule],
   declarations: [...DIRECTIVES, RankingComponent, RankingPositionComponent],
   exports: DIRECTIVES,
 })

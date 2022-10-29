@@ -3,8 +3,11 @@ import { Daemons } from './daemons';
 
 @Component({
   selector: 'app-root',
-  template: `<router-outlet></router-outlet> `,
-  styles: [],
+  template: `
+    <app-main-layout>
+      <router-outlet></router-outlet>
+    </app-main-layout>
+  `,
 })
 export class AppComponent implements OnInit, OnDestroy {
   constructor(private readonly daemons: Daemons) {}

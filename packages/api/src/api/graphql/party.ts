@@ -5,6 +5,7 @@ import { AuthenticationRequired, Id } from '@predictor/domain';
 import {
   AbandonParty,
   CreateParty,
+  GetParty,
   JoinParty,
   Party,
 } from '@predictor/domain/party';
@@ -31,6 +32,10 @@ export const PartyTypeDef = gql`
     partyId: ID!
   }
 
+  type Query {
+    party(partyId: ID!): Party!
+  }
+
   type Mutation {
     createParty(input: CreatePartyInput!): CreatePartyOutput!
     joinParty(input: JoinPartyInput!): SuccessOutput!
@@ -40,6 +45,18 @@ export const PartyTypeDef = gql`
 
 export const PartyResolver = {
   Party: {},
+
+  Query: {
+    party(
+      parent: None,
+      { partyId }: { partyId: Id },
+      ctx: Context,
+    ): Promise<Party> {
+      Guard.require(partyId, 'partyId');
+      const query = new GetParty(ctx.partyStorage);
+      return query.execute(partyId);
+    },
+  },
 
   Mutation: {
     async createParty(

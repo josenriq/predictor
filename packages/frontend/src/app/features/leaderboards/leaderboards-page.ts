@@ -8,8 +8,8 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { lastValueFrom, Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { combineLatest, lastValueFrom, Observable, of, Subject } from 'rxjs';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
 import { RankingsQuery } from './rankings.query';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
@@ -19,6 +19,7 @@ import { Party, TournamentEntry, WatchQueryResult } from 'app/graphql';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PartiesQuery } from './parties.query';
 import { Maybe } from 'app/core';
+import { PartyQuery } from './party.query';
 
 type Ranking = TournamentEntry & {
   position: number;
@@ -113,9 +114,11 @@ export class PartySelectorComponent {
       <app-party-selector
         class="sticky-block tw-py-4 -tw-mt-4"
         [parties]="(parties$ | async) ?? []"
-        [selectedPartyId]="selectedPartyId$ | async"
+        [selectedPartyId]="(selectedParty$ | async)?.id"
         (changed)="changeParty($event)"
       ></app-party-selector>
+
+      <!-- {{ isMemberOfParty$ | async | json }} -->
 
       <!-- <div *ngIf="!(isLoading$ | async) && (rankings$ | async).length === 0" -->
 
@@ -147,7 +150,8 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
   isLoading$!: Observable<boolean>;
 
   parties$!: Observable<Party[]>;
-  selectedPartyId$!: Observable<Maybe<string>>;
+  selectedParty$!: Observable<Maybe<Party>>;
+  isMemberOfParty$!: Observable<boolean>;
 
   private readonly PAGE_SIZE = 20;
   private pageNumber = 0;
@@ -160,6 +164,7 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly rankingsQuery: RankingsQuery,
     private readonly partiesQuery: PartiesQuery,
+    private readonly partyQuery: PartyQuery,
   ) {}
 
   ngOnDestroy(): void {
@@ -170,18 +175,50 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadParties();
 
-    this.selectedPartyId$ = this.route.params.pipe(
-      map(params => params['partyId']),
-    );
-
-    this.selectedPartyId$
+    this.selectedParty$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(partyId => this.loadLeaderboard(partyId));
+      .subscribe(party => this.loadLeaderboard(party?.id));
   }
 
   private loadParties(): void {
-    const query = this.partiesQuery.watch();
-    this.parties$ = query.data$.pipe(map(data => data.me?.parties ?? []));
+    const partiesQuery = this.partiesQuery.watch();
+    const userParties$ = partiesQuery.data$.pipe(
+      map(data => data.me?.parties ?? []),
+    );
+
+    const selectedPartyId$: Observable<Maybe<string>> = this.route.params.pipe(
+      map(params => params['partyId']),
+    );
+
+    this.selectedParty$ = combineLatest([selectedPartyId$, userParties$]).pipe(
+      switchMap(([partyId, userParties]) => {
+        if (!partyId) return of(void 0);
+
+        const existingParty = userParties.find(p => p.id === partyId);
+        if (existingParty) return of(existingParty);
+
+        const query = this.partyQuery.watch({ partyId });
+        return query.data$.pipe(map(data => data.party));
+      }),
+    );
+
+    this.parties$ = combineLatest([userParties$, this.selectedParty$]).pipe(
+      map(([parties, selectedParty]) => {
+        if (!selectedParty) return parties;
+        const included = parties.some(p => p.id === selectedParty?.id);
+        return included ? parties : [...parties, selectedParty];
+      }),
+    );
+
+    this.isMemberOfParty$ = combineLatest([
+      userParties$,
+      this.selectedParty$,
+    ]).pipe(
+      map(([parties, selectedParty]) => {
+        if (!selectedParty) return false;
+        return parties.some(p => p.id === selectedParty?.id);
+      }),
+    );
   }
 
   private loadLeaderboard(partyId: Maybe<string>): void {
@@ -232,11 +269,15 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
   }
 
   async loadMore(): Promise<void> {
-    const partyId = await lastValueFrom(this.selectedPartyId$);
+    const party = await lastValueFrom(this.selectedParty$);
     this.pageNumber++;
 
     this.query.fetchMore({
-      input: { pageSize: this.PAGE_SIZE, pageNumber: this.pageNumber, partyId },
+      input: {
+        pageSize: this.PAGE_SIZE,
+        pageNumber: this.pageNumber,
+        partyId: party?.id,
+      },
     });
   }
 }

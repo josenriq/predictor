@@ -55,7 +55,7 @@ import { RouterModule, Routes } from '@angular/router';
       <li><b>Round of 16:</b> 5 pts exact / 2 pts correct</li>
       <li><b>Quater-finals:</b> 7 pts exact / 3 pts correct</li>
       <li><b>Semi-finals:</b> 9 pts exact / 4 pts correct</li>
-      <li><b>Third place:</b> 10 pts exact / 5 pts correct</li>
+      <li><b>Third place:</b> 10 pts exact / 4 pts correct</li>
       <li><b>Final:</b> 11 pts exact / 5 pts correct</li>
     </ul>
 
@@ -82,7 +82,7 @@ const routes: Routes = [
     path: '',
     component: AboutPageComponent,
     data: {
-      title: 'About Policy',
+      title: 'About',
     },
   },
 ];

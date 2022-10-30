@@ -91,7 +91,7 @@ export class MatchSortOptionsComponent {
 @Component({
   selector: 'app-matches-empty-state',
   template: `
-    <div class="tw-px-8 tw-py-16 tw-text-lg tw-text-center tw-text-muted">
+    <div class="tw-px-8 tw-py-16 tw-text-center tw-text-muted">
       <ng-container *ngIf="sortBy === 'upcoming'">
         No upcoming matches at this time. Thanks for playing!
       </ng-container>
@@ -127,9 +127,9 @@ export class MatchesEmptyStateComponent {
           *ngFor="let block of matchBlocks$ | async; let blockIndex = index"
           trackBy="title"
         >
-          <h2
+          <div
             class="tw-text-center tw-p-4 tw-font-semibold tw-text-muted sticky-block animate-fadeInUp"
-            >{{ block.title }}</h2
+            >{{ block.title }}</div
           >
 
           <div
@@ -153,10 +153,10 @@ export class MatchesEmptyStateComponent {
         </div>
 
         <div
-          *ngIf="hasMore$ | async"
+          *ngIf="(hasMore$ | async) && !(isLoading$ | async)"
           class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-py-8"
         >
-          <button type="button" app-button (click)="loadMoreMatches()"
+          <button type="button" app-button (click)="loadMore()"
             >View More</button
           >
         </div>
@@ -367,7 +367,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
     return blocks;
   }
 
-  loadMoreMatches(): void {
+  loadMore(): void {
     const limit = this.limit$.getValue();
     this.limit$.next(limit + this.PAGE_SIZE);
   }

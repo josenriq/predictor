@@ -21,7 +21,9 @@ export const SESSION_OPTIONS = new InjectionToken<SessionOptions>(
 @Injectable({ providedIn: 'root' })
 export class Session {
   private readonly sessionRef: WatchQueryResult<SessionQueryResult>;
-  public readonly user$: Observable<Maybe<SessionUser>>;
+  public readonly user$: Observable<
+    Maybe<Pick<SessionUser, 'id' | 'name' | 'picture' | 'points'>>
+  >;
   public readonly isAuthenticated$: Observable<boolean>;
   public readonly isLoading$: Observable<boolean>;
 

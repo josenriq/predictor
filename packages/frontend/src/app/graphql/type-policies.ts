@@ -6,7 +6,7 @@ export const typePolicies: TypePolicies = {
   Query: {
     fields: {
       rankings: {
-        keyArgs: ['partyId'],
+        keyArgs: ['input', ['partyId']],
         merge(existing: Maybe<RankingsPage>, incoming: RankingsPage) {
           return {
             ...incoming,

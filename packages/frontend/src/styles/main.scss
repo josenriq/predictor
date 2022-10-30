@@ -6,8 +6,14 @@
 
 @import '_text';
 @import '_button';
+@import '_input';
 @import '_animation';
 @import '_sticky';
+
+:root {
+  --fancy-font: theme('fontFamily.fancy');
+  --body-bg: theme('colors.light');
+}
 
 html {
   scroll-behavior: smooth;
@@ -16,5 +22,5 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-  background-color: theme('colors.light');
+  background-color: var(--body-bg);
 }

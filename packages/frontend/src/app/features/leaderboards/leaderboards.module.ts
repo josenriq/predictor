@@ -7,6 +7,13 @@ import {
 
 const routes: Routes = [
   {
+    path: ':partyId',
+    component: LeaderboardsPageComponent,
+    data: {
+      title: 'Leaderboards',
+    },
+  },
+  {
     path: '',
     component: LeaderboardsPageComponent,
     data: {

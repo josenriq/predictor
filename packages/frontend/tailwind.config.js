@@ -15,6 +15,9 @@ module.exports = {
       screens: containerScreens,
     },
     extend: {
+      fontFamily: {
+        'fancy': ['Reem Kufi Ink', 'sans-serif'],
+      },
       colors: {
         brand: '#83243A',
         muted: colors.gray['500'],

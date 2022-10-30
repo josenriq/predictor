@@ -15,16 +15,9 @@ import { UIModule } from 'app/ui';
 @Component({
   selector: 'app-brand',
   template: `<div
-    class="tw-h-10 tw-text-2xl tw-font-bold tw-text-brand tw-text-center tw-mx-auto"
+    class="tw-h-10 tw-text-2xl tw-font-fancy tw-font-bold tw-text-brand tw-text-center tw-mx-auto"
     >Qatar 2022 Predictor</div
   >`,
-  styles: [
-    `
-      :host {
-        font-family: 'Reem Kufi Ink', sans-serif;
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BrandComponent {}
@@ -117,7 +110,9 @@ export class ArrowIndicatorComponent {
 
       <!-- Name and points -->
       <app-card-section class="tw-pb-4">
-        <div class="tw-text-center tw-text-xl">{{ user?.name }}</div>
+        <div class="tw-text-center tw-text-xl tw-font-fancy">{{
+          user?.name
+        }}</div>
         <app-points
           class="tw-text-brand tw-font-bold"
           [points]="user?.points ?? 0"
@@ -153,7 +148,9 @@ export class ArrowIndicatorComponent {
 export class UserCardComponent {
   @HostBinding('class') class = 'tw-block tw-pointer-events-none';
 
-  @Input() user!: Maybe<SessionUser>;
+  @Input() user!: Maybe<
+    Pick<SessionUser, 'id' | 'name' | 'picture' | 'points'>
+  >;
   @Input() logoutUrl!: string;
 
   isMenuOpen = false;
@@ -185,7 +182,7 @@ export class UserCardComponent {
 
           <!-- TODO: Remove when the WC starts! -->
           <div class="tw-hidden md:tw-flex tw-mt-6 tw-flex-col tw-gap-y-1">
-            <div class="tw-text-center tw-italic"
+            <div class="tw-text-center tw-font-fancy tw-italic"
               >The World Cup is almost here!</div
             >
             <app-countdown></app-countdown>

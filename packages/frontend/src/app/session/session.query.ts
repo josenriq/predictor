@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import { QueryOperation, SessionUser } from 'app/graphql';
 
-export type SessionQueryResult = { me?: SessionUser };
+export type SessionQueryResult = {
+  me?: Pick<SessionUser, 'id' | 'name' | 'picture' | 'points'>;
+};
 
 @Injectable({ providedIn: 'root' })
 export class SessionQuery extends QueryOperation<SessionQueryResult> {
@@ -13,10 +15,6 @@ export class SessionQuery extends QueryOperation<SessionQueryResult> {
         name
         picture
         points
-        parties {
-          id
-          name
-        }
       }
     }
   `;

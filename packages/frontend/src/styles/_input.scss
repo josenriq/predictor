@@ -1,0 +1,34 @@
+.select-wrapper {
+  > select {
+    @apply tw-block tw-w-full tw-appearance-none tw-font-fancy tw-whitespace-nowrap tw-font-semibold tw-text-center tw-py-2 tw-px-10 tw-border tw-border-gray-300 tw-rounded tw-shadow-sm tw-cursor-pointer tw-bg-white tw-text-brand;
+
+    &:hover {
+      @apply tw-bg-gray-100;
+    }
+
+    &.select-sm {
+      @apply tw-py-1 tw-text-sm;
+    }
+    &.select-lg {
+      @apply tw-py-3 tw-text-xl tw-rounded-lg;
+    }
+  }
+
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    text-align: center;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+
+    width: 0;
+    height: 0;
+    border-left: 0.4em solid transparent;
+    border-right: 0.4em solid transparent;
+    border-top: 0.5em solid theme('colors.brand');
+  }
+}

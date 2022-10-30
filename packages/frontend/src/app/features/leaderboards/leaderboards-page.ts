@@ -28,7 +28,7 @@ type Ranking = TournamentEntry & {
   selector: 'app-ranking-position',
   template: `
     <div
-      class="tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-justify-center tw-w-10"
+      class="tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-justify-center tw-w-9"
     >
       <span class="tw-text-sm tw-pr-0.5">#</span>
       <span class="tw-text-2xl">{{ position }}</span>
@@ -43,7 +43,7 @@ export class RankingPositionComponent {
 @Component({
   selector: 'app-ranking',
   template: `
-    <div class="tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-gap-x-4">
+    <div class="tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-gap-x-3">
       <app-ranking-position
         class="tw-text-brand"
         [position]="ranking.position"

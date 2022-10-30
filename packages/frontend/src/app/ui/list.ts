@@ -23,10 +23,13 @@ export class ListItemComponent implements OnChanges {
 
   private buildClass(): string {
     const classes = [
-      'tw-block tw-px-4 tw-py-3 odd:tw-bg-white even:tw-bg-gray-50 first:tw-rounded-t last:tw-rounded-b',
+      'tw-block tw-p-3 odd:tw-bg-white even:tw-bg-gray-50 first:tw-rounded-t last:tw-rounded-b',
+      'tw-border-2',
     ];
     if (this.highlighted) {
-      classes.push('tw-border-brand tw-border-dashed tw-border-2');
+      classes.push('tw-border-brand tw-border-dashed');
+    } else {
+      classes.push('odd:tw-border-white even:tw-border-gray-50');
     }
     return classes.join(' ');
   }

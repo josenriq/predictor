@@ -1,6 +1,6 @@
 .select-wrapper {
   > select {
-    @apply tw-block tw-w-full tw-appearance-none tw-font-fancy tw-whitespace-nowrap tw-font-semibold tw-text-center tw-py-2 tw-px-10 tw-border tw-border-gray-300 tw-rounded tw-shadow-sm tw-cursor-pointer tw-bg-white tw-text-brand;
+    @apply tw-block tw-w-full tw-appearance-none tw-whitespace-nowrap tw-font-semibold tw-text-center tw-py-2 tw-px-10 tw-border tw-border-gray-300 tw-rounded tw-shadow-sm tw-cursor-pointer tw-bg-white tw-text-brand;
 
     &:hover {
       @apply tw-bg-gray-100;

@@ -73,18 +73,21 @@ export class RankingComponent {
     <div class="select-wrapper">
       <select
         #partySelect
-        class="select-lg"
+        class="select-lg sm:tw-text-center"
         (change)="select(partySelect.value)"
       >
-        <option [selected]="!selectedPartyId" [value]="worldwideParty"
-          >🌎 Worldwide</option
+        <option [selected]="!selectedPartyId" [value]="globalParty"
+          >🌎 Global Leaderboard</option
         >
+        <option *ngIf="parties.length > 0" disabled>───────────</option>
         <option
           *ngFor="let party of parties"
           [value]="party.id"
           [selected]="selectedPartyId === party.id"
           >{{ party.name }}</option
         >
+        <option disabled>───────────</option>
+        <option>Create new leaderboard…</option>
       </select>
     </div>
   `,
@@ -96,10 +99,10 @@ export class PartySelectorComponent {
 
   @Output() changed = new EventEmitter<Maybe<string>>();
 
-  public readonly worldwideParty = 'WORLDWIDE';
+  public readonly globalParty = 'GLOBAL';
 
   select(partyId: Maybe<string>): void {
-    this.changed.emit(partyId === this.worldwideParty ? void 0 : partyId);
+    this.changed.emit(partyId === this.globalParty ? void 0 : partyId);
   }
 }
 
@@ -108,7 +111,7 @@ export class PartySelectorComponent {
   template: `
     <section class="tw-flex tw-flex-col tw-flex-nowrap">
       <app-party-selector
-        class="tw-pb-4"
+        class="sticky-block tw-py-4 -tw-mt-4"
         [parties]="(parties$ | async) ?? []"
         [selectedPartyId]="selectedPartyId$ | async"
         (changed)="changeParty($event)"

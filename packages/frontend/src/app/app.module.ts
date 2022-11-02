@@ -10,7 +10,10 @@ import { environment } from 'environments';
 import { SplashScreenModule } from './splash-screen';
 import { DaemonsModule } from './daemons';
 import { HideSplashScreenDaemon } from './daemons/hide-splash-screen-daemon';
+import { TrackPagesDaemon } from './daemons/track-pages-daemon';
+import { TrackUserDaemon } from './daemons/track-user-daemon';
 import { LayoutModule } from './layout';
+import { AnalyticsModule } from './analytics';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,8 +28,14 @@ import { LayoutModule } from './layout';
       apiBaseUri: environment.API_BASE_URI,
     }),
     SplashScreenModule.forRoot(),
-    DaemonsModule.forRoot({ daemons: [HideSplashScreenDaemon] }),
+    DaemonsModule.forRoot({
+      daemons: [HideSplashScreenDaemon, TrackPagesDaemon, TrackUserDaemon],
+    }),
     LayoutModule,
+    AnalyticsModule.forRoot({
+      debug: !environment.production,
+      google: { id: environment.GOOGLE_ANALYTICS_ID },
+    }),
   ],
   bootstrap: [AppComponent],
 })

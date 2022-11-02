@@ -28,6 +28,11 @@ const routes: Routes = [
       (await import('app/features/misc/privacy')).PrivacyModule,
   },
   {
+    path: 'data-deletion',
+    loadChildren: async (): Promise<any> =>
+      (await import('app/features/misc/data-deletion')).DataDeletionModule,
+  },
+  {
     path: '',
     loadChildren: async (): Promise<any> =>
       (await import('app/features/matches')).MatchesModule,

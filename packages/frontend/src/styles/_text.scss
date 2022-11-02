@@ -4,7 +4,9 @@ h1 {
 h2 {
   @apply tw-font-semibold tw-text-xl tw-mb-4;
 }
-p {
+p,
+ul,
+ol {
   @apply tw-mb-3;
 }
 p + h1,

@@ -9,32 +9,14 @@ import { DOCUMENT } from '@angular/common';
 import { Script } from 'app/core';
 import { AnalyticsTracker } from './analytics';
 
-const GA = 'ga';
+type GoogleAnalyticsCommand = 'js' | 'config' | 'set' | 'event';
 
-type GoogleAnalyticsCommand = 'create' | 'send' | 'set' | 'remove';
+export type GoogleAnalyticsEvent = 'page_view' | 'login' | string;
 
-export type GoogleAnalyticsHit = 'pageview' | 'event' | 'social' | 'timing';
-
-function ga(cmd: GoogleAnalyticsCommand, ...args: Array<any>): void {
+function gtag(cmd: GoogleAnalyticsCommand, ...args: Array<any>): void {
   // @ts-ignore
-  const google = window[GA];
-  if (!google) return;
-  google(cmd, ...args);
-}
-
-function ensure(): void {
-  // @ts-ignore
-  window['GoogleAnalyticsObject'] = GA;
-  // @ts-ignore
-  (window[GA] =
-    // @ts-ignore
-    window[GA] ||
-    function (): void {
-      // @ts-ignore
-      (window[GA].q = window[GA].q || []).push(arguments); // eslint-disable-line prefer-rest-params
-    }),
-    // @ts-ignore
-    (window[GA].l = 1 * new Date());
+  const dataLayer = window['dataLayer'] ?? [];
+  dataLayer.push(cmd, ...args);
 }
 
 export type GoogleAnalyticsOptions = { id: string };
@@ -51,27 +33,23 @@ export class GoogleAnalytics {
   ) {
     this.id = options.id;
     if (!!this.id) {
-      ensure();
-      script.load(`https://www.google-analytics.com/analytics.js`);
+      script.load(`https://www.googletagmanager.com/gtag/js?id=${this.id}`);
     }
   }
 
   create(): void {
-    ga('create', this.id, 'auto');
+    gtag('js', new Date());
+    gtag('config', this.id);
   }
 
-  send(hit: GoogleAnalyticsHit, ...args: Array<any>): void {
-    ga('send', hit, ...args);
+  send(event: GoogleAnalyticsEvent, ...args: Array<any>): void {
+    gtag('event', event, ...args);
   }
 
   set(values: Record<string, unknown>): void;
   set(field: string, value: unknown): void;
   set(...args: Array<any>): void {
-    ga('set', ...args);
-  }
-
-  remove(): void {
-    ga('remove');
+    gtag('set', ...args);
   }
 }
 
@@ -85,8 +63,8 @@ export class GoogleAnalyticsTracker extends AnalyticsTracker {
     this.ga.create();
   }
 
-  override identify(id: string): void {
-    this.ga.set('userId', id);
+  override identify(userId: string): void {
+    this.ga.send('login', { userId });
   }
 
   override track(
@@ -95,7 +73,7 @@ export class GoogleAnalyticsTracker extends AnalyticsTracker {
     payload?: Record<string, any>,
   ): void {
     const label = !!payload ? JSON.stringify(payload) : void 0;
-    this.ga.send('event', category, event, label);
+    this.ga.send('event', `${category} - ${event}`, { category, event, label });
   }
 
   override page(): void {
@@ -104,12 +82,10 @@ export class GoogleAnalyticsTracker extends AnalyticsTracker {
       /([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})/gi,
       '',
     );
-    this.ga.set('location', url);
-    this.ga.send('pageview');
+    this.ga.send('page_view', { page_location: url });
   }
 
   override reset(): void {
-    this.ga.remove();
     this.ga.create();
   }
 }

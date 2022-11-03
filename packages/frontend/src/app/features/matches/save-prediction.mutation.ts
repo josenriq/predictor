@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
-import { Match, MutationOperation } from 'app/graphql';
-import { SavePredictionInput, SavePredictionOutput } from 'app/graphql';
+import {
+  MutationOperation,
+  SavePredictionInput,
+  SavePredictionOutput,
+} from 'app/graphql';
 
 export type SavePredictionResult = {
   savePrediction: SavePredictionOutput;

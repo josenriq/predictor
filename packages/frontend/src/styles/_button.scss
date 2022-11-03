@@ -1,8 +1,8 @@
 .btn {
   @apply tw-block tw-whitespace-nowrap tw-font-semibold tw-text-center tw-py-2 tw-px-4 tw-border tw-border-gray-300 tw-rounded tw-shadow-sm tw-cursor-pointer;
-  transition: transform 0.12s;
+  transition: transform 0.12s, opacity 0.2s;
 }
-.btn:active {
+.btn:active:not(:disabled) {
   transform: scale(0.95);
 }
 
@@ -36,4 +36,9 @@
 }
 .btn-primary.btn-selected {
   @apply tw-bg-white tw-text-brand;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: default;
 }

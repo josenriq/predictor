@@ -91,7 +91,7 @@ export class RankingComponent {
           >{{ party.name }}</option
         >
         <option disabled>───────────</option>
-        <option>Create new leaderboard…</option>
+        <option value="new">Create new leaderboard…</option>
       </select>
     </div>
   `,
@@ -102,11 +102,16 @@ export class PartySelectorComponent {
   @Input() parties: Party[] = [];
 
   @Output() changed = new EventEmitter<Maybe<string>>();
+  @Output() createNew = new EventEmitter<void>();
 
   public readonly globalParty = 'GLOBAL';
 
   select(partyId: Maybe<string>): void {
-    this.changed.emit(partyId === this.globalParty ? void 0 : partyId);
+    if (partyId === 'new') {
+      this.createNew.emit();
+    } else {
+      this.changed.emit(partyId === this.globalParty ? void 0 : partyId);
+    }
   }
 }
 
@@ -119,6 +124,7 @@ export class PartySelectorComponent {
         [parties]="(parties$ | async) ?? []"
         [selectedPartyId]="(selectedParty$ | async)?.id"
         (changed)="changeParty($event)"
+        (createNew)="createParty()"
       ></app-party-selector>
 
       <!-- {{ isMemberOfParty$ | async | json }} -->
@@ -268,6 +274,12 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
 
   changeParty(partyId: Maybe<string>): void {
     this.router.navigate(['../', partyId ?? GLOBAL_PARTY], {
+      relativeTo: this.route,
+    });
+  }
+
+  createParty(): void {
+    this.router.navigate(['../new'], {
       relativeTo: this.route,
     });
   }

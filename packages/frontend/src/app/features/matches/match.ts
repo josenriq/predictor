@@ -378,7 +378,7 @@ export class MatchStatusComponent {
       <app-card-section>
         <div class="tw-flex tw-flex-col tw-flex-nowrap">
           <div class="tw-text-center tw-text-xs tw-text-muted tw-mb-2">
-            {{ match.startsAt | date: 'MMM d, h:mm a' }}
+            {{ match.startsAt | date: 'EEE MMM d, h:mm a' }}
           </div>
 
           <app-tutorial

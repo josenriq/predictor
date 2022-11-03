@@ -147,7 +147,7 @@ export type SavePredictionInput = {
 };
 
 export type SavePredictionOutput = {
-  prediction: Prediction;
+  match: Match;
 };
 
 export type SessionUser = {

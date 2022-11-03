@@ -103,6 +103,18 @@ export class PredictionMongooseStorage
     });
   }
 
+  async save(prediction: Prediction): Promise<void> {
+    await super.save(prediction);
+
+    const compoundId = [
+      Id.encode(prediction.userId),
+      Id.encode(prediction.matchId),
+    ].join(',');
+    this.findByUserAndMatchLoader
+      .clear(compoundId)
+      .prime(compoundId, this.mapper.to(prediction));
+  }
+
   async findByUserAndMatch(
     userId: Id,
     matchId: Id,

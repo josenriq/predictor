@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
-import { MutationOperation } from 'app/graphql';
+import { Match, MutationOperation } from 'app/graphql';
 import { SavePredictionInput, SavePredictionOutput } from 'app/graphql';
 
 export type SavePredictionResult = {
@@ -15,26 +15,16 @@ export class SavePredictionMutation extends MutationOperation<
   override mutation = gql`
     mutation SavePrediction($input: SavePredictionInput!) {
       savePrediction(input: $input) {
-        prediction {
+        match {
           id
-          score
+          prediction {
+            id
+            score
+            outcome
+            points
+          }
         }
       }
     }
   `;
-
-  override optimisticResponse = ({
-    input,
-  }: {
-    input: SavePredictionInput;
-  }): SavePredictionResult => ({
-    savePrediction: {
-      __typename: 'SavePredictionOutput',
-      prediction: {
-        __typename: 'Prediction',
-        id: 'temp-id',
-        score: input.score,
-      },
-    } as SavePredictionOutput,
-  });
 }

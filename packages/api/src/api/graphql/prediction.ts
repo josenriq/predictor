@@ -2,12 +2,12 @@ import gql from 'graphql-tag';
 import { Context } from '../context';
 import { Guard, None } from '@predictor/core';
 import {
-  Prediction,
   PredictionOutcome,
   SavePrediction,
 } from '@predictor/domain/prediction';
 import { AuthenticationRequired, Id } from '@predictor/domain';
 import { Score } from '@predictor/domain/score';
+import { GetMatch, Match } from '@predictor/domain/match';
 
 export const PredictionTypeDef = gql`
   enum PredictionOutcome {
@@ -29,7 +29,7 @@ export const PredictionTypeDef = gql`
   }
 
   type SavePredictionOutput {
-    prediction: Prediction!
+    match: Match!
   }
 
   type Mutation {
@@ -47,7 +47,7 @@ export const PredictionResolver = {
       parent: None,
       { input }: { input: { matchId: Id; score: Score } },
       ctx: Context,
-    ): Promise<{ prediction: Prediction }> {
+    ): Promise<{ match: Match }> {
       Guard.require(input, 'input');
 
       if (!ctx.viewer) {
@@ -60,11 +60,14 @@ export const PredictionResolver = {
         ctx.tournamentEntryStorage,
       );
 
-      const prediction = await command.execute({
+      await command.execute({
         ...input,
         userId: ctx.viewer?.id as Id,
       });
-      return { prediction };
+
+      const query = new GetMatch(ctx.matchStorage);
+      const match = await query.execute(input.matchId);
+      return { match };
     },
   },
 };

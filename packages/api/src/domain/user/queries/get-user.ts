@@ -1,4 +1,4 @@
-import { Guard, Maybe } from '@predictor/core';
+import { Guard } from '@predictor/core';
 import { Id, Query } from '@predictor/domain';
 import { UserNotFound } from '../errors';
 import { User, UserStorage } from '../user';

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import {
   LeaderboardsPageModule,
   LeaderboardsPageComponent,
+  LeaderboardsRedirectorComponent,
 } from './leaderboards-page';
 
 const routes: Routes = [
@@ -15,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: LeaderboardsPageComponent,
+    component: LeaderboardsRedirectorComponent,
     data: {
       title: 'Leaderboards',
     },

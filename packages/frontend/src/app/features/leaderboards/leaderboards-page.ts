@@ -18,8 +18,11 @@ import { Session } from 'app/session';
 import { Party, TournamentEntry, WatchQueryResult } from 'app/graphql';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PartiesQuery } from './parties.query';
-import { Maybe } from 'app/core';
+import { LocalStorage, Maybe } from 'app/core';
 import { PartyQuery } from './party.query';
+
+const STORAGE_PARTY_ID = 'leaderboards:partyId';
+const GLOBAL_PARTY = 'global';
 
 type Ranking = TournamentEntry & {
   position: number;
@@ -162,6 +165,7 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
     public readonly session: Session,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly localStorage: LocalStorage,
     private readonly rankingsQuery: RankingsQuery,
     private readonly partiesQuery: PartiesQuery,
     private readonly partyQuery: PartyQuery,
@@ -175,9 +179,10 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadParties();
 
-    this.selectedParty$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(party => this.loadLeaderboard(party?.id));
+    this.selectedParty$.pipe(takeUntil(this.destroy$)).subscribe(party => {
+      this.localStorage.set(STORAGE_PARTY_ID, party?.id ?? GLOBAL_PARTY);
+      this.loadLeaderboard(party?.id);
+    });
   }
 
   private loadParties(): void {
@@ -188,6 +193,7 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
 
     const selectedPartyId$: Observable<Maybe<string>> = this.route.params.pipe(
       map(params => params['partyId']),
+      map(partyId => (partyId === GLOBAL_PARTY ? void 0 : partyId)),
     );
 
     this.selectedParty$ = combineLatest([selectedPartyId$, userParties$]).pipe(
@@ -261,11 +267,9 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
   }
 
   changeParty(partyId: Maybe<string>): void {
-    const path = ['/leaderboards']; // TODO: Make this relative somehow
-    if (partyId) {
-      path.push(partyId);
-    }
-    this.router.navigate(path);
+    this.router.navigate(['../', partyId ?? GLOBAL_PARTY], {
+      relativeTo: this.route,
+    });
   }
 
   async loadMore(): Promise<void> {
@@ -282,7 +286,28 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
   }
 }
 
-const DIRECTIVES = [LeaderboardsPageComponent];
+@Component({
+  selector: 'app-leaderboards-redirector',
+  template: ``,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class LeaderboardsRedirectorComponent implements OnInit {
+  constructor(
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly localStorage: LocalStorage,
+  ) {}
+
+  ngOnInit(): void {
+    const partyId = this.localStorage.get(STORAGE_PARTY_ID, GLOBAL_PARTY);
+    this.router.navigate(['./', partyId], {
+      relativeTo: this.route,
+      replaceUrl: true,
+    });
+  }
+}
+
+const DIRECTIVES = [LeaderboardsPageComponent, LeaderboardsRedirectorComponent];
 
 @NgModule({
   imports: [CommonModule, UIModule, RouterModule, TrackByModule],

@@ -412,6 +412,7 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
       // TODO: Inject navigator
       await navigator.share(shareData);
     } catch (error) {
+      console.warn('Could not use share API', error);
       // Default to copying the link
       this.clipboard.copy(shareData.url);
       // TODO: Toaster or modal

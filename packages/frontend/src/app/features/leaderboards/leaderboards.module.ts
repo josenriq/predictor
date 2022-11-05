@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {
-  CreateLeaderboardPageComponent,
-  CreateLeaderboardPageModule,
-} from './create-leaderboard-page';
+  CreatePartyPageComponent,
+  CreatePartyPageModule,
+} from './create-party-page';
 import {
   LeaderboardsPageModule,
   LeaderboardsPageComponent,
@@ -14,9 +14,9 @@ const routes: Routes = [
   {
     path: 'new',
     pathMatch: 'full',
-    component: CreateLeaderboardPageComponent,
+    component: CreatePartyPageComponent,
     data: {
-      title: 'Create Leaderboard',
+      title: 'Create Party',
     },
   },
   {
@@ -37,7 +37,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    CreateLeaderboardPageModule,
+    CreatePartyPageModule,
     LeaderboardsPageModule,
     RouterModule.forChild(routes),
   ],

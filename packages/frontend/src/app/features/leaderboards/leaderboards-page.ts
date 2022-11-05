@@ -83,7 +83,7 @@ export class RankingComponent {
         <option [selected]="!selectedPartyId" [value]="globalParty"
           >🌎 Global Leaderboard</option
         >
-        <option *ngIf="parties.length > 0" disabled>───────────</option>
+        <option *ngIf="parties.length > 0" disabled>Parties</option>
         <option
           *ngFor="let party of parties"
           [value]="party.id"
@@ -91,7 +91,7 @@ export class RankingComponent {
           >{{ party.name }}</option
         >
         <option disabled>───────────</option>
-        <option value="new">Create new leaderboard…</option>
+        <option value="new">Create new party…</option>
       </select>
     </div>
   `,

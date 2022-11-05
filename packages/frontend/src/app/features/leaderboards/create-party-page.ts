@@ -6,9 +6,8 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Inject,
 } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -101,7 +100,6 @@ export class CreatePartyPageComponent implements OnInit {
   busy = false;
 
   constructor(
-    @Inject(DOCUMENT) private readonly document: Document,
     private readonly session: Session,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
@@ -110,8 +108,7 @@ export class CreatePartyPageComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     if (!(await this.session.isAuthenticated())) {
-      // TODO: Show modal
-      this.document.location = this.session.loginUrl;
+      this.session.login();
       return;
     }
   }

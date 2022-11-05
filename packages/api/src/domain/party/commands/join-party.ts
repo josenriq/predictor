@@ -2,7 +2,7 @@ import { Guard } from '@predictor/core';
 import { Id, Command } from '@predictor/domain';
 import { UserNotFound, UserStorage } from '@predictor/domain/user';
 import { PartyNotFound } from '../errors';
-import { Party, PartyStorage } from '../party';
+import { PartyStorage } from '../party';
 
 export type JoinPartyInput = {
   partyId: Id;

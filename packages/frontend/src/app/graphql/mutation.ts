@@ -7,10 +7,7 @@ import {
 } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
 import { DocumentNode } from 'graphql';
-import { FetchResult } from '@apollo/client/core';
-import { DataProxy } from '@apollo/client/cache';
 import { formatError } from './format-error';
-// import { RefetchQueryDescription } from '@apollo/client/core/watchQueryOptions';
 
 export type MutationOptions<T, V> = Omit<
   Mutate<T, V>,
@@ -23,6 +20,7 @@ export abstract class MutationOperation<T extends any, V = OperationVariables> {
   protected readonly refetchQueries?: Array<
     string | DocumentNode | PureQueryOptions
   >;
+  protected readonly awaitRefetchQueries: boolean = false;
   protected readonly optimisticResponse?: T | ((vars: V) => T);
 
   constructor(protected readonly apollo: Apollo) {}
@@ -42,6 +40,10 @@ export abstract class MutationOperation<T extends any, V = OperationVariables> {
               ? q
               : { query: q },
           ),
+          awaitRefetchQueries:
+            this.refetchQueries &&
+            this.refetchQueries.length > 0 &&
+            this.awaitRefetchQueries,
           optimisticResponse: this.optimisticResponse,
         })
         .subscribe({
@@ -56,16 +58,3 @@ export abstract class MutationOperation<T extends any, V = OperationVariables> {
     );
   }
 }
-
-// {
-// variables,
-// awaitRefetchQueries = false,
-// optimisticResponse,
-// update,
-// }: {
-// variables?: OperationVariables;
-// refetchQueries?: Array<string | DocumentNode | PureQueryOptions>;
-// awaitRefetchQueries?: boolean;
-// optimisticResponse?: T | ((vars: OperationVariables) => T);
-// update?: Mutate<T>['update'];
-// } = {}): Promise<T> {

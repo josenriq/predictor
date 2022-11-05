@@ -7,7 +7,6 @@ import {
   Output,
   EventEmitter,
   OnDestroy,
-  Inject,
 } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import {
@@ -18,7 +17,7 @@ import {
 } from 'rxjs/operators';
 import { MatchesQuery } from './matches.query';
 import { Match, MatchStage } from 'app/graphql';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
 import { TrackByIdModule, TrackByModule } from 'ng-track-by';
 import { MatchModule, Score } from './match';
@@ -179,7 +178,6 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
   constructor(
-    @Inject(DOCUMENT) private readonly document: Document,
     private readonly session: Session,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
@@ -375,7 +373,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   async savePrediction(matchId: string, score: Score): Promise<void> {
     if (!(await this.session.isAuthenticated())) {
       // TODO: Show modal
-      this.document.location = this.session.loginUrl;
+      this.session.login();
       return;
     }
     try {

@@ -59,9 +59,10 @@ export function register(
     }),
   );
 
-  authRoute.get('/login', (req, res) =>
-    res.oidc.login({ returnTo: config.redirectionUrl }),
-  );
+  authRoute.get('/login', (req, res) => {
+    const returnTo = String(req.query['redir'] ?? config.redirectionUrl);
+    return res.oidc.login({ returnTo });
+  });
 
   return app.use('/', authRoute);
 }

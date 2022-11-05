@@ -18,8 +18,10 @@ import { Session } from 'app/session';
 import { Party, TournamentEntry, WatchQueryResult } from 'app/graphql';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PartiesQuery } from './parties.query';
-import { LocalStorage, Maybe } from 'app/core';
+import { LocalStorage, Clipboard, Maybe } from 'app/core';
 import { PartyQuery } from './party.query';
+import { AbandonPartyMutation } from './abandon-party.mutation';
+import { JoinPartyMutation } from './join-party.mutation';
 
 const STORAGE_PARTY_ID = 'leaderboards:partyId';
 const GLOBAL_PARTY = 'global';
@@ -127,9 +129,50 @@ export class PartySelectorComponent {
         (createNew)="createParty()"
       ></app-party-selector>
 
-      <!-- {{ isMemberOfParty$ | async | json }} -->
+      <!-- Empty state -->
+      <div
+        *ngIf="!(isLoading$ | async) && (rankings$ | async)?.length === 0"
+        class="tw-px-8 tw-py-16 tw-text-center tw-text-muted"
+      >
+        No rankings to display
+      </div>
 
-      <!-- <div *ngIf="!(isLoading$ | async) && (rankings$ | async).length === 0" -->
+      <!-- Share -->
+      <div
+        *ngIf="
+          !(isLoading$ | async) &&
+          (selectedParty$ | async) &&
+          (isMemberOfParty$ | async)
+        "
+        class="tw-pb-4 tw-text-center"
+      >
+        <a
+          href="javascript:void(0)"
+          class="text-link tw-text-lg tw-font-semibold"
+          (click)="shareSelectedParty()"
+          >Invite friends to join</a
+        >
+      </div>
+
+      <!-- Join -->
+      <div
+        *ngIf="
+          !(isLoading$ | async) &&
+          (selectedParty$ | async) &&
+          !(isMemberOfParty$ | async)
+        "
+        class="tw-pb-4"
+      >
+        <button
+          type="button"
+          app-button
+          variant="primary"
+          size="lg"
+          class="tw-w-full"
+          (click)="joinSelectedParty()"
+          >Join this party!</button
+        >
+      </div>
 
       <app-list *ngIf="(rankings$ | async)?.length ?? 0 > 0">
         <app-list-item
@@ -148,6 +191,23 @@ export class PartySelectorComponent {
       >
         <button type="button" app-button (click)="loadMore()">View More</button>
       </div>
+
+      <!-- Abandon -->
+      <div
+        *ngIf="
+          !(isLoading$ | async) &&
+          (selectedParty$ | async) &&
+          (isMemberOfParty$ | async)
+        "
+        class="tw-py-8 tw-text-center"
+      >
+        <a
+          href="javascript:void(0)"
+          class="text-link tw-text-sm"
+          (click)="abandonSelectedParty()"
+          >Abandon this party</a
+        >
+      </div>
     </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -162,6 +222,8 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
   selectedParty$!: Observable<Maybe<Party>>;
   isMemberOfParty$!: Observable<boolean>;
 
+  private selectedParty: Maybe<Party>;
+
   private readonly PAGE_SIZE = 20;
   private pageNumber = 0;
 
@@ -175,6 +237,9 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
     private readonly rankingsQuery: RankingsQuery,
     private readonly partiesQuery: PartiesQuery,
     private readonly partyQuery: PartyQuery,
+    private readonly joinPartyMutation: JoinPartyMutation,
+    private readonly abandonPartyMutation: AbandonPartyMutation,
+    private readonly clipboard: Clipboard,
   ) {}
 
   ngOnDestroy(): void {
@@ -186,6 +251,7 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
     this.loadParties();
 
     this.selectedParty$.pipe(takeUntil(this.destroy$)).subscribe(party => {
+      this.selectedParty = party;
       this.localStorage.set(STORAGE_PARTY_ID, party?.id ?? GLOBAL_PARTY);
       this.loadLeaderboard(party?.id);
     });
@@ -223,11 +289,12 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
     );
 
     this.isMemberOfParty$ = combineLatest([
+      this.session.isAuthenticated$,
       userParties$,
       this.selectedParty$,
     ]).pipe(
-      map(([parties, selectedParty]) => {
-        if (!selectedParty) return false;
+      map(([isAuthenticated, parties, selectedParty]) => {
+        if (!isAuthenticated || !selectedParty) return false;
         return parties.some(p => p.id === selectedParty?.id);
       }),
     );
@@ -272,6 +339,19 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
     this.isLoading$ = query.isLoading$;
   }
 
+  async loadMore(): Promise<void> {
+    const party = await lastValueFrom(this.selectedParty$);
+    this.pageNumber++;
+
+    this.query.fetchMore({
+      input: {
+        pageSize: this.PAGE_SIZE,
+        pageNumber: this.pageNumber,
+        partyId: party?.id,
+      },
+    });
+  }
+
   changeParty(partyId: Maybe<string>): void {
     this.router.navigate(['../', partyId ?? GLOBAL_PARTY], {
       relativeTo: this.route,
@@ -284,17 +364,59 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  async loadMore(): Promise<void> {
-    const party = await lastValueFrom(this.selectedParty$);
-    this.pageNumber++;
+  async joinSelectedParty(): Promise<void> {
+    if (!(await this.session.isAuthenticated())) {
+      this.session.login();
+      return;
+    }
 
-    this.query.fetchMore({
-      input: {
-        pageSize: this.PAGE_SIZE,
-        pageNumber: this.pageNumber,
-        partyId: party?.id,
-      },
-    });
+    if (!this.selectedParty) return;
+
+    try {
+      this.joinPartyMutation.mutate({
+        input: { partyId: this.selectedParty.id },
+      });
+    } catch (error) {
+      // TODO: Toaster
+      alert('Something went wrong. Please try again.');
+    }
+  }
+
+  async abandonSelectedParty(): Promise<void> {
+    if (!this.selectedParty) return;
+
+    if (!confirm('Are you sure you want to abandon this party?')) return;
+
+    try {
+      this.abandonPartyMutation.mutate({
+        input: { partyId: this.selectedParty.id },
+      });
+      this.router.navigate(['../global'], { relativeTo: this.route });
+    } catch (error) {
+      // TODO: Toaster
+      alert('Something went wrong. Please try again.');
+    }
+  }
+
+  async shareSelectedParty(): Promise<void> {
+    if (!this.selectedParty) return;
+
+    const shareData = {
+      title: 'Play Qatar 2022 Predictor',
+      text: `Join me at the "${this.selectedParty.name}" party and play the World Cup prediction game`,
+      url: `https://qatar2022.gg/leaderboards/${this.selectedParty.id}`,
+    };
+
+    try {
+      if (!navigator.canShare()) throw 'cannot-share';
+      // TODO: Inject navigator
+      await navigator.share(shareData);
+    } catch (error) {
+      // Default to copying the link
+      this.clipboard.copy(shareData.url);
+      // TODO: Toaster or modal
+      alert(`Invitation link copied and ready to be pasted 😉`);
+    }
   }
 }
 

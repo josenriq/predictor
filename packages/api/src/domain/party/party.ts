@@ -30,7 +30,7 @@ export class Party extends Entity<Party> {
       this.id,
       this.name,
       this.ownerId,
-      this.memberIds.filter(id => id !== userId),
+      this.memberIds.filter(id => !id.equals(userId)),
     );
   }
 

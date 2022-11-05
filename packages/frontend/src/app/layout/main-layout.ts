@@ -5,6 +5,8 @@ import {
   ChangeDetectionStrategy,
   Input,
   HostBinding,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Maybe } from 'app/core';
@@ -43,7 +45,12 @@ export class TopBarComponent {}
         <div class="tw-text-center tw-text-l tw-pt-4 tw-pb-1 tw-font-semibold"
           >Welcome! 👋🏻</div
         >
-        <a [href]="loginUrl" app-button variant="primary" size="lg"
+        <a
+          href="javascript:void(0)"
+          app-button
+          variant="primary"
+          size="lg"
+          (click)="login.emit()"
           >Sign in to play</a
         >
       </app-card-section>
@@ -60,7 +67,7 @@ export class TopBarComponent {}
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginCardComponent {
-  @Input() loginUrl!: string;
+  @Output() login = new EventEmitter<void>();
 }
 
 @Component({
@@ -170,8 +177,8 @@ export class UserCardComponent {
         <aside class="sm:tw-sticky sm:tw-top-20 sm:tw-mt-20">
           <app-login-card
             *ngIf="!(session.user$ | async)"
-            [loginUrl]="session.loginUrl"
             class="tw-fixed tw-z-20 tw-left-0 tw-right-0 tw-bottom-0 sm:tw-static"
+            (login)="session.login()"
           ></app-login-card>
           <app-user-card
             *ngIf="!!(session.user$ | async)"

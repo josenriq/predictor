@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { gql } from 'apollo-angular';
+import { Apollo, gql } from 'apollo-angular';
 import {
   MutationOperation,
   CreatePartyInput,
   CreatePartyOutput,
 } from 'app/graphql';
+import { PartiesQuery } from './parties.query';
 
 export type CreatePartyResult = {
   createParty: CreatePartyOutput;
@@ -15,6 +16,10 @@ export class CreatePartyMutation extends MutationOperation<
   CreatePartyResult,
   { input: CreatePartyInput }
 > {
+  constructor(apollo: Apollo, private partiesQuery: PartiesQuery) {
+    super(apollo);
+  }
+
   override mutation = gql`
     mutation CreateParty($input: CreatePartyInput!) {
       createParty(input: $input) {
@@ -25,4 +30,7 @@ export class CreatePartyMutation extends MutationOperation<
       }
     }
   `;
+
+  override refetchQueries = [this.partiesQuery.query];
+  override awaitRefetchQueries = true;
 }

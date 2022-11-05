@@ -11,6 +11,7 @@ import { Maybe, Url } from 'app/core';
 import { SessionQuery, SessionQueryResult } from './session.query';
 import { SESSION_INITIALIZER } from './initializer';
 import { SessionUser, WatchQueryResult } from 'app/graphql';
+import { DOCUMENT } from '@angular/common';
 
 export type SessionOptions = { apiBaseUri: string };
 
@@ -30,6 +31,7 @@ export class Session {
   constructor(
     private readonly sessionQuery: SessionQuery,
     @Inject(SESSION_OPTIONS) private readonly options: SessionOptions,
+    @Inject(DOCUMENT) private readonly document: Document,
   ) {
     this.sessionRef = this.sessionQuery.watch();
 
@@ -41,11 +43,16 @@ export class Session {
     this.isAuthenticated$ = this.user$.pipe(map(user => !!user));
   }
 
-  get loginUrl(): string {
-    return Url.join(this.options.apiBaseUri, '/login');
-  }
   get logoutUrl(): string {
     return Url.join(this.options.apiBaseUri, '/logout');
+  }
+
+  login(): void {
+    const loginUrl =
+      Url.join(this.options.apiBaseUri, '/login') +
+      `?redir=${encodeURIComponent(this.document.location.href)}`;
+
+    this.document.location = loginUrl;
   }
 
   isAuthenticated(): Promise<boolean> {

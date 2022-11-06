@@ -42,8 +42,9 @@ export class TopBarComponent {}
   template: `
     <app-card [translucent]="true">
       <app-card-section>
-        <div class="tw-text-center tw-text-l tw-pt-4 tw-pb-1 tw-font-semibold"
-          >Welcome! 👋🏻</div
+        <div class="tw-text-center tw-pb-3 tw-italic"
+          >Guess the scores of the upcoming World Cup and play against your
+          friends!</div
         >
         <a
           href="javascript:void(0)"

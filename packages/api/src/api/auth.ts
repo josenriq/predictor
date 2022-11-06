@@ -1,5 +1,7 @@
 import { Guard, Maybe } from '@predictor/core';
 import { Id, Url } from '@predictor/domain';
+import { QATAR_2022 } from '@predictor/domain/tournament';
+import { TournamentEntry } from '@predictor/domain/tournament-entry';
 import { User } from '@predictor/domain/user';
 import { Database } from '@predictor/infra/database';
 import { Application, Router } from 'express';
@@ -52,7 +54,14 @@ export function register(
 
         // Save user in our db if it doesn't exist
         const existingUser = await db.user.find(user.id);
-        if (!existingUser) await db.user.save(user);
+        if (!existingUser) {
+          await db.user.save(user);
+
+          // XXX: Ensure a tournament entry to Qatar
+          await db.tournamentEntry.save(
+            new TournamentEntry(Id.generate(), user.id, QATAR_2022, 0),
+          );
+        }
 
         return session;
       },

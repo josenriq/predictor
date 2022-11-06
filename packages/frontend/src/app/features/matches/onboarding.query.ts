@@ -3,7 +3,7 @@ import { gql } from '@apollo/client/core';
 import { QueryOperation, SessionUser } from 'app/graphql';
 
 export type OnboardingQueryResult = {
-  me: Pick<SessionUser, 'id' | 'hasSeenTutorial'>;
+  me: Pick<SessionUser, 'id' | 'hasSeenWelcome' | 'hasSeenTutorial'>;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -12,6 +12,7 @@ export class OnboardingQuery extends QueryOperation<OnboardingQueryResult> {
     query onboarding {
       me {
         id
+        hasSeenWelcome
         hasSeenTutorial
       }
     }

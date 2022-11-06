@@ -189,7 +189,7 @@ export class UserCardComponent {
           ></app-user-card>
 
           <!-- TODO: Remove when the WC starts! -->
-          <div class="tw-hidden sm:tw-flex tw-mt-6 tw-flex-col tw-gap-y-1">
+          <div class="tw-hidden sm:tw-flex tw-my-6 tw-flex-col tw-gap-y-1">
             <div class="tw-text-center tw-font-fancy tw-italic"
               >The World Cup is almost here!</div
             >

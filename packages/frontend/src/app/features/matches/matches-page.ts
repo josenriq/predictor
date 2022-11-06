@@ -30,11 +30,12 @@ import {
   isEqual,
 } from 'date-fns';
 import { localDateFrom } from 'app/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SavePredictionMutation } from './save-prediction.mutation';
 import { OnboardingQuery } from './onboarding.query';
 import { MarkHasSeenTutorialMutation } from './mark-has-seen-tutorial.mutation';
 import { Session } from 'app/session';
+import { MarkHasSeenWelcomeMutation } from './mark-has-seen-welcome.mutation';
 
 type MatchBlock = {
   title: string;
@@ -106,9 +107,47 @@ export class MatchesEmptyStateComponent {
 }
 
 @Component({
+  selector: 'app-onboarding-welcome',
+  template: `
+    <app-card variant="striped">
+      <app-card-section>
+        <div class="tw-flex tw-flex-col tw-gap-y-2">
+          <span class="tw-italic tw-text-center"
+            >Hey there {{ name }} 👋🏻 Make sure you
+            <a
+              class="text-link tw-font-semibold"
+              routerLink="/about"
+              (click)="dismissed.emit()"
+              >check out the rules</a
+            >, and good luck!</span
+          >
+          <button type="button" app-button (click)="dismissed.emit()"
+            >Got it</button
+          >
+        </div>
+      </app-card-section>
+    </app-card>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class OnboardingWelcomeComponent {
+  @Input() name!: string;
+  @Output() dismissed = new EventEmitter<void>();
+}
+
+@Component({
   selector: 'app-matches-page',
   template: `
     <section class="tw-flex tw-flex-col tw-flex-nowrap">
+      <app-onboarding-welcome
+        *ngIf="
+          !!(session.isAuthenticated$ | async) && !(hasSeenWelcome$ | async)
+        "
+        class="tw-mb-6"
+        [name]="(session.user$ | async)?.name ?? ''"
+        (dismissed)="markHasSeenWelcome()"
+      ></app-onboarding-welcome>
+
       <app-match-sort-options
         [sortBy]="(sortBy$ | async) ?? 'upcoming'"
         (changed)="changeSort($event)"
@@ -144,6 +183,7 @@ export class MatchesEmptyStateComponent {
                 blockIndex === 0 &&
                 matchIndex === 0 &&
                 match.isOpenForPredictions &&
+                !!(session.isAuthenticated$ | async) &&
                 (hasSeenTutorial$ | async) === false
               "
               (finishedTutorial)="markHasSeenTutorial()"
@@ -173,18 +213,20 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   private readonly PAGE_SIZE = 12;
   private readonly limit$ = new BehaviorSubject(this.PAGE_SIZE);
 
+  hasSeenWelcome$!: Observable<boolean>;
   hasSeenTutorial$!: Observable<boolean>;
 
   private readonly destroy$ = new Subject<void>();
 
   constructor(
-    private readonly session: Session,
+    public readonly session: Session,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly matchesQuery: MatchesQuery,
     private readonly savePredictionMutation: SavePredictionMutation,
     private readonly onbardingQuery: OnboardingQuery,
     private readonly markTutorialMutation: MarkHasSeenTutorialMutation,
+    private readonly markWelcomeMutation: MarkHasSeenWelcomeMutation,
   ) {}
 
   ngOnDestroy(): void {
@@ -274,6 +316,9 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   private loadTutorials(): void {
     const onbardingQuery = this.onbardingQuery.watch();
 
+    this.hasSeenWelcome$ = onbardingQuery.data$.pipe(
+      map(data => data.me?.hasSeenWelcome ?? false),
+    );
     this.hasSeenTutorial$ = onbardingQuery.data$.pipe(
       map(data => data.me?.hasSeenTutorial ?? false),
     );
@@ -384,6 +429,14 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  async markHasSeenWelcome(): Promise<void> {
+    try {
+      await this.markWelcomeMutation.mutate();
+    } catch (error) {
+      console.warn('Could not mark welcome as seen', error);
+    }
+  }
+
   async markHasSeenTutorial(): Promise<void> {
     if (!(await this.session.isAuthenticated())) {
       // Ignore, no need to save
@@ -406,11 +459,13 @@ const DIRECTIVES = [MatchesPageComponent];
     TrackByModule,
     TrackByIdModule,
     MatchModule,
+    RouterModule,
   ],
   declarations: [
     ...DIRECTIVES,
     MatchSortOptionsComponent,
     MatchesEmptyStateComponent,
+    OnboardingWelcomeComponent,
   ],
   exports: DIRECTIVES,
 })

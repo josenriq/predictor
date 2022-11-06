@@ -16,7 +16,7 @@ export class CardSectionComponent {
   @HostBinding('class') class = 'tw-block tw-p-4';
 }
 
-export type CardVariant = 'white' | 'light' | 'brand';
+export type CardVariant = 'white' | 'light' | 'brand' | 'striped';
 
 @Component({
   selector: 'app-card',
@@ -26,6 +26,7 @@ export type CardVariant = 'white' | 'light' | 'brand';
       [class.tw-bg-white]="variant === 'white'"
       [class.tw-bg-light]="variant === 'light'"
       [class.tw-bg-brand]="variant === 'brand'"
+      [class.striped]="variant === 'striped'"
       [class.tw-bg-opacity-80]="translucent"
       [class.tw-backdrop-blur-sm]="translucent"
     ></div>
@@ -33,6 +34,21 @@ export type CardVariant = 'white' | 'light' | 'brand';
       <ng-content></ng-content>
     </div>
   `,
+  styles: [
+    `
+      .striped {
+        background: repeating-linear-gradient(
+          -45deg,
+          var(--tw-bg-white),
+          var(--tw-bg-white),
+          10px,
+          var(--tw-bg-light),
+          10px,
+          var(--tw-bg-light) 20px
+        );
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {

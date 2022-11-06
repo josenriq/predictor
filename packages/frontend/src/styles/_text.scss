@@ -8,10 +8,10 @@ p,
 ul,
 ol {
   @apply tw-mb-3;
-}
-p + h1,
-p + h2 {
-  @apply tw-mt-6;
+  & + h1,
+  & + h2 {
+    @apply tw-mt-6;
+  }
 }
 
 ul {
@@ -24,6 +24,7 @@ ul > li {
 
 a.text-link {
   @apply tw-text-brand;
+  cursor: pointer;
   &:hover,
   &:active,
   &:focus {

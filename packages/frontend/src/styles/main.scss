@@ -13,6 +13,8 @@
 :root {
   --fancy-font: theme('fontFamily.fancy');
   --body-bg: theme('colors.light');
+  --tw-bg-white: theme('colors.white');
+  --tw-bg-light: theme('colors.light');
 }
 
 html {

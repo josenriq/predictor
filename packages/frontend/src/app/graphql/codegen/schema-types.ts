@@ -82,6 +82,7 @@ export type Mutation = {
   createParty: CreatePartyOutput;
   joinParty: SuccessOutput;
   markHasSeenTutorial: SuccessOutput;
+  markHasSeenWelcome: SuccessOutput;
   savePrediction: SavePredictionOutput;
 };
 
@@ -152,6 +153,7 @@ export type SavePredictionOutput = {
 
 export type SessionUser = {
   hasSeenTutorial: Scalars['Boolean'];
+  hasSeenWelcome: Scalars['Boolean'];
   id: Scalars['ID'];
   name: Scalars['String'];
   parties: Array<Party>;

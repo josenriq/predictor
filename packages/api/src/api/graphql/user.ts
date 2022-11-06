@@ -18,6 +18,7 @@ export const UserTypeDef = gql`
     id: ID!
     name: String!
     picture: Url
+    hasSeenWelcome: Boolean!
     hasSeenTutorial: Boolean!
     points: Int!
     parties: [Party!]!
@@ -28,6 +29,7 @@ export const UserTypeDef = gql`
   }
 
   type Mutation {
+    markHasSeenWelcome: SuccessOutput!
     markHasSeenTutorial: SuccessOutput!
   }
 `;
@@ -36,6 +38,10 @@ export const UserResolver = {
   User: {},
 
   SessionUser: {
+    hasSeenWelcome(user: User): boolean {
+      return !!user.flags['hasSeenWelcome'];
+    },
+
     hasSeenTutorial(user: User): boolean {
       return !!user.flags['hasSeenTutorial'];
     },
@@ -63,6 +69,26 @@ export const UserResolver = {
   },
 
   Mutation: {
+    async markHasSeenWelcome(
+      parent: None,
+      args: None,
+      ctx: Context,
+    ): Promise<{ success: boolean }> {
+      if (!ctx.viewer) {
+        throw new AuthenticationRequired();
+      }
+
+      const command = new SaveUserFlag(ctx.userStorage);
+
+      await command.execute({
+        userId: ctx.viewer?.id as Id,
+        flag: 'hasSeenWelcome',
+        value: true,
+      });
+
+      return { success: true };
+    },
+
     async markHasSeenTutorial(
       parent: None,
       args: None,

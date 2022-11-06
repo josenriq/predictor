@@ -18,11 +18,10 @@
 }
 
 .btn-secondary {
-  // @apply tw-bg-white tw-text-gray-800;
   @apply tw-bg-white tw-text-brand;
 }
 .btn-secondary:hover {
-  @apply tw-bg-gray-100;
+  @apply tw-bg-gray-50;
 }
 .btn-secondary.btn-selected {
   @apply tw-bg-brand tw-text-white;

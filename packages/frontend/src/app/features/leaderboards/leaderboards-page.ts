@@ -8,7 +8,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { combineLatest, lastValueFrom, Observable, of, Subject } from 'rxjs';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
 import { map, switchMap, takeUntil } from 'rxjs/operators';
 import { RankingsQuery } from './rankings.query';
 import { CommonModule } from '@angular/common';
@@ -340,14 +340,13 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
   }
 
   async loadMore(): Promise<void> {
-    const party = await lastValueFrom(this.selectedParty$);
     this.pageNumber++;
 
     this.query.fetchMore({
       input: {
         pageSize: this.PAGE_SIZE,
         pageNumber: this.pageNumber,
-        partyId: party?.id,
+        partyId: this.selectedParty?.id,
       },
     });
   }

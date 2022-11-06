@@ -22,6 +22,7 @@ import { LocalStorage, Clipboard, Maybe } from 'app/core';
 import { PartyQuery } from './party.query';
 import { AbandonPartyMutation } from './abandon-party.mutation';
 import { JoinPartyMutation } from './join-party.mutation';
+import { Confetti } from 'app/ui/confetti';
 
 const STORAGE_PARTY_ID = 'leaderboards:partyId';
 const GLOBAL_PARTY = 'global';
@@ -240,6 +241,7 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
     private readonly joinPartyMutation: JoinPartyMutation,
     private readonly abandonPartyMutation: AbandonPartyMutation,
     private readonly clipboard: Clipboard,
+    private readonly confetti: Confetti,
   ) {}
 
   ngOnDestroy(): void {
@@ -372,8 +374,14 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
     if (!this.selectedParty) return;
 
     try {
-      this.joinPartyMutation.mutate({
+      await this.joinPartyMutation.mutate({
         input: { partyId: this.selectedParty.id },
+      });
+
+      this.confetti.throw({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
       });
     } catch (error) {
       // TODO: Toaster
@@ -387,7 +395,7 @@ export class LeaderboardsPageComponent implements OnInit, OnDestroy {
     if (!confirm('Are you sure you want to abandon this party?')) return;
 
     try {
-      this.abandonPartyMutation.mutate({
+      await this.abandonPartyMutation.mutate({
         input: { partyId: this.selectedParty.id },
       });
       this.router.navigate(['../global'], { relativeTo: this.route });

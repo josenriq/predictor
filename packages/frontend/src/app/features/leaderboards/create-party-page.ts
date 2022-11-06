@@ -14,6 +14,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Party } from 'app/graphql';
 import { CreatePartyMutation } from './create-party.mutation';
 import { Session } from 'app/session';
+import { Confetti } from 'app/ui/confetti';
 
 @Component({
   selector: 'app-create-party-form',
@@ -104,6 +105,7 @@ export class CreatePartyPageComponent implements OnInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly createPartyMutation: CreatePartyMutation,
+    private readonly confetti: Confetti,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -118,6 +120,12 @@ export class CreatePartyPageComponent implements OnInit {
     this.busy = true;
     try {
       const result = await this.createPartyMutation.mutate({ input: { name } });
+
+      this.confetti.throw({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
 
       this.router.navigate(['../', result?.createParty.party.id], {
         relativeTo: this.route,

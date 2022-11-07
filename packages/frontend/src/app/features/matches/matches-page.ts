@@ -141,7 +141,8 @@ export class OnboardingWelcomeComponent {
     <section class="tw-flex tw-flex-col tw-flex-nowrap">
       <app-onboarding-welcome
         *ngIf="
-          !!(session.isAuthenticated$ | async) && !(hasSeenWelcome$ | async)
+          !!(session.isAuthenticated$ | async) &&
+          (hasSeenWelcome$ | async) === false
         "
         class="tw-mb-6"
         [name]="(session.user$ | async)?.name ?? ''"

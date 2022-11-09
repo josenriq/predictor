@@ -63,5 +63,13 @@ export class Match extends Entity<Match> {
 }
 
 export type MatchStorage = Storage<Match> & {
-  listPendingByTournament(tournamentId: Id): Promise<Array<Match>>;
+  listPendingByTournament(tournamentId: Id): Promise<Match[]>;
+};
+
+export type MatchChecker = {
+  checkForUpdates(matches: Match[]): Promise<Match[]>;
+};
+
+export type MatchNotifier = {
+  notify(match: Match): Promise<void>;
 };

@@ -32,6 +32,8 @@
     "start:api": "lerna run --scope @predictor/api --stream start",
     "build:api": "lerna run --scope @predictor/api --stream build",
     "deploy:api:prod": "lerna run --scope @predictor/api --stream deploy:prod",
+    "build:grader": "lerna run --scope @predictor/grader --stream build",
+    "deploy:grader:prod": "lerna run --scope @predictor/grader --stream deploy:prod",
     "build:frontend": "lerna run --scope @predictor/frontend --stream build"
   }
 }

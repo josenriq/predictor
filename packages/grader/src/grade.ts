@@ -1,6 +1,3 @@
-import { readConfig } from './config';
-import { createDatabase } from '@predictor/infra/database';
-import { connectToDatabase } from '@predictor/infra/mongo';
 import minimist from 'minimist';
 import { Id } from '@predictor/domain';
 import { GetMatch, MatchStatus, UpdateMatch } from '@predictor/domain/match';
@@ -11,10 +8,9 @@ import {
 } from '@predictor/domain/prediction';
 import { Guard } from '@predictor/core';
 import { Score } from '@predictor/domain/score';
+import { bootstrap } from './lambda/bootstrap';
 
 (async () => {
-  const config = readConfig();
-
   const { matchId, home, away, force } = minimist(process.argv.slice(2), {
     string: ['matchId'],
     boolean: ['force'],
@@ -29,8 +25,7 @@ import { Score } from '@predictor/domain/score';
     console.log('Usage: --matchId 123 --home 2 --away 1');
   }
 
-  const connection = await connectToDatabase(config.storage.mongoUri);
-  const db = createDatabase({ connection });
+  const { db } = await bootstrap();
 
   // Get match
   const match = await new GetMatch(db.match).execute(Id.decode(matchId));

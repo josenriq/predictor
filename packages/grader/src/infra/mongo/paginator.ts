@@ -2,12 +2,7 @@ import { Model, FilterQuery } from 'mongoose';
 import { DocumentType } from '@typegoose/typegoose';
 import { Guard } from '@predictor/core';
 import { Entity, Id } from '@predictor/domain';
-import {
-  RelayPaginationOptions,
-  Connection,
-  Page,
-  PageOptions,
-} from '@predictor/domain/pagination';
+import { Page, PageOptions } from '@predictor/domain/pagination';
 import { DbModel } from './db-model';
 
 export type MongoosePaginatorSortOptions<M extends DbModel> = {

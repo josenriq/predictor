@@ -325,7 +325,7 @@ export class TutorialComponent implements OnChanges {
     >
       <div
         *ngIf="match.status === MatchStatus.Ongoing"
-        class="tw-text-green-500 tw-font-semibold"
+        class="tw-text-red-500 tw-font-bold"
         >{{ match.time ?? 'Ongoing' }}</div
       >
       <div *ngIf="match.status === MatchStatus.Cancelled" class="tw-text-muted"
@@ -412,6 +412,9 @@ export class MatchStatusComponent {
                 *ngIf="!!match.score && match.status !== MatchStatus.Unstarted"
               >
                 <app-score
+                  [class.tw-animate-pulse]="
+                    match.status === MatchStatus.Ongoing
+                  "
                   [home]="match.score?.home"
                   [away]="match.score?.away"
                 ></app-score>

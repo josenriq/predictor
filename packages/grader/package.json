@@ -18,15 +18,24 @@
     "uid": "^2.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^23.0.1",
+    "@rollup/plugin-json": "^5.0.0",
     "@types/convict": "^6.1.1",
     "@types/node": "^18.7.18",
     "dotenv-safe": "^8.2.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^3.2.3",
+    "serverless": "^3.23.0",
     "ts-node-dev": "^2.0.0",
     "ttypescript": "^1.5.13",
     "typescript-transform-paths": "^3.3.1"
   },
   "scripts": {
-    "start": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/index.ts",
-    "grade": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/grade.ts"
+    "start": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/check-matches.ts",
+    "grade": "ts-node-dev --no-notify --compiler ttypescript --project tsconfig.json -r dotenv-safe/config -- src/grade.ts",
+    "build": "yarn clean && ttsc --project tsconfig.build.json && rollup -c",
+    "deploy:dev": "serverless deploy",
+    "deploy:prod": "serverless deploy --stage production",
+    "clean": "rimraf dist && rimraf out-tsc"
   }
 }

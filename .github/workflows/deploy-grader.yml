@@ -1,0 +1,19 @@
+name: deploy-grader
+run-name: Deploying Predictor Grader in AWS
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - run: yarn
+      - run: yarn serverless config credentials --provider aws --key ${{secrets.AWS_ACCESS_KEY}} --secret ${{secrets.AWS_ACCESS_SECRET}}
+      - run: yarn build:grader
+      - run: yarn deploy:grader:prod
+      - run: echo "Success!"

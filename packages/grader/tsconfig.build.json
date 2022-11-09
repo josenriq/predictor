@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "files": ["src/lambda/handlers/check-matches.ts"],
+  "compilerOptions": {
+    "module": "ESNext",
+    "outDir": "out-tsc"
+  }
+}

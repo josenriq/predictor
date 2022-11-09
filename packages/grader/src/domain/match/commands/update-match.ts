@@ -1,4 +1,4 @@
-import { Guard } from '@predictor/core';
+import { Guard, Maybe } from '@predictor/core';
 import { Id, Command } from '@predictor/domain';
 import { Score } from '@predictor/domain/score';
 import { MatchStatus, MatchStorage } from '../match';
@@ -7,8 +7,8 @@ import { MatchNotFound } from '../errors';
 export type UpdateMatchCommandInput = {
   matchId: Id;
   status: MatchStatus;
-  score?: Score;
-  time?: string;
+  score: Maybe<Score>;
+  time?: Maybe<string>;
 };
 
 export class UpdateMatch implements Command<UpdateMatchCommandInput> {

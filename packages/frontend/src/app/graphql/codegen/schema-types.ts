@@ -121,10 +121,15 @@ export enum PredictionOutcome {
 }
 
 export type Query = {
+  match: Match;
   matches: Array<Match>;
   me?: Maybe<SessionUser>;
   party: Party;
   rankings: RankingsPage;
+};
+
+export type QueryMatchArgs = {
+  matchId: Scalars['ID'];
 };
 
 export type QueryPartyArgs = {

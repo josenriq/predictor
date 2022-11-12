@@ -1,15 +1,17 @@
 import gql from 'graphql-tag';
 import { Context } from '../context';
-import { Maybe, None } from '@predictor/core';
+import { Guard, Maybe, None } from '@predictor/core';
 import {
   ListMatches,
   Match,
   MatchStatus,
   MatchStage,
+  GetMatch,
 } from '@predictor/domain/match';
 import { GetTeam, Team } from '@predictor/domain/team';
 import { FindPrediction, Prediction } from '@predictor/domain/prediction';
 import { QATAR_2022 } from '@predictor/domain/tournament';
+import { Id } from '@predictor/domain';
 
 export const MatchTypeDef = gql`
   enum MatchStage {
@@ -47,6 +49,7 @@ export const MatchTypeDef = gql`
 
   type Query {
     matches: [Match!]!
+    match(matchId: ID!): Match!
   }
 `;
 
@@ -84,6 +87,16 @@ export const MatchResolver = {
     ): Promise<Array<Match>> {
       const query = new ListMatches(ctx.matchStorage);
       return query.execute(QATAR_2022);
+    },
+
+    match(
+      parent: None,
+      { matchId }: { matchId: Id },
+      ctx: Context,
+    ): Promise<Match> {
+      Guard.require(matchId, 'matchId');
+      const query = new GetMatch(ctx.matchStorage);
+      return query.execute(matchId);
     },
   },
 };

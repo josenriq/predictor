@@ -415,8 +415,10 @@ export class MatchStatusComponent {
                   [class.tw-animate-pulse]="
                     match.status === MatchStatus.Ongoing
                   "
+                  [class.tw-text-red-500]="match.status === MatchStatus.Ongoing"
                   [home]="match.score?.home"
                   [away]="match.score?.away"
+                  title="Actual result"
                 ></app-score>
                 <div class="tw-w-full tw-h-px tw-bg-gray-300"></div>
               </ng-container>
@@ -424,6 +426,7 @@ export class MatchStatusComponent {
                 class="tw-text-brand"
                 [home]="(prediction$ | async)?.home"
                 [away]="(prediction$ | async)?.away"
+                title="Your guess"
               ></app-score>
             </div>
 

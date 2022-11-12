@@ -41,7 +41,7 @@ export async function checkAndGradeMatches(ctx: AppContext): Promise<void> {
 async function updateMatch(match: Match, ctx: AppContext): Promise<void> {
   console.log(`Updating match ${match.id}`);
 
-  await new UpdateMatch(ctx.db.match).execute({
+  await new UpdateMatch(ctx.db.match, ctx.notifier).execute({
     matchId: match.id,
     status: match.status,
     score: match.score,

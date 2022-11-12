@@ -12,8 +12,10 @@ import { DaemonsModule } from './daemons';
 import { HideSplashScreenDaemon } from './daemons/hide-splash-screen-daemon';
 import { TrackPagesDaemon } from './daemons/track-pages-daemon';
 import { TrackUserDaemon } from './daemons/track-user-daemon';
+import { RefetchMatchDaemon } from './daemons/refetch-match-daemon';
 import { LayoutModule } from './layout';
 import { AnalyticsModule } from './analytics';
+import { PusherModule } from './pusher';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,12 +31,20 @@ import { AnalyticsModule } from './analytics';
     }),
     SplashScreenModule.forRoot(),
     DaemonsModule.forRoot({
-      daemons: [HideSplashScreenDaemon, TrackPagesDaemon, TrackUserDaemon],
+      daemons: [
+        HideSplashScreenDaemon,
+        TrackPagesDaemon,
+        TrackUserDaemon,
+        RefetchMatchDaemon,
+      ],
     }),
     LayoutModule,
     AnalyticsModule.forRoot({
       debug: !environment.production,
       google: { id: environment.GOOGLE_ANALYTICS_ID },
+    }),
+    PusherModule.forRoot({
+      key: environment.PUSHER_KEY,
     }),
   ],
   bootstrap: [AppComponent],

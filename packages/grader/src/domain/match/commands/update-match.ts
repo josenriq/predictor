@@ -1,7 +1,7 @@
 import { Guard, Maybe } from '@predictor/core';
 import { Id, Command } from '@predictor/domain';
 import { Score } from '@predictor/domain/score';
-import { MatchStatus, MatchStorage } from '../match';
+import { MatchNotifier, MatchStatus, MatchStorage } from '../match';
 import { MatchNotFound } from '../errors';
 
 export type UpdateMatchCommandInput = {
@@ -13,7 +13,8 @@ export type UpdateMatchCommandInput = {
 
 export class UpdateMatch implements Command<UpdateMatchCommandInput> {
   constructor(
-    private readonly matchStorage: MatchStorage, // pusher repository
+    private readonly matchStorage: MatchStorage,
+    private readonly matchNotifier: MatchNotifier,
   ) {
     Guard.require(this.matchStorage, 'matchStorage');
   }
@@ -33,6 +34,6 @@ export class UpdateMatch implements Command<UpdateMatchCommandInput> {
     );
     await this.matchStorage.save(updatedMatch);
 
-    // TODO: Use pusher to notify
+    await this.matchNotifier.notify(updatedMatch);
   }
 }

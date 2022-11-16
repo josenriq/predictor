@@ -16,7 +16,7 @@ functions:
     handler: dist/check-matches.handler
     timeout: 60
     events:
-      - schedule: rate(1 minute)
+      # - schedule: rate(1 minute)
       - http:
           path: check-matches
           method: get

@@ -13,6 +13,7 @@ import { Maybe } from 'app/core';
 import { SessionUser } from 'app/graphql';
 import { Session } from 'app/session';
 import { UIModule } from 'app/ui';
+import { isBefore } from 'date-fns';
 
 @Component({
   selector: 'app-brand',
@@ -189,11 +190,14 @@ export class UserCardComponent {
           ></app-user-card>
 
           <!-- TODO: Remove when the WC starts! -->
-          <div class="tw-hidden sm:tw-flex tw-my-6 tw-flex-col tw-gap-y-1">
+          <div
+            *ngIf="showCountdown"
+            class="tw-hidden sm:tw-flex tw-my-6 tw-flex-col tw-gap-y-1"
+          >
             <div class="tw-text-center tw-font-fancy tw-italic"
               >The World Cup is almost here!</div
             >
-            <app-countdown></app-countdown>
+            <app-countdown [date]="kickoff"></app-countdown>
           </div>
         </aside>
 
@@ -210,6 +214,9 @@ export class UserCardComponent {
 })
 export class MainLayoutComponent {
   constructor(public readonly session: Session) {}
+
+  kickoff = new Date(Date.UTC(2022, 10, 20, 16));
+  showCountdown = isBefore(new Date(), this.kickoff);
 }
 
 const DIRECTIVES = [MainLayoutComponent];

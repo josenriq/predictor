@@ -65,7 +65,7 @@ export class CountdownSlotComponent {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CountdownComponent implements OnInit, OnDestroy {
-  @Input() date = new Date(Date.UTC(2022, 10, 20, 16)); // opening game!
+  @Input() date = new Date();
 
   private countdownInterval?: NodeJS.Timer;
 
@@ -82,10 +82,10 @@ export class CountdownComponent implements OnInit, OnDestroy {
       end: this.date,
     });
 
-    this.days = duration.days ?? 0;
-    this.hours = duration.hours ?? 0;
-    this.minutes = duration.minutes ?? 0;
-    this.seconds = duration.seconds ?? 0;
+    this.days = Math.max(0, duration.days ?? 0);
+    this.hours = Math.max(0, duration.hours ?? 0);
+    this.minutes = Math.max(0, duration.minutes ?? 0);
+    this.seconds = Math.max(0, duration.seconds ?? 0);
   }
 
   ngOnInit(): void {

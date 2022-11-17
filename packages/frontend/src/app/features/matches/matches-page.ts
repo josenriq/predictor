@@ -15,8 +15,8 @@ import {
   map,
   takeUntil,
 } from 'rxjs/operators';
-import { MatchesQuery } from './matches.query';
-import { Match, MatchStage } from 'app/graphql';
+import { MatchesQuery, MatchesQueryResult } from './matches.query';
+import { Match, MatchStage, WatchQueryResult } from 'app/graphql';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
 import { TrackByIdModule, TrackByModule } from 'ng-track-by';
@@ -211,6 +211,8 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   isLoading$!: Observable<boolean>;
   sortBy$!: Observable<MatchSortOption>;
 
+  private matchesQueryRef!: WatchQueryResult<MatchesQueryResult>;
+
   private readonly PAGE_SIZE = 12;
   private readonly limit$ = new BehaviorSubject(this.PAGE_SIZE);
 
@@ -241,7 +243,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   }
 
   private loadMatches(): void {
-    const matchesQuery = this.matchesQuery.watch();
+    this.matchesQueryRef = this.matchesQuery.watch();
 
     this.sortBy$ = this.route.fragment.pipe(
       map(
@@ -262,7 +264,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
       .subscribe(() => this.limit$.next(this.PAGE_SIZE));
 
     const matches$ = combineLatest([
-      matchesQuery.data$.pipe(map(data => data.matches)),
+      this.matchesQueryRef.data$.pipe(map(data => data.matches)),
       this.sortBy$,
     ]).pipe(
       map(([matches, sortBy]) => {
@@ -311,7 +313,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
       ),
     ]).pipe(map(([available, visible]) => available > visible));
 
-    this.isLoading$ = matchesQuery.isLoading$;
+    this.isLoading$ = this.matchesQueryRef.isLoading$;
   }
 
   private loadTutorials(): void {
@@ -424,9 +426,14 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
     }
     try {
       await this.savePredictionMutation.mutate({ input: { matchId, score } });
-    } catch (error) {
-      console.warn('Could not save prediction', error);
-      // TODO: Show error
+    } catch (error: any) {
+      if (error?.code === 'match:closed-for-predictions') {
+        alert('Sorry, this match has been closed for predictions.');
+        this.matchesQueryRef?.refetch();
+      } else {
+        console.warn('Could not save prediction', error);
+        // TODO: Show error
+      }
     }
   }
 

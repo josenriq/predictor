@@ -24,8 +24,9 @@ export class LiveChecker implements MatchChecker {
 
       for (const scrapedMatch of scrapedMatches) {
         if (
-          homeTeam?.name === scrapedMatch.homeTeam &&
-          awayTeam?.name === scrapedMatch.awayTeam
+          homeTeam?.name.toLowerCase() ===
+            scrapedMatch.homeTeam.toLowerCase() &&
+          awayTeam?.name.toLowerCase() === scrapedMatch.awayTeam.toLowerCase()
         ) {
           const scrapedScore = scrapedMatch.score
             ? Score.decode(scrapedMatch.score)

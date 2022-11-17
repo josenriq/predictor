@@ -12,11 +12,13 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
+  Pipe,
+  PipeTransform,
 } from '@angular/core';
 import { Match, MatchStatus, PredictionOutcome, Team } from 'app/graphql';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
-import { delay } from 'app/core';
+import { delay, Maybe } from 'app/core';
 import {
   BehaviorSubject,
   debounceTime,
@@ -316,6 +318,16 @@ export class TutorialComponent implements OnChanges {
   }
 }
 
+@Pipe({
+  name: 'pointsMessage',
+})
+export class PointsMessagePipe implements PipeTransform {
+  transform(points: Maybe<number> = 0): string {
+    if (points === 0) return `You didn't win any points`;
+    return `You scored ${points ?? 0} ${points === 1 ? 'point' : 'points'}!`;
+  }
+}
+
 @Component({
   selector: 'app-match-status',
   template: `
@@ -355,8 +367,7 @@ export class TutorialComponent implements OnChanges {
         [class.tw-text-green-500]="
           match.prediction?.outcome === PredictionOutcome.Exact
         "
-        >Scored {{ match.prediction?.points ?? 0 }}
-        {{ match.prediction?.points === 1 ? 'point' : 'points' }}</div
+        >{{ match.prediction?.points | pointsMessage }}</div
       >
     </div>
   `,
@@ -543,6 +554,7 @@ const DIRECTIVES = [MatchComponent];
     ScoreNumberComponent,
     TutorialComponent,
     MatchStatusComponent,
+    PointsMessagePipe,
   ],
   exports: DIRECTIVES,
 })

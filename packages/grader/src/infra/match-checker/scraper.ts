@@ -1,4 +1,5 @@
-import puppeteer from 'puppeteer';
+import chromium from 'chrome-aws-lambda';
+import { Browser } from 'puppeteer-core';
 
 export type ScrapedMatch = {
   homeTeam: string;
@@ -12,7 +13,7 @@ export type ScrapedMatch = {
 };
 
 export async function scrapeMatches(): Promise<ScrapedMatch[]> {
-  const browser = await puppeteer.launch();
+  const browser = await makeBrowser();
   const page = await browser.newPage();
 
   await page.goto('https://www.soccer24.com/', {
@@ -96,4 +97,19 @@ export async function scrapeMatches(): Promise<ScrapedMatch[]> {
   await browser.close();
 
   return matches;
+}
+
+async function makeBrowser(): Promise<Browser> {
+  const executablePath =
+    (await chromium.executablePath) ??
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'; // TODO: Convert to env var
+
+  const browser = await chromium.puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath,
+    headless: chromium.headless,
+  });
+
+  return browser;
 }

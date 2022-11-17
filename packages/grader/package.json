@@ -7,6 +7,7 @@
   "private": true,
   "dependencies": {
     "@typegoose/typegoose": "^9.12.0",
+    "chrome-aws-lambda": "^10.1.0",
     "convict": "^6.2.3",
     "convict-format-with-validator": "^6.2.0",
     "dataloader": "^2.1.0",
@@ -14,7 +15,7 @@
     "minimist": "^1.2.6",
     "mongodb": "^4.9.1",
     "mongoose": "^6.6.1",
-    "puppeteer": "^18.0.5",
+    "puppeteer-core": "^19.2.2",
     "pusher": "^5.1.1-beta",
     "uid": "^2.0.0"
   },
@@ -23,6 +24,7 @@
     "@rollup/plugin-json": "^5.0.0",
     "@types/convict": "^6.1.1",
     "@types/node": "^18.7.18",
+    "@types/node-fetch": "^2.6.2",
     "dotenv-safe": "^8.2.0",
     "rimraf": "^3.0.2",
     "rollup": "^3.2.3",

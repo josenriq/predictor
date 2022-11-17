@@ -30,15 +30,12 @@ export async function scrapeMatches(): Promise<ScrapedMatch[]> {
       const awayTeam = matchEl
         .querySelector('.event__participant--away')
         ?.textContent?.trim();
-      const homeScore = (
-        matchEl.querySelector('.event__part--home.event__part--2') ??
-        matchEl.querySelector('.event__score--home')
-      )?.textContent?.trim();
-      const awayScore = (
-        matchEl.querySelector('.event__part--away.event__part--2') ??
-        matchEl.querySelector('.event__score--away')
-      )?.textContent?.trim();
-
+      const homeScore = matchEl
+        .querySelector('.event__score--home')
+        ?.textContent?.trim();
+      const awayScore = matchEl
+        .querySelector('.event__score--away')
+        ?.textContent?.trim();
       const homeScore2T = matchEl
         .querySelector('.event__part--home.event__part--2')
         ?.textContent?.trim();
@@ -80,14 +77,17 @@ export async function scrapeMatches(): Promise<ScrapedMatch[]> {
         ? regularTimeScore ?? finalScore
         : finalScore;
 
+      const time = stage
+        .replace(/Extra Time(\d+)/, 'Extra Time $1')
+        .replace(/^(.*\d+)$/, `$1'`)
+        .replace(/^After.*$/, 'Finished');
+
       matches.push({
         homeTeam,
         awayTeam,
         status,
         score,
-        time: ['Ongoing', 'Finished'].includes(status)
-          ? stage.replace(/^(.*\d+)$/, `$1'`).replace(/After.*/, 'Finished')
-          : void 0,
+        time: ['Ongoing', 'Finished'].includes(status) ? time : void 0,
       });
     }
 

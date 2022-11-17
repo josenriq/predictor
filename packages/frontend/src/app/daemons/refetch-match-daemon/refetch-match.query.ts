@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { gql } from '@apollo/client/core';
-import { Match, QueryOperation } from 'app/graphql';
+import { Match, QueryOperation, SessionUser } from 'app/graphql';
 
-export type MatchQueryResult = {
+export type RefetchMatchQueryResult = {
   match: Pick<
     Match,
     'id' | 'status' | 'time' | 'score' | 'isOpenForPredictions' | 'prediction'
   >;
+  me: Pick<SessionUser, 'id' | 'points'>;
 };
 
 @Injectable({ providedIn: 'root' })
-export class MatchQuery extends QueryOperation<
-  MatchQueryResult,
+export class RefetchMatchQuery extends QueryOperation<
+  RefetchMatchQueryResult,
   { matchId: string }
 > {
   override query = gql`
@@ -28,6 +29,10 @@ export class MatchQuery extends QueryOperation<
           outcome
           points
         }
+      }
+      me {
+        id
+        points
       }
     }
   `;

@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Daemon } from '../daemon';
 import { PusherService } from 'app/pusher';
-import { MatchQuery } from './match.query';
+import { RefetchMatchQuery } from './refetch-match.query';
 import { Maybe } from 'app/core';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class RefetchMatchDaemon extends Daemon {
 
   constructor(
     private readonly pusher: PusherService,
-    private readonly matchQuery: MatchQuery,
+    private readonly refetchQuery: RefetchMatchQuery,
   ) {
     super();
   }
@@ -24,7 +24,7 @@ export class RefetchMatchDaemon extends Daemon {
       .subscribe(({ name, data }) => {
         const matchId = data['matchId'] as Maybe<string>;
         if (matchId) {
-          this.matchQuery.fetch({ matchId }, { fetchPolicy: 'network-only' });
+          this.refetchQuery.fetch({ matchId }, { fetchPolicy: 'network-only' });
         }
       });
   }

@@ -15,8 +15,9 @@ export type GoogleAnalyticsEvent = 'page_view' | 'login' | string;
 
 function gtag(cmd: GoogleAnalyticsCommand, ...args: Array<any>): void {
   // @ts-ignore
-  const dataLayer = window['dataLayer'] ?? [];
-  dataLayer.push(cmd, ...args);
+  window.dataLayer = window.dataLayer || [];
+  // @ts-ignore
+  window.dataLayer.push(cmd, ...args);
 }
 
 export type GoogleAnalyticsOptions = { id: string };

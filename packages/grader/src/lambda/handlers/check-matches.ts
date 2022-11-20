@@ -70,7 +70,9 @@ async function updateMatch(match: Match, ctx: AppContext): Promise<void> {
 
     if (predictions.length) {
       console.log(
-        `Saving [${pageNumber * pageSize} - ${predictions.length}] predictions`,
+        `Saving [${pageNumber * pageSize} - ${
+          pageNumber * pageSize + predictions.length
+        }] predictions`,
       );
       await Promise.all(
         predictions.map(p => gradePrediction.execute({ predictionId: p.id })),

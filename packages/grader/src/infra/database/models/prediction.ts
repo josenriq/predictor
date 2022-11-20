@@ -101,7 +101,7 @@ export class PredictionMongooseStorage
       .find({ matchId: Id.encode(matchId) })
       .sort('_id')
       .limit(pageSize)
-      .skip(pageNumber)
+      .skip(pageNumber * pageSize)
       .exec();
     return records.map(record => {
       this.loader.prime(Id.encode(record.id), record);

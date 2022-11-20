@@ -25,7 +25,7 @@ import { bootstrap } from './lambda/bootstrap';
     console.log('Usage: --matchId 123 --home 2 --away 1');
   }
 
-  const { db } = await bootstrap();
+  const { db, notifier } = await bootstrap();
 
   // Get match
   const match = await new GetMatch(db.match).execute(Id.decode(matchId));
@@ -41,7 +41,7 @@ import { bootstrap } from './lambda/bootstrap';
   }
 
   // Finish match
-  await new UpdateMatch(db.match).execute({
+  await new UpdateMatch(db.match, notifier).execute({
     matchId: match.id,
     status: MatchStatus.Finished,
     score: Score.decode({ home, away }),
@@ -63,6 +63,12 @@ import { bootstrap } from './lambda/bootstrap';
       pageNumber,
       pageSize,
     });
+
+    console.log(
+      `Saving [${pageNumber * pageSize} - ${
+        pageNumber * pageSize + predictions.length
+      }] predictions`,
+    );
 
     if (predictions.length) {
       await Promise.all(

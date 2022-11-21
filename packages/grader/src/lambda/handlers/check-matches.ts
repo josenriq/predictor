@@ -33,6 +33,9 @@ export async function checkAndGradeMatches(ctx: AppContext): Promise<void> {
   console.log(`Updating ${updatedMatches.length} match(es)`);
   for (const match of updatedMatches) {
     await updateMatch(match, ctx);
+
+    console.log(`Notifying match ${match.id} via Pusher`);
+    await ctx.notifier.notify(match);
   }
 
   console.log('Finished!');
@@ -41,7 +44,7 @@ export async function checkAndGradeMatches(ctx: AppContext): Promise<void> {
 async function updateMatch(match: Match, ctx: AppContext): Promise<void> {
   console.log(`Updating match ${match.id}`);
 
-  await new UpdateMatch(ctx.db.match, ctx.notifier).execute({
+  await new UpdateMatch(ctx.db.match).execute({
     matchId: match.id,
     status: match.status,
     score: match.score,

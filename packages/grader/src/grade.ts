@@ -41,7 +41,7 @@ import { bootstrap } from './lambda/bootstrap';
   }
 
   // Finish match
-  await new UpdateMatch(db.match, notifier).execute({
+  await new UpdateMatch(db.match).execute({
     matchId: match.id,
     status: MatchStatus.Finished,
     score: Score.decode({ home, away }),
@@ -78,6 +78,9 @@ import { bootstrap } from './lambda/bootstrap';
 
     pageNumber++;
   } while (predictions.length === pageSize);
+
+  console.log('Notifying via Pusher');
+  await notifier.notify(match);
 
   console.log('Finished :)');
 })();

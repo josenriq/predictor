@@ -22,7 +22,7 @@ import { Size } from './size';
         >{{ points }}</span
       >
       <span class="tw-text-sm tw-pl-0.5">{{
-        points === 1 ? 'pt' : 'pts'
+        points === 1 ? 'pt&nbsp;' : 'pts'
       }}</span>
     </div>
   `,

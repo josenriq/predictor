@@ -16,7 +16,7 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 import { MatchesQuery, MatchesQueryResult } from './matches.query';
-import { Match, MatchStage, WatchQueryResult } from 'app/graphql';
+import { Match, MatchStage, Party, WatchQueryResult } from 'app/graphql';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
 import { TrackByIdModule, TrackByModule } from 'ng-track-by';
@@ -29,13 +29,15 @@ import {
   isAfter,
   isEqual,
 } from 'date-fns';
-import { localDateFrom } from 'app/core';
+import { localDateFrom, LocalStorage, Maybe } from 'app/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SavePredictionMutation } from './save-prediction.mutation';
 import { OnboardingQuery } from './onboarding.query';
 import { MarkHasSeenTutorialMutation } from './mark-has-seen-tutorial.mutation';
 import { Session } from 'app/session';
 import { MarkHasSeenWelcomeMutation } from './mark-has-seen-welcome.mutation';
+import { PartyPredictionsModule } from './party-predictions';
+import { PartiesQuery } from './parties.query';
 
 type MatchBlock = {
   title: string;
@@ -43,6 +45,8 @@ type MatchBlock = {
 };
 
 type MatchSortOption = 'upcoming' | 'past' | 'stage';
+
+const STORAGE_PARTY_ID = 'leaderboards:partyId'; // XXX: Reusing leaderboards key on purpose
 
 @Component({
   selector: 'app-match-sort-options',
@@ -174,21 +178,57 @@ export class OnboardingWelcomeComponent {
           <div
             class="tw-flex tw-flex-col tw-flex-nowrap tw-gap-y-8 tw-mt-2 tw-mb-8"
           >
-            <app-match
+            <app-card
               *ngFor="let match of block.matches; let matchIndex = index"
               trackById
               class="animate-fadeInUp"
-              [match]="match"
-              (predictionChanged)="savePrediction(match.id, $event)"
-              [tutorial]="
-                blockIndex === 0 &&
-                matchIndex === 0 &&
-                match.isOpenForPredictions &&
-                !!(session.isAuthenticated$ | async) &&
-                (hasSeenTutorial$ | async) === false
-              "
-              (finishedTutorial)="markHasSeenTutorial()"
-            ></app-match>
+            >
+              <app-card-section>
+                <app-match
+                  [match]="match"
+                  (predictionChanged)="savePrediction(match.id, $event)"
+                  [tutorial]="
+                    blockIndex === 0 &&
+                    matchIndex === 0 &&
+                    match.isOpenForPredictions &&
+                    !!(session.isAuthenticated$ | async) &&
+                    (hasSeenTutorial$ | async) === false
+                  "
+                  (finishedTutorial)="markHasSeenTutorial()"
+                ></app-match>
+              </app-card-section>
+
+              <!-- Party predictions -->
+              <ng-container
+                *ngIf="
+                  ((parties$ | async)?.length ?? 0 > 0) &&
+                  !match.isOpenForPredictions
+                "
+              >
+                <app-collapse [collapsed]="!partyPredictionsOpen[match.id]">
+                  <app-card-section class="tw-bg-gray-50">
+                    <app-party-predictions
+                      [matchId]="match.id"
+                      [parties]="(parties$ | async) ?? []"
+                      [selectedPartyId]="(selectedPartyId$ | async) ?? ''"
+                      (partyChanged)="changeParty($event)"
+                    ></app-party-predictions>
+                  </app-card-section>
+                </app-collapse>
+                <app-menu class="tw-block tw-rounded-b-lg tw-overflow-hidden">
+                  <button
+                    type="button"
+                    app-menu-item
+                    class="tw-text-xs tw-uppercase tw-font-semibold"
+                    (click)="
+                      partyPredictionsOpen[match.id] =
+                        !partyPredictionsOpen[match.id]
+                    "
+                    >What others guessed</button
+                  >
+                </app-menu>
+              </ng-container>
+            </app-card>
           </div>
         </div>
 
@@ -219,6 +259,12 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   hasSeenWelcome$!: Observable<boolean>;
   hasSeenTutorial$!: Observable<boolean>;
 
+  parties$!: Observable<Party[]>;
+  selectedPartyId$ = new BehaviorSubject<Maybe<string>>(
+    this.localStorage.get(STORAGE_PARTY_ID, void 0),
+  );
+  partyPredictionsOpen: Record<string, boolean> = {};
+
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -230,6 +276,8 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
     private readonly onbardingQuery: OnboardingQuery,
     private readonly markTutorialMutation: MarkHasSeenTutorialMutation,
     private readonly markWelcomeMutation: MarkHasSeenWelcomeMutation,
+    private readonly partiesQuery: PartiesQuery,
+    private readonly localStorage: LocalStorage,
   ) {}
 
   ngOnDestroy(): void {
@@ -240,6 +288,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadMatches();
     this.loadTutorials();
+    this.loadParties();
   }
 
   private loadMatches(): void {
@@ -325,6 +374,20 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
     this.hasSeenTutorial$ = onbardingQuery.data$.pipe(
       map(data => data.me?.hasSeenTutorial ?? false),
     );
+  }
+
+  private loadParties(): void {
+    const partiesQuery = this.partiesQuery.watch();
+
+    this.parties$ = partiesQuery.data$.pipe(
+      map(data => data.me?.parties ?? []),
+    );
+
+    this.parties$.pipe(takeUntil(this.destroy$)).subscribe(parties => {
+      if (parties.length > 0 && !this.selectedPartyId$.getValue()) {
+        this.selectedPartyId$.next(parties[0].id);
+      }
+    });
   }
 
   changeSort(sortBy: MatchSortOption): void {
@@ -456,6 +519,11 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
       console.warn('Could not mark tutorial as seen', error);
     }
   }
+
+  changeParty(partyId: string): void {
+    this.localStorage.set(STORAGE_PARTY_ID, partyId);
+    this.selectedPartyId$.next(partyId);
+  }
 }
 
 const DIRECTIVES = [MatchesPageComponent];
@@ -467,6 +535,7 @@ const DIRECTIVES = [MatchesPageComponent];
     TrackByModule,
     TrackByIdModule,
     MatchModule,
+    PartyPredictionsModule,
     RouterModule,
   ],
   declarations: [

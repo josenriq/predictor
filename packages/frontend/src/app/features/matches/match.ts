@@ -385,93 +385,87 @@ export class MatchStatusComponent {
 @Component({
   selector: 'app-match',
   template: `
-    <app-card>
-      <app-card-section>
+    <div class="tw-flex tw-flex-col tw-flex-nowrap">
+      <div class="tw-text-center tw-text-xs tw-text-muted tw-mb-2">
+        {{ match.startsAt | date: 'EEE MMM d, h:mm a' }}
+      </div>
+
+      <app-tutorial
+        *ngIf="tutorial"
+        [step]="tutorialStep"
+        (finished)="finishTutorial()"
+      ></app-tutorial>
+
+      <div
+        class="tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-mt-2 tw-gap-x-3"
+      >
+        <app-team-name
+          class="tw-flex-1 tw-text-right"
+          [team]="match.homeTeam"
+        ></app-team-name>
+
+        <app-team-banner-button
+          *ngIf="match.isOpenForPredictions"
+          [teamId]="match.homeTeam.id"
+          (increment)="incrementScore('home')"
+          (reset)="resetScore('home')"
+        ></app-team-banner-button>
+
+        <app-team-banner
+          *ngIf="!match.isOpenForPredictions"
+          [teamId]="match.homeTeam.id"
+        ></app-team-banner>
+
         <div class="tw-flex tw-flex-col tw-flex-nowrap">
-          <div class="tw-text-center tw-text-xs tw-text-muted tw-mb-2">
-            {{ match.startsAt | date: 'EEE MMM d, h:mm a' }}
-          </div>
-
-          <app-tutorial
-            *ngIf="tutorial"
-            [step]="tutorialStep"
-            (finished)="finishTutorial()"
-          ></app-tutorial>
-
-          <div
-            class="tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-mt-2 tw-gap-x-3"
+          <ng-container
+            *ngIf="!!match.score && match.status !== MatchStatus.Unstarted"
           >
-            <app-team-name
-              class="tw-flex-1 tw-text-right"
-              [team]="match.homeTeam"
-            ></app-team-name>
-
-            <app-team-banner-button
-              *ngIf="match.isOpenForPredictions"
-              [teamId]="match.homeTeam.id"
-              (increment)="incrementScore('home')"
-              (reset)="resetScore('home')"
-            ></app-team-banner-button>
-
-            <app-team-banner
-              *ngIf="!match.isOpenForPredictions"
-              [teamId]="match.homeTeam.id"
-            ></app-team-banner>
-
-            <div class="tw-flex tw-flex-col tw-flex-nowrap">
-              <ng-container
-                *ngIf="!!match.score && match.status !== MatchStatus.Unstarted"
-              >
-                <app-score
-                  [class.tw-animate-pulse]="
-                    match.status === MatchStatus.Ongoing
-                  "
-                  [class.tw-text-red-500]="match.status === MatchStatus.Ongoing"
-                  [home]="match.score?.home"
-                  [away]="match.score?.away"
-                  title="Actual result"
-                ></app-score>
-                <div class="tw-w-full tw-h-px tw-bg-gray-300"></div>
-              </ng-container>
-              <app-score
-                class="tw-text-brand"
-                [home]="(prediction$ | async)?.home"
-                [away]="(prediction$ | async)?.away"
-                title="Your guess"
-              ></app-score>
-            </div>
-
-            <app-team-banner-button
-              *ngIf="match.isOpenForPredictions"
-              [teamId]="match.awayTeam.id"
-              (increment)="incrementScore('away')"
-              (reset)="resetScore('away')"
-            ></app-team-banner-button>
-
-            <app-team-banner
-              *ngIf="!match.isOpenForPredictions"
-              [teamId]="match.awayTeam.id"
-            ></app-team-banner>
-
-            <app-team-name
-              class="tw-flex-1"
-              [team]="match.awayTeam"
-            ></app-team-name>
-          </div>
-
-          <app-match-status
-            *ngIf="match.status !== MatchStatus.Unstarted"
-            class="tw-mt-2"
-            [match]="match"
-          ></app-match-status>
-
-          <div class="tw-text-center tw-text-xs tw-text-muted tw-mt-4"
-            ><span *ngIf="match.group">Group {{ match.group }} • </span
-            >{{ match.stadium }}</div
-          >
+            <app-score
+              [class.tw-animate-pulse]="match.status === MatchStatus.Ongoing"
+              [class.tw-text-red-500]="match.status === MatchStatus.Ongoing"
+              [home]="match.score?.home"
+              [away]="match.score?.away"
+              title="Actual result"
+            ></app-score>
+            <div class="tw-w-full tw-h-px tw-bg-gray-300"></div>
+          </ng-container>
+          <app-score
+            class="tw-text-brand"
+            [home]="(prediction$ | async)?.home"
+            [away]="(prediction$ | async)?.away"
+            title="Your guess"
+          ></app-score>
         </div>
-      </app-card-section>
-    </app-card>
+
+        <app-team-banner-button
+          *ngIf="match.isOpenForPredictions"
+          [teamId]="match.awayTeam.id"
+          (increment)="incrementScore('away')"
+          (reset)="resetScore('away')"
+        ></app-team-banner-button>
+
+        <app-team-banner
+          *ngIf="!match.isOpenForPredictions"
+          [teamId]="match.awayTeam.id"
+        ></app-team-banner>
+
+        <app-team-name
+          class="tw-flex-1"
+          [team]="match.awayTeam"
+        ></app-team-name>
+      </div>
+
+      <app-match-status
+        *ngIf="match.status !== MatchStatus.Unstarted"
+        class="tw-mt-2"
+        [match]="match"
+      ></app-match-status>
+
+      <div class="tw-text-center tw-text-xs tw-text-muted tw-mt-4"
+        ><span *ngIf="match.group">Group {{ match.group }} • </span
+        >{{ match.stadium }}</div
+      >
+    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

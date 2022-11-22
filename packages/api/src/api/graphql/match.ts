@@ -9,9 +9,13 @@ import {
   GetMatch,
 } from '@predictor/domain/match';
 import { GetTeam, Team } from '@predictor/domain/team';
-import { FindPrediction, Prediction } from '@predictor/domain/prediction';
+import {
+  FindPrediction,
+  ListPredictionsByParty,
+  Prediction,
+} from '@predictor/domain/prediction';
 import { QATAR_2022 } from '@predictor/domain/tournament';
-import { Id } from '@predictor/domain';
+import { emptyPage, Id, Page, PageInput } from '@predictor/domain';
 
 export const MatchTypeDef = gql`
   enum MatchStage {
@@ -45,6 +49,20 @@ export const MatchTypeDef = gql`
     time: String
     isOpenForPredictions: Boolean!
     prediction: Prediction
+    partyPredictions(input: ListPartyPredictionsInput!): PredictionsPage!
+  }
+
+  input ListPartyPredictionsInput {
+    pageSize: Int = 20
+    pageNumber: Int = 0
+    partyId: ID!
+  }
+
+  type PredictionsPage {
+    results: [Prediction!]!
+    pageSize: Int!
+    pageNumber: Int!
+    hasMore: Boolean!
   }
 
   type Query {
@@ -76,6 +94,25 @@ export const MatchResolver = {
       if (!ctx.viewer) return void 0;
       const query = new FindPrediction(ctx.predictionStorage);
       return await query.execute({ matchId: match.id, userId: ctx.viewer.id });
+    },
+
+    async partyPredictions(
+      match: Match,
+      { input }: { input: PageInput & { partyId: Id } },
+      ctx: Context,
+    ): Promise<Page<Prediction>> {
+      if (!ctx.viewer) return emptyPage();
+
+      const query = new ListPredictionsByParty(
+        ctx.predictionStorage,
+        ctx.matchStorage,
+        ctx.partyStorage,
+      );
+      return await query.execute({
+        ...input,
+        matchId: match.id,
+        excludedUserId: ctx.viewer.id,
+      });
     },
   },
 

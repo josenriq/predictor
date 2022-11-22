@@ -38,6 +38,12 @@ export type JoinPartyInput = {
   partyId: Scalars['ID'];
 };
 
+export type ListPartyPredictionsInput = {
+  pageNumber?: InputMaybe<Scalars['Int']>;
+  pageSize?: InputMaybe<Scalars['Int']>;
+  partyId: Scalars['ID'];
+};
+
 export type ListRankingsInput = {
   pageNumber?: InputMaybe<Scalars['Int']>;
   pageSize?: InputMaybe<Scalars['Int']>;
@@ -50,6 +56,7 @@ export type Match = {
   homeTeam: Team;
   id: Scalars['ID'];
   isOpenForPredictions: Scalars['Boolean'];
+  partyPredictions: PredictionsPage;
   prediction?: Maybe<Prediction>;
   score?: Maybe<Scalars['Score']>;
   stadium?: Maybe<Scalars['String']>;
@@ -57,6 +64,10 @@ export type Match = {
   startsAt: Scalars['DateTime'];
   status: MatchStatus;
   time?: Maybe<Scalars['String']>;
+};
+
+export type MatchPartyPredictionsArgs = {
+  input: ListPartyPredictionsInput;
 };
 
 export enum MatchStage {
@@ -112,6 +123,7 @@ export type Prediction = {
   outcome?: Maybe<PredictionOutcome>;
   points?: Maybe<Scalars['Int']>;
   score: Scalars['Score'];
+  user: User;
 };
 
 export enum PredictionOutcome {
@@ -119,6 +131,13 @@ export enum PredictionOutcome {
   Exact = 'Exact',
   Incorrect = 'Incorrect',
 }
+
+export type PredictionsPage = {
+  hasMore: Scalars['Boolean'];
+  pageNumber: Scalars['Int'];
+  pageSize: Scalars['Int'];
+  results: Array<Prediction>;
+};
 
 export type Query = {
   match: Match;

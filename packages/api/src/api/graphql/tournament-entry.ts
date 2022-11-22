@@ -5,8 +5,7 @@ import {
   ListRankings,
   TournamentEntry,
 } from '@predictor/domain/tournament-entry';
-import { User } from '@predictor/domain/user';
-import { GetUser } from '@predictor/domain/user/queries';
+import { GetUser, User } from '@predictor/domain/user';
 import gql from 'graphql-tag';
 import { Context } from '../context';
 
@@ -18,7 +17,7 @@ export const TournamentEntryTypeDef = gql`
   }
 
   input ListRankingsInput {
-    pageSize: Int = 15
+    pageSize: Int = 20
     pageNumber: Int = 0
     partyId: ID
   }

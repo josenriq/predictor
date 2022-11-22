@@ -9,3 +9,12 @@ export type PageInput = {
   pageNumber: number;
   pageSize: number;
 };
+
+export function emptyPage<E>(): Page<E> {
+  return {
+    results: [],
+    pageNumber: 0,
+    pageSize: 0,
+    hasMore: false,
+  };
+}

@@ -2,12 +2,14 @@ import gql from 'graphql-tag';
 import { Context } from '../context';
 import { Guard, None } from '@predictor/core';
 import {
+  Prediction,
   PredictionOutcome,
   SavePrediction,
 } from '@predictor/domain/prediction';
 import { AuthenticationRequired, Id } from '@predictor/domain';
 import { Score } from '@predictor/domain/score';
 import { GetMatch, Match } from '@predictor/domain/match';
+import { User, GetUser } from '@predictor/domain/user';
 
 export const PredictionTypeDef = gql`
   enum PredictionOutcome {
@@ -21,6 +23,7 @@ export const PredictionTypeDef = gql`
     score: Score!
     outcome: PredictionOutcome
     points: Int
+    user: User!
   }
 
   input SavePredictionInput {
@@ -40,7 +43,12 @@ export const PredictionTypeDef = gql`
 export const PredictionResolver = {
   PredictionOutcome,
 
-  Prediction: {},
+  Prediction: {
+    user(prediction: Prediction, args: None, ctx: Context): Promise<User> {
+      const query = new GetUser(ctx.userStorage);
+      return query.execute(prediction.userId);
+    },
+  },
 
   Mutation: {
     async savePrediction(

@@ -1,4 +1,4 @@
-import { Id, Entity, Storage } from '@predictor/domain';
+import { Id, Entity, Storage, Page } from '@predictor/domain';
 import { Guard, Maybe } from '@predictor/core';
 import { Score } from '@predictor/domain/score';
 
@@ -58,4 +58,10 @@ export class Prediction extends Entity<Prediction> {
 
 export type PredictionStorage = Storage<Prediction> & {
   findByUserAndMatch(userId: Id, matchId: Id): Promise<Maybe<Prediction>>;
+  listByMatch(
+    matchId: Id,
+    limitToUserIds: Array<Id>,
+    pageSize: number,
+    pageNumber: number,
+  ): Promise<Page<Prediction>>;
 };

@@ -1,5 +1,5 @@
 import { Guard, Maybe } from '@predictor/core';
-import { Id, Mapper } from '@predictor/domain';
+import { Id, Mapper, Page } from '@predictor/domain';
 import {
   Prediction,
   PredictionOutcome,
@@ -123,5 +123,31 @@ export class PredictionMongooseStorage
       [Id.encode(userId), Id.encode(matchId)].join(','),
     );
     return record ? this.mapper.from(record) : void 0;
+  }
+
+  async listByMatch(
+    matchId: Id,
+    limitToUserIds: Array<Id>,
+    pageSize: number,
+    pageNumber: number,
+  ): Promise<Page<Prediction>> {
+    const filter: Record<string, any> = {
+      matchId: Id.encode(matchId),
+      userId: { $in: limitToUserIds.map(Id.encode) },
+    };
+
+    const total = await this.db.find(filter).countDocuments();
+
+    const records = await this.db
+      .find(filter)
+      .skip(pageNumber * pageSize)
+      .limit(pageSize);
+
+    return {
+      results: records.map(this.mapper.from),
+      pageSize,
+      pageNumber,
+      hasMore: pageNumber * pageSize + records.length < total,
+    };
   }
 }

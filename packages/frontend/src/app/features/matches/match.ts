@@ -124,6 +124,7 @@ export class ScoreComponent {
       class="pushable"
       (touchstart)="pressDown($event)"
       (touchend)="pressUp()"
+      (touchmove)="pressCancel()"
       (touchcancel)="pressCancel()"
       (mousedown)="pressDown($event)"
       (mouseup)="pressUp()"

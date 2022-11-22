@@ -509,9 +509,10 @@ export class MatchComponent implements OnInit, OnDestroy {
 
   incrementScore(side: keyof Score): void {
     const pred = this.prediction$.getValue();
+
     this.prediction$.next({
       ...pred,
-      [side]: Math.min(15, (pred[side] ?? -1) + 1),
+      [side]: ((pred[side] ?? -1) + 1) % 16,
     });
 
     if (this.tutorialStep === 'press') {

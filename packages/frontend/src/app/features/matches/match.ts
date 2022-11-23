@@ -431,7 +431,16 @@ export class MatchStatusComponent {
             <div class="tw-w-full tw-h-px tw-bg-gray-300"></div>
           </ng-container>
           <app-score
-            class="tw-text-brand"
+            [class.tw-text-brand]="!match.prediction?.outcome"
+            [class.tw-text-muted]="
+              match.prediction?.outcome === PredictionOutcome.Incorrect
+            "
+            [class.tw-text-blue-500]="
+              match.prediction?.outcome === PredictionOutcome.Correct
+            "
+            [class.tw-text-green-500]="
+              match.prediction?.outcome === PredictionOutcome.Exact
+            "
             [home]="(prediction$ | async)?.home"
             [away]="(prediction$ | async)?.away"
             title="Your guess"
@@ -483,6 +492,8 @@ export class MatchComponent implements OnInit, OnDestroy {
   tutorialStep: TutorialStep = 'press';
 
   @Output() finishedTutorial = new EventEmitter<void>();
+
+  PredictionOutcome = PredictionOutcome;
 
   destroy$ = new Subject<void>();
 

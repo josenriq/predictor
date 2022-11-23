@@ -27,6 +27,7 @@ export class PartyPredictionsQuery extends QueryOperation<
               picture
             }
             score
+            outcome
           }
           pageSize
           pageNumber

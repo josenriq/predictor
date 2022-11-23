@@ -10,7 +10,12 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
-import { Party, Prediction, WatchQueryResult } from 'app/graphql';
+import {
+  Party,
+  Prediction,
+  PredictionOutcome,
+  WatchQueryResult,
+} from 'app/graphql';
 import { map, Observable } from 'rxjs';
 import { PartyPredictionsQuery } from './party-predictions.query';
 import { TrackByIdModule } from 'ng-track-by';
@@ -31,6 +36,15 @@ import { TrackByIdModule } from 'ng-track-by';
       </div>
       <div
         class="tw-flex tw-flex-row tw-flex-nowrap tw-items-center tw-font-semibold"
+        [class.tw-text-muted]="
+          prediction.outcome === PredictionOutcome.Incorrect
+        "
+        [class.tw-text-blue-500]="
+          prediction.outcome === PredictionOutcome.Correct
+        "
+        [class.tw-text-green-500]="
+          prediction.outcome === PredictionOutcome.Exact
+        "
       >
         <div class="tw-w-5 tw-text-center">{{ prediction.score.home }}</div>
         <div>-</div>
@@ -42,6 +56,8 @@ import { TrackByIdModule } from 'ng-track-by';
 })
 export class PredictionComponent {
   @Input() prediction!: Prediction;
+
+  PredictionOutcome = PredictionOutcome;
 }
 
 @Component({

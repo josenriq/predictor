@@ -15,7 +15,13 @@ import {
   Pipe,
   PipeTransform,
 } from '@angular/core';
-import { Match, MatchStatus, PredictionOutcome, Team } from 'app/graphql';
+import {
+  Match,
+  MatchStage,
+  MatchStatus,
+  PredictionOutcome,
+  Team,
+} from 'app/graphql';
 import { CommonModule } from '@angular/common';
 import { UIModule } from 'app/ui';
 import { delay, Maybe } from 'app/core';
@@ -471,10 +477,29 @@ export class MatchStatusComponent {
         [match]="match"
       ></app-match-status>
 
-      <div class="tw-text-center tw-text-xs tw-text-muted tw-mt-4"
-        ><span *ngIf="match.group">Group {{ match.group }} • </span
-        >{{ match.stadium }}</div
-      >
+      <div class="tw-text-center tw-text-xs tw-text-muted tw-mt-4">
+        <span class="tw-font-semibold">
+          <ng-container *ngIf="match.stage === MatchStage.Group && match.group"
+            >Group {{ match.group }}</ng-container
+          >
+          <ng-container *ngIf="match.stage === MatchStage.RoundOf16"
+            >Round of 16</ng-container
+          >
+          <ng-container *ngIf="match.stage === MatchStage.QuaterFinal"
+            >Quater Final</ng-container
+          >
+          <ng-container *ngIf="match.stage === MatchStage.SemiFinal"
+            >Semi Final</ng-container
+          >
+          <ng-container *ngIf="match.stage === MatchStage.ThirdPlace"
+            >Third Place</ng-container
+          >
+          <ng-container *ngIf="match.stage === MatchStage.Final"
+            >FINAL</ng-container
+          ></span
+        >
+        • {{ match.stadium }}
+      </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -484,6 +509,7 @@ export class MatchComponent implements OnInit, OnDestroy {
 
   @Input() match!: Match;
   MatchStatus = MatchStatus;
+  MatchStage = MatchStage;
 
   prediction$ = new BehaviorSubject<Partial<Score>>({});
   @Output() predictionChanged = new EventEmitter<Score>();

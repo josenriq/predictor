@@ -406,7 +406,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
     };
     return matches.slice().sort((a, b) => {
       if (a.stage !== b.stage) {
-        return stagePoints[a.stage] - stagePoints[b.stage];
+        return stagePoints[b.stage] - stagePoints[a.stage];
       }
       if (
         a.stage === MatchStage.Group &&

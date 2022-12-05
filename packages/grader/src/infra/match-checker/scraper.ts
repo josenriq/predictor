@@ -52,7 +52,9 @@ export async function scrapeMatches(): Promise<ScrapedMatch[]> {
           ? 'Cancelled'
           : stage === 'Postponed'
           ? 'Postponed'
-          : stage === 'Finished' || /After (Pen|ET)/i.test(stage)
+          : stage === 'Finished' ||
+            /After (Pen|ET)/i.test(stage) ||
+            /^Penalties$/i.test(stage)
           ? 'Finished'
           : 'Ongoing';
 
@@ -73,7 +75,7 @@ export async function scrapeMatches(): Promise<ScrapedMatch[]> {
               away: parseInt(awayScore2T ?? '0'),
             }
           : void 0;
-      const score = /After Pen/i.test(stage)
+      const score = /After Pen|Penalties/i.test(stage)
         ? regularTimeScore ?? finalScore
         : finalScore;
 

@@ -19,8 +19,9 @@ import { RouterModule, Routes } from '@angular/router';
 
     <p
       >Sign in during the World Cup and fill out the scores of the
-      <a class="text-link" routerLink="/">upcoming matches</a>. Make your best
-      guest!</p
+      <a class="text-link" routerLink="/">upcoming matches</a>.
+      <b>Final score includes extra times, but not penalty shootouts</b>. Make
+      your best guest!</p
     >
     <p
       >Matches become unavailable for prediction

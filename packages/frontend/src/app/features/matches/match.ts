@@ -486,7 +486,7 @@ export class MatchStatusComponent {
             >Round of 16</ng-container
           >
           <ng-container *ngIf="match.stage === MatchStage.QuaterFinal"
-            >Quater Final</ng-container
+            >Quarter Final</ng-container
           >
           <ng-container *ngIf="match.stage === MatchStage.SemiFinal"
             >Semi Final</ng-container

@@ -451,7 +451,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
       [MatchStage.Regular]: 'Season',
       [MatchStage.Group]: 'Group',
       [MatchStage.RoundOf16]: 'Round of 16',
-      [MatchStage.QuaterFinal]: 'Quater-Finals',
+      [MatchStage.QuaterFinal]: 'Quarter-Finals',
       [MatchStage.SemiFinal]: 'Semi-Finals',
       [MatchStage.ThirdPlace]: 'Third Place',
       [MatchStage.Final]: 'Final',

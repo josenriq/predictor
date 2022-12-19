@@ -53,13 +53,21 @@ const STORAGE_PARTY_ID = 'leaderboards:partyId'; // XXX: Reusing leaderboards ke
   template: `
     <app-side-scroller class="tw-block -tw-mx-4">
       <div class="tw-pl-2"></div>
-      <button
+      <!-- <button
         type="button"
         app-button
         [pill]="true"
         [selected]="sortBy === 'upcoming'"
         (click)="select('upcoming')"
         >Upcoming Matches</button
+      > -->
+      <button
+        type="button"
+        app-button
+        [pill]="true"
+        [selected]="sortBy === 'past'"
+        (click)="select('past')"
+        >Past Matches</button
       >
       <button
         type="button"
@@ -68,14 +76,6 @@ const STORAGE_PARTY_ID = 'leaderboards:partyId'; // XXX: Reusing leaderboards ke
         [selected]="sortBy === 'stage'"
         (click)="select('stage')"
         >By Stage</button
-      >
-      <button
-        type="button"
-        app-button
-        [pill]="true"
-        [selected]="sortBy === 'past'"
-        (click)="select('past')"
-        >Past Matches</button
       >
       <div class="tw-pr-20 md:tw-pr-2"></div>
     </app-side-scroller>
@@ -154,7 +154,7 @@ export class OnboardingWelcomeComponent {
       ></app-onboarding-welcome>
 
       <app-match-sort-options
-        [sortBy]="(sortBy$ | async) ?? 'upcoming'"
+        [sortBy]="(sortBy$ | async) ?? 'stage'"
         (changed)="changeSort($event)"
         class="tw-pb-4"
       ></app-match-sort-options>
@@ -162,7 +162,7 @@ export class OnboardingWelcomeComponent {
       <ng-container *ngIf="!(isLoading$ | async)">
         <app-matches-empty-state
           *ngIf="(matchBlocks$ | async)?.length === 0"
-          [sortBy]="(sortBy$ | async) ?? 'upcoming'"
+          [sortBy]="(sortBy$ | async) ?? 'stage'"
           class="animate-fadeIn"
         ></app-matches-empty-state>
 
@@ -303,7 +303,7 @@ export class MatchesPageComponent implements OnInit, OnDestroy {
             ? 'past'
             : fragment === 'stage'
             ? 'stage'
-            : 'upcoming', // default
+            : 'stage', // default, now that it's over!
       ),
       distinctUntilChanged(),
     );
